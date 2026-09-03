@@ -1,0 +1,74 @@
+.survey-navigation {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  border-top: 1px solid #d9c9cc;
+  padding-top: 1rem;
+}
+
+ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #624f53;
+  font-size: 0.9rem;
+}
+
+li span:first-child {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border: 1px solid #9f858b;
+  border-radius: 50%;
+}
+
+li.active,
+li.completed {
+  color: #800000;
+  font-weight: 700;
+}
+
+li.active span:first-child,
+li.completed span:first-child {
+  border-color: #800000;
+  background: #800000;
+  color: #fff;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+button {
+  border: 0;
+  border-radius: 4px;
+  padding: 0.7rem 1.2rem;
+  background: #800000;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+button:disabled {
+  background: #d9c9cc;
+  color: #624f53;
+  cursor: not-allowed;
+}
+
+button:focus-visible {
+  outline: 3px solid #d69a9a;
+  outline-offset: 2px;
+}

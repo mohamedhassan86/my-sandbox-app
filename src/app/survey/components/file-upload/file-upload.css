@@ -1,0 +1,20 @@
+.file-upload {
+  display: grid;
+  gap: 0.75rem;
+  color: #624f53;
+  font-size: 0.95rem;
+}
+
+input[type='file'] {
+  width: 100%;
+  border: 1px dashed #9f858b;
+  border-radius: 4px;
+  padding: 0.75rem;
+  background: #fff;
+  font: inherit;
+}
+
+ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}

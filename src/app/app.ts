@@ -1,12 +1,9 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { SurveyViewComponent } from './survey/pages/survey-view/survey-view';
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [SurveyViewComponent],
   selector: 'app-root',
-  styleUrl: './app.css',
-  templateUrl: './app.html',
+  template: '<app-survey-view />',
 })
-export class App {
-  protected readonly title = signal('my-sandbox-app');
-}
+export class App {}
