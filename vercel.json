@@ -1,0 +1,4 @@
+{
+  "buildCommand": "pnpm exec ng build",
+  "outputDirectory": "dist/my-sandbox-app/browser"
+}
