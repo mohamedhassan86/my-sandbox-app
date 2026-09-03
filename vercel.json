@@ -1,4 +1,5 @@
 {
+  "installCommand": "pnpm install --ignore-scripts",
   "buildCommand": "pnpm exec ng build",
   "outputDirectory": "dist/my-sandbox-app/browser"
 }
