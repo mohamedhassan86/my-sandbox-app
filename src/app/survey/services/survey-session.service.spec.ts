@@ -32,4 +32,27 @@ describe('SurveySessionService', () => {
     session.setAnswer({ questionId: 'Q1', value: 'Ada' });
     expect(session.buildResponse()?.surveyId).toBe('SV001');
   });
+
+  it('supports a 100-page, 500-question configuration', () => {
+    const session = new SurveySessionService();
+    const largeSurvey = {
+      surveyId: 'LARGE',
+      title: 'Large Survey',
+      version: '1.0',
+      pages: Array.from({ length: 100 }, (_, pageIndex) => ({
+        pageId: `P${pageIndex + 1}`,
+        title: `Page ${pageIndex + 1}`,
+        questions: Array.from({ length: 5 }, (_, questionIndex) => ({
+          questionId: `Q${pageIndex * 5 + questionIndex + 1}`,
+          type: 'textbox' as const,
+          label: `Question ${questionIndex + 1}`,
+          required: false,
+          attachmentsRequired: 0 as const,
+        })),
+      })),
+    };
+    session.start(largeSurvey);
+    expect(session.pageCount()).toBe(100);
+    expect(session.validateAll()).toHaveLength(0);
+  });
 });

@@ -1,0 +1,67 @@
+{
+  "surveyId": "SV001",
+  "title": "Customer Feedback Survey",
+  "description": "Please complete the survey.",
+  "version": "1.0",
+  "pages": [
+    {
+      "pageId": "P1",
+      "title": "General Information",
+      "questions": [
+        {
+          "questionId": "Q1",
+          "type": "radio",
+          "label": "Are you satisfied?",
+          "required": true,
+          "options": [
+            { "label": "Yes", "value": "yes" },
+            { "label": "No", "value": "no" }
+          ],
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q2",
+          "type": "checkbox",
+          "label": "Which topics matter to you?",
+          "required": false,
+          "options": [
+            { "label": "Support", "value": "support" },
+            { "label": "Pricing", "value": "pricing" }
+          ],
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q3",
+          "type": "textbox",
+          "label": "Your name",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 80,
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q4",
+          "type": "textarea",
+          "label": "Additional comments",
+          "required": false,
+          "maxLength": 500,
+          "attachmentsRequired": 0
+        }
+      ]
+    },
+    {
+      "pageId": "P2",
+      "title": "Final Thoughts",
+      "questions": [
+        {
+          "questionId": "Q5",
+          "type": "textarea",
+          "label": "What could we improve?",
+          "required": false,
+          "maxLength": 500,
+          "attachmentsRequired": 0
+        }
+      ]
+    }
+  ]
+}

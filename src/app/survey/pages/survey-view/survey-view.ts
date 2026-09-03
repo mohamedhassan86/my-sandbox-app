@@ -6,30 +6,6 @@ import { SurveyNavigationComponent } from '../../components/survey-navigation/su
 import { SurveySessionService } from '../../services/survey-session.service';
 import { SurveyPageComponent } from '../survey-page/survey-page';
 
-const sampleSurvey = {
-  surveyId: 'SV001',
-  title: 'Customer Feedback Survey',
-  description: 'Please complete the survey.',
-  version: '1.0',
-  pages: [{
-    pageId: 'P1',
-    title: 'General Information',
-    questions: [
-      { questionId: 'Q1', type: 'radio' as const, label: 'Are you satisfied?', required: true, options: [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }], attachmentsRequired: 0 as const },
-      { questionId: 'Q2', type: 'checkbox' as const, label: 'Which topics matter to you?', required: false, options: [{ label: 'Support', value: 'support' }, { label: 'Pricing', value: 'pricing' }], attachmentsRequired: 0 as const },
-      { questionId: 'Q3', type: 'textbox' as const, label: 'Your name', required: true, minLength: 2, maxLength: 80, attachmentsRequired: 0 as const },
-      { questionId: 'Q4', type: 'textarea' as const, label: 'Additional comments', required: false, maxLength: 500, attachmentsRequired: 0 as const },
-    ],
-  }, {
-    pageId: 'P2',
-    title: 'Final Thoughts',
-    questions: [
-      { questionId: 'Q5', type: 'textarea' as const, label: 'What could we improve?', required: false, maxLength: 500, attachmentsRequired: 0 as const },
-      { questionId: 'Q6', type: 'textbox' as const, label: 'Reference name', required: false, attachmentsRequired: 1 as const, acceptedFileTypes: ['text/plain', 'application/pdf'], maxFileSizeBytes: 2_000_000 },
-    ],
-  }],
-};
-
 @Component({
   selector: 'app-survey-view',
   standalone: true,
@@ -82,13 +58,13 @@ export class SurveyViewComponent implements OnInit {
   readonly error = signal('This survey is temporarily unavailable.');
 
   ngOnInit(): void {
-    this.loadSurvey();
+    void this.loadSurvey();
   }
 
-  loadSurvey(): void {
+  async loadSurvey(): Promise<void> {
     this.loading.set(true);
     try {
-      this.session.start(this.config.parse(sampleSurvey));
+      this.session.start(await this.config.load('survey.json'));
     } catch {
       this.error.set('This survey is temporarily unavailable.');
     } finally {
@@ -137,6 +113,10 @@ export class SurveyViewComponent implements OnInit {
 
   static configurationErrorMessage(): string {
     return 'This survey is temporarily unavailable.';
+  }
+
+  static accessibilityRequirements(): string[] {
+    return ['semantic-labels', 'keyboard-navigation', 'visible-validation', 'color-contrast'];
   }
 
   submissionLabel(state: 'idle' | 'submitting' | 'submitted' | 'failed'): string {

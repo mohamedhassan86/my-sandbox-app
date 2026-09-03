@@ -10,50 +10,69 @@ To start a local development server, run:
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+# Dynamic Survey Viewer
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Angular application for rendering and submitting JSON-configured surveys.
 
-```bash
-ng generate component component-name
+## Development
+
+Install dependencies and start the development server:
+
+```powershell
+pnpm install
+pnpm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Open `http://localhost:4200/` after the server starts. The default fixture is
+`public/survey.json`; changing that JSON changes the rendered survey without changing
+the survey components.
 
-```bash
-ng generate --help
+## Validation
+
+Run the focused feature tests:
+
+```powershell
+pnpm exec vitest run src/app/core src/app/survey
 ```
 
-## Building
+Run the production build:
 
-To build the project run:
-
-```bash
-ng build
+```powershell
+pnpm exec ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The full `pnpm exec vitest run` command also includes the Angular-generated app test.
 
-## Running unit tests
+## Survey configuration
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+The JSON contract is documented in
+`specs/001-survey-management/contracts/survey-json.md`. Supported question types are
+`radio`, `checkbox`, `textbox`, and `textarea`. Questions may require zero through
+three attachments and may define selection, text length, file type, and file size rules.
 
-```bash
-ng test
+The response submission boundary is documented in
+`specs/001-survey-management/contracts/response-submission.md`. The default adapter
+posts to `/api/survey-responses`; connect that route to the response service before
+using production submissions.
+
+## Project design
+
+- Typed domain models live under `src/app/core/models`.
+- Configuration and submission services live under `src/app/core/services`.
+- Validation rules live under `src/app/core/validators`.
+- Survey pages, question renderers, navigation, and session state live under
+	`src/app/survey`.
+- Spec Kit planning artifacts live under `specs/001-survey-management`.
+
+## Deployment
+
+The project is linked to Vercel. Deploy a production build with:
+
+```powershell
+pnpm dlx vercel --prod
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
+Vercel uses `vercel.json` to run Angular’s build and `pnpm install --ignore-scripts`.
+Environment files and Vercel metadata are excluded from version control.
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

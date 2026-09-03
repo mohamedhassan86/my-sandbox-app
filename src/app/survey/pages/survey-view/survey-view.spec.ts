@@ -23,3 +23,14 @@ describe('survey submission state', () => {
     expect(SurveyViewComponent.configurationErrorMessage()).toContain('unavailable');
   });
 });
+
+describe('survey accessibility contract', () => {
+  it('requires semantic labels and keyboard-safe controls', () => {
+    expect(SurveyViewComponent.accessibilityRequirements()).toEqual([
+      'semantic-labels',
+      'keyboard-navigation',
+      'visible-validation',
+      'color-contrast',
+    ]);
+  });
+});

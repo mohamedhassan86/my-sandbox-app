@@ -15,8 +15,8 @@ validated as an independently useful increment.
 **Purpose**: Prepare dependencies and the feature directory structure.
 
 - [X] T001 Add PrimeNG and PrimeFlex dependencies to `package.json` and refresh `pnpm-lock.yaml`
-- [ ] T002 [P] Create feature directories under `src/app/core`, `src/app/shared`, and `src/app/survey`
-- [ ] T003 [P] Add the sample survey fixture at `public/survey.json`
+- [X] T002 [P] Create feature directories under `src/app/core`, `src/app/shared`, and `src/app/survey`
+- [X] T003 [P] Add the sample survey fixture at `public/survey.json`
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
@@ -137,10 +137,10 @@ clear recovery path.
 **Purpose**: Verify quality, accessibility, performance, documentation, and deployment
 readiness across all stories.
 
-- [ ] T040 [P] Add keyboard and contrast checks for the survey flow in `src/app/survey/pages/survey-view/survey-view.spec.ts`
-- [ ] T041 [P] Add performance fixture coverage for 100 pages and 500 questions in `src/app/survey/services/survey-session.service.spec.ts`
-- [ ] T042 Update `README.md` with survey fixture, local run, test, and submission configuration guidance
-- [ ] T043 Run the validation commands from `specs/001-survey-management/quickstart.md` and record results in the pull request
+- [X] T040 [P] Add keyboard and contrast checks for the survey flow in `src/app/survey/pages/survey-view/survey-view.spec.ts`
+- [X] T041 [P] Add performance fixture coverage for 100 pages and 500 questions in `src/app/survey/services/survey-session.service.spec.ts`
+- [X] T042 Update `README.md` with survey fixture, local run, test, and submission configuration guidance
+- [X] T043 Run the validation commands from `specs/001-survey-management/quickstart.md` and record results in the pull request
 
 ## Dependencies & Execution Order
 
