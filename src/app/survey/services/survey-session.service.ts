@@ -52,6 +52,27 @@ export class SurveySessionService {
     return true;
   }
 
+  goToPage(index: number): boolean {
+    const count = this.pageCount();
+    if (index < 0 || index >= count || index === this.currentPageIndex()) return false;
+    // Going backward is always allowed (answers preserved)
+    if (index < this.currentPageIndex()) {
+      this.currentPageIndex.set(index);
+      return true;
+    }
+    // Going forward: validate all pages from current up to target-1
+    const survey = this.survey();
+    if (!survey) return false;
+    for (let i = this.currentPageIndex(); i < index; i++) {
+      const page = survey.pages[i];
+      if (page && validatePageResponse(page, this.answers(), this.attachments()).length > 0) {
+        return false;
+      }
+    }
+    this.currentPageIndex.set(index);
+    return true;
+  }
+
   validateAll() {
     const survey = this.survey();
     return survey ? validateSurveyResponse(survey, this.answers(), this.attachments()) : [];

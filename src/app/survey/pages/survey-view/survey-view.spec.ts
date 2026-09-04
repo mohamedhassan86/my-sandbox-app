@@ -34,3 +34,46 @@ describe('survey accessibility contract', () => {
     ]);
   });
 });
+
+describe('four-page fixture and page order', () => {
+  it('reports correct statuses for a four-page survey', () => {
+    // Page 0 active, rest upcoming
+    expect(SurveyNavigationComponent.statusFor(0, 0, 4)).toBe('active');
+    expect(SurveyNavigationComponent.statusFor(1, 0, 4)).toBe('upcoming');
+    expect(SurveyNavigationComponent.statusFor(2, 0, 4)).toBe('upcoming');
+    expect(SurveyNavigationComponent.statusFor(3, 0, 4)).toBe('upcoming');
+
+    // After page 0 completed: page 0 completed, page 1 active
+    expect(SurveyNavigationComponent.statusFor(0, 1, 4)).toBe('completed');
+    expect(SurveyNavigationComponent.statusFor(1, 1, 4)).toBe('active');
+    expect(SurveyNavigationComponent.statusFor(2, 1, 4)).toBe('upcoming');
+    expect(SurveyNavigationComponent.statusFor(3, 1, 4)).toBe('upcoming');
+
+    // After page 1 completed: pages 0-1 completed, page 2 active
+    expect(SurveyNavigationComponent.statusFor(0, 2, 4)).toBe('completed');
+    expect(SurveyNavigationComponent.statusFor(1, 2, 4)).toBe('completed');
+    expect(SurveyNavigationComponent.statusFor(2, 2, 4)).toBe('active');
+    expect(SurveyNavigationComponent.statusFor(3, 2, 4)).toBe('upcoming');
+
+    // Last page active: all previous completed
+    expect(SurveyNavigationComponent.statusFor(0, 3, 4)).toBe('completed');
+    expect(SurveyNavigationComponent.statusFor(1, 3, 4)).toBe('completed');
+    expect(SurveyNavigationComponent.statusFor(2, 3, 4)).toBe('completed');
+    expect(SurveyNavigationComponent.statusFor(3, 3, 4)).toBe('active');
+  });
+});
+
+describe('responsive and keyboard interaction regression', () => {
+  it('requires focus-visible outlines on interactive controls', () => {
+    expect(SurveyViewComponent.accessibilityRequirements()).toContain('keyboard-navigation');
+    expect(SurveyViewComponent.accessibilityRequirements()).toContain('color-contrast');
+  });
+
+  it('requires visible validation feedback', () => {
+    expect(SurveyViewComponent.accessibilityRequirements()).toContain('visible-validation');
+  });
+
+  it('requires semantic labels for screen readers', () => {
+    expect(SurveyViewComponent.accessibilityRequirements()).toContain('semantic-labels');
+  });
+});

@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, computed } from '@angular/core';
 
 export type PageStatus = 'active' | 'completed' | 'upcoming';
 
@@ -7,11 +7,21 @@ export type PageStatus = 'active' | 'completed' | 'upcoming';
   standalone: true,
   template: `
     <nav class="survey-navigation" aria-label="Survey pages">
+      <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="progress()" aria-valuemin="0" aria-valuemax="100">
+        <span class="progress-fill" [style.width.%]="progress()"></span>
+      </div>
+      <p class="progress-text">{{ progress() }}% complete</p>
       <ol>
         @for (page of pages(); let index = $index; track page.pageId) {
-          <li [class.active]="statusFor(index, currentIndex(), pages().length) === 'active'" [class.completed]="statusFor(index, currentIndex(), pages().length) === 'completed'">
-            <span>{{ index + 1 }}</span>
-            <span>{{ page.title }}</span>
+          <li [class.active]="statusFor(index, currentIndex(), pages().length) === 'active'"
+              [class.completed]="statusFor(index, currentIndex(), pages().length) === 'completed'">
+            <button type="button" class="page-step"
+                    [attr.aria-current]="index === currentIndex() ? 'step' : null"
+                    [disabled]="index > currentIndex()"
+                    (click)="goTo.emit(index)">
+              <span class="step-number">{{ index + 1 }}</span>
+              <span class="step-title">{{ page.title }}</span>
+            </button>
           </li>
         }
       </ol>
@@ -28,6 +38,13 @@ export class SurveyNavigationComponent {
   readonly currentIndex = input.required<number>();
   readonly previous = output<void>();
   readonly next = output<void>();
+  readonly goTo = output<number>();
+
+  readonly progress = computed(() => {
+    const count = this.pages().length;
+    if (count === 0) return 0;
+    return Math.round(((this.currentIndex() + 1) / count) * 100);
+  });
 
   statusFor(index: number, currentIndex: number, pageCount: number): PageStatus {
     return SurveyNavigationComponent.statusFor(index, currentIndex, pageCount);

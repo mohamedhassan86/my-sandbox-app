@@ -1,48 +1,119 @@
 .survey-navigation {
   display: grid;
-  gap: 1rem;
-  margin-top: 2rem;
-  border-top: 1px solid #d9c9cc;
-  padding-top: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #d9c9cc;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e8e0e2;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  display: block;
+  height: 100%;
+  background: #800000;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  margin: 0;
+  color: #624f53;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: right;
 }
 
 ol {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 li {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.page-step {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d9c9cc;
+  border-radius: 6px;
+  background: #faf8f8;
   color: #624f53;
-  font-size: 0.9rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
-li span:first-child {
-  display: grid;
-  width: 1.75rem;
-  height: 1.75rem;
-  place-items: center;
-  border: 1px solid #9f858b;
-  border-radius: 50%;
+.page-step:hover:not(:disabled) {
+  background: #f0e8ea;
+  border-color: #9f858b;
 }
 
-li.active,
-li.completed {
-  color: #800000;
-  font-weight: 700;
+.page-step:focus-visible {
+  outline: 3px solid #d69a9a;
+  outline-offset: 2px;
 }
 
-li.active span:first-child,
-li.completed span:first-child {
+.page-step:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+li.active .page-step {
   border-color: #800000;
   background: #800000;
   color: #fff;
+  font-weight: 700;
+}
+
+li.completed .page-step {
+  border-color: #800000;
+  color: #800000;
+  font-weight: 600;
+}
+
+li.completed .page-step .step-number {
+  background: #800000;
+  color: #fff;
+}
+
+.step-number {
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  border: 1px solid #9f858b;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+li.active .step-number,
+li.completed .step-number {
+  border-color: #800000;
+}
+
+.step-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .actions {
@@ -71,4 +142,24 @@ button:disabled {
 button:focus-visible {
   outline: 3px solid #d69a9a;
   outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  ol {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .page-step {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
 }

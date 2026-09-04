@@ -26,6 +26,17 @@ on [survey-json.md](contracts/survey-json.md).
 
 Expected result: the first page is usable and no configuration error is shown.
 
+### Four-page survey navigation
+
+1. Load the default `public/survey.json` fixture (four pages).
+2. Verify the progress bar shows 25% on page 1, 50% on page 2, etc.
+3. Click a completed page step to navigate directly back to it.
+4. Verify answers are preserved when returning to earlier pages.
+5. Verify forward navigation is blocked when the current page has incomplete required fields.
+
+Expected result: all four pages are accessible in order, direct page selection works for
+completed pages, and invalid forward navigation is blocked.
+
 ### Navigation and answer preservation
 
 1. Load a survey with at least two pages.
@@ -65,6 +76,12 @@ pnpm exec ng build
 
 Expected result: unit and integration tests pass, and the production build completes
 without errors.
+
+### Latest results (2026-09-04)
+
+- **Tests**: 41 passed, 0 failed (10 test files)
+- **Build**: Production bundle generated successfully (237.39 kB initial, 63.47 kB estimated transfer)
+- **Sample survey**: Four-page demo with progress bar, clickable page steps, and question numbering
 
 ## Related artifacts
 

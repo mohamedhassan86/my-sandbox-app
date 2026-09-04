@@ -55,4 +55,46 @@ describe('SurveySessionService', () => {
     expect(session.pageCount()).toBe(100);
     expect(session.validateAll()).toHaveLength(0);
   });
+
+  it('goToPage navigates backward without validation', () => {
+    const session = new SurveySessionService();
+    session.start(survey);
+    // Advance to page 1
+    session.setAnswer({ questionId: 'Q1', value: 'Ada' });
+    session.next();
+    expect(session.pageIndex()).toBe(1);
+    // Go back to page 0
+    expect(session.goToPage(0)).toBe(true);
+    expect(session.pageIndex()).toBe(0);
+  });
+
+  it('goToPage blocks forward navigation when current page is invalid', () => {
+    const session = new SurveySessionService();
+    session.start(survey);
+    // Q1 is required but not answered
+    expect(session.goToPage(1)).toBe(false);
+    expect(session.pageIndex()).toBe(0);
+  });
+
+  it('goToPage allows forward navigation when current page is valid', () => {
+    const session = new SurveySessionService();
+    session.start(survey);
+    session.setAnswer({ questionId: 'Q1', value: 'Ada' });
+    expect(session.goToPage(1)).toBe(true);
+    expect(session.pageIndex()).toBe(1);
+  });
+
+  it('goToPage rejects out-of-range indices', () => {
+    const session = new SurveySessionService();
+    session.start(survey);
+    expect(session.goToPage(-1)).toBe(false);
+    expect(session.goToPage(2)).toBe(false);
+    expect(session.pageIndex()).toBe(0);
+  });
+
+  it('goToPage returns false when navigating to the same page', () => {
+    const session = new SurveySessionService();
+    session.start(survey);
+    expect(session.goToPage(0)).toBe(false);
+  });
 });

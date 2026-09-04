@@ -142,6 +142,34 @@ readiness across all stories.
 - [X] T042 Update `README.md` with survey fixture, local run, test, and submission configuration guidance
 - [X] T043 Run the validation commands from `specs/001-survey-management/quickstart.md` and record results in the pull request
 
+## Phase 8: Survey UX Enhancement and Four-Page Demo
+
+**Purpose**: Make the survey experience functional, engaging, and easy to scan while
+keeping all controls accessible and aligned with the project UX guidelines.
+
+**Independent Test**: Open the sample survey, verify four ordered pages with navigation
+at the top, complete each page, revisit earlier pages without losing answers, and confirm
+that responsive and keyboard interactions remain usable.
+
+### Tests for UX Enhancement
+
+- [X] T044 [P] [US2] Add four-page fixture and page-order assertions in `src/app/survey/pages/survey-view/survey-view.spec.ts`
+- [X] T045 [P] [US2] Add top-navigation interaction and active/completed-state tests in `src/app/survey/components/survey-navigation/survey-navigation.spec.ts`
+- [X] T046 [P] [US1] Add question feedback and answer-preservation tests in `src/app/survey/pages/survey-page/survey-page.spec.ts`
+- [X] T047 [P] Add responsive and keyboard interaction regression tests in `src/app/survey/pages/survey-view/survey-view.spec.ts`
+
+### Implementation for UX Enhancement
+
+- [X] T048 [US2] Expand the sample configuration to exactly four ordered pages in `public/survey.json`
+- [X] T049 [US2] Move page navigation above the page content and keep it visible in `src/app/survey/pages/survey-view/survey-view.ts`
+- [X] T050 [US2] Add direct page selection, progress percentage, and clear active/completed states in `src/app/survey/components/survey-navigation/survey-navigation.ts`
+- [X] T051 [US2] Add top-navigation layout, responsive wrapping, and mobile-friendly controls in `src/app/survey/components/survey-navigation/survey-navigation.css`
+- [X] T052 [US1] Add completion cues, question numbering, and friendly validation feedback in `src/app/survey/pages/survey-page/survey-page.ts`
+- [X] T053 [US1] Add playful but restrained interaction states, focus styling, and responsive spacing in `src/app/survey/survey.css`
+- [X] T054 [US2] Update the session service to support direct page selection without bypassing validation in `src/app/survey/services/survey-session.service.ts`
+- [X] T055 Update the sample survey documentation and four-page UX behavior in `README.md` and `specs/001-survey-management/quickstart.md`
+- [X] T056 Run the complete test, build, and responsive smoke-check commands and record results in `specs/001-survey-management/quickstart.md`
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -152,6 +180,7 @@ readiness across all stories.
   testable after foundation; US3 builds on the response state from US1 and US2; US4
   uses the configuration boundary from foundation and can be tested independently.
 - **Polish (Phase 7)**: Depends on the desired user stories being complete.
+- **UX Enhancement (Phase 8)**: Depends on US1, US2, and the existing polish checks.
 
 ### User Story Dependencies
 
@@ -159,6 +188,7 @@ readiness across all stories.
 - **US2**: Depends on T004-T012 and the survey view introduced by US1.
 - **US3**: Depends on T004-T012 and the response/page state from US1 and US2.
 - **US4**: Depends on T006 and the survey view error boundary; can proceed after US1 view scaffolding.
+- **UX Enhancement**: Depends on T013-T027 and extends the existing US1/US2 experience without changing the response contract.
 
 ### Parallel Opportunities
 
@@ -169,6 +199,7 @@ readiness across all stories.
 - In US3, T028-T031 can run in parallel; T033 and T035 can proceed before T034 integration.
 - In US4, T036-T037 can run in parallel.
 - T040-T041 can run in parallel after all story behavior is available.
+- T044-T047 can run in parallel before implementation; T048, T051, and T053 can run in parallel when their files do not overlap.
 
 ## Implementation Strategy
 
@@ -185,6 +216,7 @@ readiness across all stories.
 2. Add US3 attachments and submission failure recovery.
 3. Add US4 invalid-configuration recovery.
 4. Complete Phase 7 quality and quickstart validation.
+5. Add Phase 8 four-page navigation and UX enhancements, then validate desktop, mobile, and keyboard flows.
 
 ## Traceability Summary
 
@@ -193,3 +225,4 @@ readiness across all stories.
 - US3 covers FR-008 through FR-017.
 - US4 covers FR-002 and configuration-related edge cases.
 - Phase 7 covers FR-019, FR-020, SC-001 through SC-007, and constitution quality gates.
+- Phase 8 strengthens FR-006, FR-018, FR-019, FR-020, and the four-page sample/demo requirement.

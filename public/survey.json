@@ -1,37 +1,15 @@
 {
   "surveyId": "SV001",
   "title": "Customer Feedback Survey",
-  "description": "Please complete the survey.",
+  "description": "We value your opinion. Please share your experience with us.",
   "version": "1.0",
   "pages": [
     {
       "pageId": "P1",
-      "title": "General Information",
+      "title": "About You",
       "questions": [
         {
           "questionId": "Q1",
-          "type": "radio",
-          "label": "Are you satisfied?",
-          "required": true,
-          "options": [
-            { "label": "Yes", "value": "yes" },
-            { "label": "No", "value": "no" }
-          ],
-          "attachmentsRequired": 0
-        },
-        {
-          "questionId": "Q2",
-          "type": "checkbox",
-          "label": "Which topics matter to you?",
-          "required": false,
-          "options": [
-            { "label": "Support", "value": "support" },
-            { "label": "Pricing", "value": "pricing" }
-          ],
-          "attachmentsRequired": 0
-        },
-        {
-          "questionId": "Q3",
           "type": "textbox",
           "label": "Your name",
           "required": true,
@@ -40,25 +18,120 @@
           "attachmentsRequired": 0
         },
         {
-          "questionId": "Q4",
-          "type": "textarea",
-          "label": "Additional comments",
-          "required": false,
-          "maxLength": 500,
+          "questionId": "Q2",
+          "type": "textbox",
+          "label": "Email address",
+          "required": true,
+          "minLength": 5,
+          "maxLength": 120,
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q3",
+          "type": "radio",
+          "label": "How did you hear about us?",
+          "required": true,
+          "options": [
+            { "label": "Social media", "value": "social" },
+            { "label": "Friend or colleague", "value": "referral" },
+            { "label": "Search engine", "value": "search" },
+            { "label": "Advertisement", "value": "ad" },
+            { "label": "Other", "value": "other" }
+          ],
           "attachmentsRequired": 0
         }
       ]
     },
     {
       "pageId": "P2",
+      "title": "Your Experience",
+      "questions": [
+        {
+          "questionId": "Q4",
+          "type": "radio",
+          "label": "Are you satisfied with our service?",
+          "required": true,
+          "options": [
+            { "label": "Very satisfied", "value": "very-satisfied" },
+            { "label": "Satisfied", "value": "satisfied" },
+            { "label": "Neutral", "value": "neutral" },
+            { "label": "Unsatisfied", "value": "unsatisfied" },
+            { "label": "Very unsatisfied", "value": "very-unsatisfied" }
+          ],
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q5",
+          "type": "checkbox",
+          "label": "Which topics matter to you?",
+          "required": false,
+          "options": [
+            { "label": "Product quality", "value": "quality" },
+            { "label": "Customer support", "value": "support" },
+            { "label": "Pricing", "value": "pricing" },
+            { "label": "Shipping", "value": "shipping" },
+            { "label": "Returns", "value": "returns" }
+          ],
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q6",
+          "type": "textarea",
+          "label": "Tell us more about your experience",
+          "required": false,
+          "maxLength": 1000,
+          "attachmentsRequired": 0
+        }
+      ]
+    },
+    {
+      "pageId": "P3",
+      "title": "Supporting Files",
+      "questions": [
+        {
+          "questionId": "Q7",
+          "type": "radio",
+          "label": "Would you like to share supporting files?",
+          "required": true,
+          "options": [
+            { "label": "Yes, I have files to share", "value": "yes" },
+            { "label": "No, not at this time", "value": "no" }
+          ],
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q8",
+          "type": "textarea",
+          "label": "Upload relevant screenshots or documents below",
+          "required": false,
+          "maxLength": 200,
+          "attachmentsRequired": 3,
+          "acceptedFileTypes": ["image/png", "image/jpeg", "application/pdf"],
+          "maxFileSizeBytes": 5242880
+        }
+      ]
+    },
+    {
+      "pageId": "P4",
       "title": "Final Thoughts",
       "questions": [
         {
-          "questionId": "Q5",
+          "questionId": "Q9",
           "type": "textarea",
           "label": "What could we improve?",
           "required": false,
           "maxLength": 500,
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q10",
+          "type": "radio",
+          "label": "May we follow up with you?",
+          "required": true,
+          "options": [
+            { "label": "Yes, please contact me", "value": "yes" },
+            { "label": "No, thanks", "value": "no" }
+          ],
           "attachmentsRequired": 0
         }
       ]

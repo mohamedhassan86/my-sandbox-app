@@ -28,6 +28,19 @@ Open `http://localhost:4200/` after the server starts. The default fixture is
 `public/survey.json`; changing that JSON changes the rendered survey without changing
 the survey components.
 
+## Sample survey
+
+The default fixture (`public/survey.json`) contains a four-page demo survey:
+
+1. **About You** — name, email, and how you heard about us
+2. **Your Experience** — satisfaction rating, topics of interest, and open feedback
+3. **Supporting Files** — file upload with PNG/JPEG/PDF support (up to 3 files, 5 MB each)
+4. **Final Thoughts** — improvement suggestions and follow-up consent
+
+Navigation appears above the page content with a progress bar, clickable page steps,
+and Previous/Next buttons. Completed pages show a green left border and a checkmark
+cue on answered questions.
+
 ## Validation
 
 Run the focused feature tests:

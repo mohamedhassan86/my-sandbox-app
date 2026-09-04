@@ -21,18 +21,19 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
           @if (currentSurvey.description) { <p class="description">{{ currentSurvey.description }}</p> }
         </header>
         @if (session.currentPage(); as page) {
+          <app-survey-navigation
+            [pages]="currentSurvey.pages"
+            [currentIndex]="session.pageIndex()"
+            (previous)="previousPage()"
+            (next)="nextPage()"
+            (goTo)="goToPage($event)"
+          />
           <app-survey-page
             [page]="page"
             [answers]="session.currentAnswers()"
             [attachments]="session.currentAttachments()"
             (answerChange)="setAnswer($event)"
             (filesChange)="setAttachments($event)"
-          />
-          <app-survey-navigation
-            [pages]="currentSurvey.pages"
-            [currentIndex]="session.pageIndex()"
-            (previous)="previousPage()"
-            (next)="nextPage()"
           />
           <p class="submission-status" role="status">{{ submissionMessage() }}</p>
           <button class="submit-button" type="button" [disabled]="submissionState() === 'submitting' || !session.isLastPage()" (click)="submit()">
@@ -86,6 +87,10 @@ export class SurveyViewComponent implements OnInit {
 
   nextPage(): void {
     this.session.next();
+  }
+
+  goToPage(index: number): void {
+    this.session.goToPage(index);
   }
 
   async submit(): Promise<void> {
