@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import type { Answer, ResponseAttachment } from '../../../core/models/response.models';
 import { SurveyCatalogService } from '../../../core/services/survey-catalog.service';
@@ -18,18 +18,42 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
         <p role="status">Loading survey...</p>
       } @else if (survey(); as currentSurvey) {
         <div class="survey-layout row">
-          <header class="survey-header col-12 col-md-4">
-            <p class="eyebrow">Survey {{ currentSurvey.version }}</p>
-            <h2>{{ currentSurvey.title }}</h2>
-            @if (currentSurvey.description) { <p class="description">{{ currentSurvey.description }}</p> }
-            <app-survey-navigation
-              [pages]="currentSurvey.pages"
-              [currentIndex]="session.pageIndex()"
-              [submitted]="session.isSubmitted()"
-              (previous)="previousPage()"
-              (next)="nextPage()"
-              (goTo)="goToPage($event)"
-            />
+          @if (!isDesktop() && mobileNavOpen()) {
+            <div class="survey-menu-backdrop" (click)="toggleMobileNav()"></div>
+          }
+          <header class="survey-header col-12 col-md-4" [class.compact]="!sidebarExpanded()">
+            <button
+              type="button"
+              class="menu-toggle"
+              [attr.aria-expanded]="sidebarExpanded()"
+              aria-controls="survey-header-content"
+              [attr.aria-label]="mobileNavOpen() ? 'Collapse survey menu' : 'Expand survey menu'"
+              (click)="toggleMobileNav()"
+            >
+              <span class="burger-icon" [class.open]="mobileNavOpen()" aria-hidden="true"><span></span><span></span><span></span></span>
+              @if (mobileNavOpen()) {
+                <span class="mobile-menu-summary">
+                  <strong class="mobile-menu-title">{{ currentSurvey.title }}</strong>
+                  <span class="mobile-menu-progress">{{ mobileMenuSummary(session.pageIndex(), currentSurvey.pages.length, session.completionPercentage()) }}</span>
+                </span>
+              }
+            </button>
+            <div class="survey-header-content" id="survey-header-content">
+              @if (sidebarExpanded()) {
+                <p class="eyebrow">Survey {{ currentSurvey.version }}</p>
+                <h2>{{ currentSurvey.title }}</h2>
+                @if (currentSurvey.description) { <p class="description">{{ currentSurvey.description }}</p> }
+              }
+              <app-survey-navigation
+                [pages]="currentSurvey.pages"
+                [currentIndex]="session.pageIndex()"
+                [submitted]="session.isSubmitted()"
+                [compact]="!sidebarExpanded()"
+                (previous)="previousPage()"
+                (next)="nextPage()"
+                (goTo)="goToPage($event)"
+              />
+            </div>
           </header>
           @if (session.currentPage(); as page) {
             <section class="survey-content col-12 col-md-8">
@@ -63,7 +87,7 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
   `,
   styleUrl: '../../survey.css',
 })
-export class SurveyViewComponent implements OnInit {
+export class SurveyViewComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly catalog = inject(SurveyCatalogService);
   private readonly submission = inject(ResponseSubmissionService);
@@ -73,9 +97,19 @@ export class SurveyViewComponent implements OnInit {
   readonly submissionState = signal<'idle' | 'submitting' | 'submitted' | 'failed'>('idle');
   readonly submissionMessage = signal('');
   readonly error = signal('This survey is temporarily unavailable.');
+  readonly mobileNavOpen = signal(SurveyViewComponent.mobileNavDefaultOpen());
+  private readonly desktopQuery = typeof window !== 'undefined' ? window.matchMedia('(min-width: 768px)') : null;
+  readonly isDesktop = signal(this.desktopQuery?.matches ?? true);
+  readonly sidebarExpanded = computed(() => this.isDesktop() || this.mobileNavOpen());
+  private readonly handleDesktopChange = (event: MediaQueryListEvent) => this.isDesktop.set(event.matches);
 
   ngOnInit(): void {
     void this.loadSurvey();
+    this.desktopQuery?.addEventListener('change', this.handleDesktopChange);
+  }
+
+  ngOnDestroy(): void {
+    this.desktopQuery?.removeEventListener('change', this.handleDesktopChange);
   }
 
   async loadSurvey(): Promise<void> {
@@ -108,6 +142,10 @@ export class SurveyViewComponent implements OnInit {
 
   goToPage(index: number): void {
     this.session.goToPage(index);
+  }
+
+  toggleMobileNav(): void {
+    this.mobileNavOpen.update((open) => SurveyViewComponent.mobileNavToggle(open));
   }
 
   async submit(): Promise<void> {
@@ -152,7 +190,23 @@ export class SurveyViewComponent implements OnInit {
     return ['semantic-labels', 'keyboard-navigation', 'visible-validation', 'color-contrast'];
   }
 
+  static mobileNavDefaultOpen(): boolean {
+    return false;
+  }
+
+  static mobileNavToggle(open: boolean): boolean {
+    return !open;
+  }
+
+  static mobileMenuSummary(currentPageIndex: number, pageCount: number, completionPercentage: number): string {
+    return `Page ${currentPageIndex + 1} of ${pageCount} · ${completionPercentage}% complete`;
+  }
+
   submissionLabel(state: 'idle' | 'submitting' | 'submitted' | 'failed'): string {
     return SurveyViewComponent.submissionLabel(state);
+  }
+
+  mobileMenuSummary(currentPageIndex: number, pageCount: number, completionPercentage: number): string {
+    return SurveyViewComponent.mobileMenuSummary(currentPageIndex, pageCount, completionPercentage);
   }
 }

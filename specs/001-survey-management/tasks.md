@@ -251,6 +251,41 @@ error is shown without attempting to load an arbitrary file path.
 - [X] T092 Update `README.md` and `specs/001-survey-management/quickstart.md` to use `/` and `/surveys/extended-feedback` URLs instead of `?survey=...`
 - [X] T093 Remove filename query-parameter selection and use the manifest-backed route catalog
 
+## Phase 12: Mobile Docked Menu Navigation
+
+**Purpose**: Render the left-hand survey header/navigation panel as a fixed, edge-docked
+rail on mobile viewports so respondents always have compact step access beside the
+survey content, with a burger toggle to expand it into a full overlay drawer showing the
+same data as desktop without permanently consuming screen width.
+
+**Independent Test**: Open the survey at a mobile viewport width (`<768px`) and verify
+the survey header/navigation renders as a compact icon-only rail beside the survey
+content, with each step button still clickable. Expand the burger toggle and verify an
+overlay drawer slides open with an animated width transition, a dimmed backdrop behind
+it, and the full eyebrow, title, description, progress bar, and page list with titles.
+Tap the backdrop or the toggle again and verify the drawer collapses back to the rail.
+Verify the rail/drawer and survey body have no rounded corners or border on mobile, and
+that the desktop layout (`>=768px`) is unaffected, hides the toggle, and always shows the
+panel expanded beside the survey content.
+
+### Tests for Mobile Docked Menu Navigation
+
+- [X] T094 [P] Add collapsed-by-default and toggle-expand/collapse behavior tests for the mobile menu in `src/app/survey/pages/survey-view/survey-view.spec.ts`
+- [X] T095 [P] Add condensed summary formatting tests (page position and completion percentage) for the mobile menu toggle in `src/app/survey/pages/survey-view/survey-view.spec.ts`
+
+### Implementation for Mobile Docked Menu Navigation
+
+- [X] T096 Add a `mobileNavOpen` collapsed-by-default state, a `matchMedia`-driven `isDesktop` signal, and a `sidebarExpanded` computed value to `src/app/survey/pages/survey-view/survey-view.ts`
+- [X] T097 Add the burger toggle button with a condensed summary (title, page position, completion percentage), a dismissible backdrop, and a `compact` input passed to `app-survey-navigation` bound to `sidebarExpanded` in `src/app/survey/pages/survey-view/survey-view.ts`
+- [X] T098 Add a `compact` input to `SurveyNavigationComponent` that renders icon-only step buttons (with `title`/`aria-label` fallback) while keeping them clickable in `src/app/survey/components/survey-navigation/survey-navigation.ts` and `src/app/survey/components/survey-navigation/survey-navigation.css`
+- [X] T099 Add fixed edge-docked rail positioning, animated width transition between compact and expanded, backdrop styling, squared corners, and borderless mobile survey body scoped to `max-width: 767px`, and hide the toggle at `min-width: 768px`, in `src/app/survey/survey.css`
+- [ ] T100 Run the full test suite and a mobile-width visual smoke check and record results in `specs/001-survey-management/quickstart.md`
+
+**Checkpoint**: The survey header/navigation renders as a compact docked rail beside the
+survey content on mobile, expands into an animated overlay drawer with the same data as
+desktop, collapses back on backdrop/toggle interaction, and does not regress the
+existing desktop sidebar layout or navigation behavior.
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -273,6 +308,7 @@ error is shown without attempting to load an arbitrary file path.
 - **Reference-Driven UX**: Depends on T057-T059 before implementation; T060-T067 and T070-T071 can proceed in parallel where files do not overlap; T068 documents the result; T069 is the visual validation gate.
 - **Final Completion Summary**: Depends on the submission state from US3 and the completed reference-driven UX work; T072-T074 can run in parallel, followed by T075-T079 and T081-T082, then T080.
 - **Named Survey Routes**: Depends on the existing survey view and fixture loader; T088-T089 can run in parallel, T090-T091 follow the catalog contract, and T092-T093 complete migration and documentation.
+- **Mobile Docked Menu Navigation**: Depends on the existing survey header/navigation markup from US2 and the reference-driven UX styling from Phase 9; T094-T095 define the collapse/expand and summary-formatting contract before T096-T099 implement it, and T100 is the validation gate.
 
 ### Parallel Opportunities
 
@@ -287,6 +323,7 @@ error is shown without attempting to load an arbitrary file path.
 - T057-T059 can run in parallel; T060-T067 and T070-T071 can run in parallel where their files do not overlap; T068 can proceed after the UX contract is settled, with T069 last.
 - T072-T074 can run in parallel; T075-T079 and T081-T082 can proceed in dependency order after the tests define the completion contract; T080 remains last.
 - T088-T089 can run in parallel; T090-T091 depend on the route/catalog contract; T092-T093 finish the migration.
+- T094-T095 can run in parallel; T096-T097 depend on the same file and proceed in sequence, T098 can proceed in parallel with T096-T097 since it only touches the navigation component, T099 depends on T098 for the compact styling contract, and T100 remains last.
 
 ## Implementation Strategy
 
@@ -307,6 +344,7 @@ error is shown without attempting to load an arbitrary file path.
 6. Implement the Phase 9 reference-driven UX patterns and Bootstrap-compatible form layout, then complete visual smoke checks against `public/theme-preview.png`.
 7. Implement the Phase 10 final completion summary, final-page Submit action, and validate the successful and failed submission states.
 8. Replace filename query selection with named allowlisted survey routes and verify default, extended, and unknown-route behavior.
+9. Render the survey header/navigation as a mobile docked rail with a burger toggle that expands into an animated overlay drawer, preserving the desktop layout, and validate collapse/expand behavior and dismiss interactions at mobile widths.
 
 ## Traceability Summary
 
@@ -322,3 +360,4 @@ error is shown without attempting to load an arbitrary file path.
 - T083-T085 add an independent six-step survey fixture without modifying `public/survey.json`.
 - T086-T087 preserve the completed steps header as non-interactive context after submission.
 - Phase 11 removes filename exposure from survey selection and prevents arbitrary fixture loading.
+- Phase 12 strengthens FR-019 and FR-020 by keeping the desktop-equivalent navigation data available on mobile through a docked, keyboard-accessible rail that expands into an overlay drawer.

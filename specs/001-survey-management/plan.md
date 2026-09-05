@@ -27,6 +27,16 @@ Survey variants must be selected through named, allowlisted routes rather than e
 fixture filenames in query parameters. The default survey is available at `/`, while
 the independent extended fixture is exposed through `/surveys/extended-feedback`.
 
+On mobile viewports (`<768px`), the left-hand survey header/navigation panel renders as
+a fixed, edge-docked rail (icon-only step buttons, no titles) that sits beside the
+survey content by default. A burger toggle expands the rail into a full overlay drawer
+that animates its width open, dims the survey content behind a backdrop, and shows the
+same data as the desktop panel (eyebrow, title, description, progress bar, and page
+list with titles); tapping the backdrop or the toggle again collapses it back to the
+rail. The mobile rail/drawer and survey body have no rounded corners or border. On
+desktop (`>=768px`) the burger toggle is hidden and the panel always renders in its full
+expanded form beside the survey content, unaffected by the mobile toggle state.
+
 ### UX Reference: `public/theme-preview.png`
 
 The reference establishes a focused survey panel on a soft pink page backdrop. The
@@ -81,7 +91,8 @@ keys never become arbitrary file paths.
 
 **Implementation Status**: Reference-driven question types, shared UX tokens, responsive
 panel styling, Bootstrap-compatible form markup, and documentation are implemented.
-Remaining work includes browser-level responsive, keyboard, and visual smoke validation.
+The mobile docked rail/overlay drawer navigation is implemented. Remaining work includes
+browser-level responsive, keyboard, and visual smoke validation.
 
 ## Constitution Check
 

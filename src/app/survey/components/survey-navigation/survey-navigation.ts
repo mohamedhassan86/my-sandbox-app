@@ -6,21 +6,23 @@ export type PageStatus = 'active' | 'completed' | 'upcoming';
   selector: 'app-survey-navigation',
   standalone: true,
   template: `
-    <nav class="survey-navigation" aria-label="Survey pages">
+    <nav class="survey-navigation" [class.compact]="compact()" aria-label="Survey pages">
       <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="progress()" aria-valuemin="0" aria-valuemax="100">
         <span class="progress-fill" [style.width.%]="progress()"></span>
       </div>
-      <p class="progress-text">{{ progress() }}% complete</p>
+      @if (!compact()) { <p class="progress-text">{{ progress() }}% complete</p> }
       <ol>
         @for (page of pages(); let index = $index; track page.pageId) {
           <li [class.active]="statusFor(index, currentIndex(), pages().length) === 'active'"
               [class.completed]="statusFor(index, currentIndex(), pages().length) === 'completed'">
             <button type="button" class="page-step"
                     [attr.aria-current]="index === currentIndex() ? 'step' : null"
+                    [attr.aria-label]="compact() ? page.title : null"
+                    [attr.title]="compact() ? page.title : null"
                   [disabled]="submitted() || index > currentIndex()"
                   (click)="selectPage(index)">
               <span class="step-number">{{ index + 1 }}</span>
-              <span class="step-title">{{ page.title }}</span>
+              @if (!compact()) { <span class="step-title">{{ page.title }}</span> }
             </button>
           </li>
         }
@@ -33,6 +35,7 @@ export class SurveyNavigationComponent {
   readonly pages = input.required<ReadonlyArray<{ pageId: string; title: string }>>();
   readonly currentIndex = input.required<number>();
   readonly submitted = input(false);
+  readonly compact = input(false);
   readonly previous = output<void>();
   readonly next = output<void>();
   readonly goTo = output<number>();

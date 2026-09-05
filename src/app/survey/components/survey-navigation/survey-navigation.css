@@ -115,6 +115,16 @@ li.completed .step-number {
   white-space: nowrap;
 }
 
+.survey-navigation.compact .page-step {
+  justify-content: center;
+  width: 2.5rem;
+  padding: 0.4rem;
+}
+
+.survey-navigation.compact ol {
+  gap: 0.4rem;
+}
+
 @media (max-width: 600px) {
   ol {
     gap: 0.35rem;

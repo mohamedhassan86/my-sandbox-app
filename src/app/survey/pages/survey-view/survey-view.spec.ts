@@ -79,6 +79,22 @@ describe('responsive and keyboard interaction regression', () => {
   });
 });
 
+describe('mobile burger menu navigation', () => {
+  it('is collapsed by default', () => {
+    expect(SurveyViewComponent.mobileNavDefaultOpen()).toBe(false);
+  });
+
+  it('toggles open and closed', () => {
+    expect(SurveyViewComponent.mobileNavToggle(false)).toBe(true);
+    expect(SurveyViewComponent.mobileNavToggle(true)).toBe(false);
+  });
+
+  it('summarizes the current page position and completion percentage', () => {
+    expect(SurveyViewComponent.mobileMenuSummary(0, 4, 0)).toBe('Page 1 of 4 · 0% complete');
+    expect(SurveyViewComponent.mobileMenuSummary(2, 4, 50)).toBe('Page 3 of 4 · 50% complete');
+  });
+});
+
 describe('completion summary', () => {
   it('uses a high-level completion message and percentage', () => {
     expect(SurveyViewComponent.completionMessage()).toContain('successfully');

@@ -32,6 +32,123 @@
   box-shadow: 0 1.25rem 3rem rgba(90, 38, 48, 0.08);
 }
 
+.menu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 0.75rem;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.burger-icon {
+  display: grid;
+  flex-shrink: 0;
+  gap: 4px;
+  width: 1.5rem;
+}
+
+.burger-icon span {
+  display: block;
+  height: 2px;
+  background: var(--maroon);
+  border-radius: 1px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.burger-icon.open span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.burger-icon.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-icon.open span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.mobile-menu-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.mobile-menu-title {
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-menu-progress {
+  color: var(--muted-ink);
+  font-size: 0.8rem;
+}
+
+.survey-header.compact {
+  width: fit-content;
+}
+
+.survey-header.compact .survey-header-content {
+  width: auto;
+}
+
+.survey-menu-backdrop {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .survey-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 50;
+    overflow-y: auto;
+    border-radius: 0;
+    margin: 0;
+    transition: width 0.28s ease, box-shadow 0.28s ease;
+  }
+
+  .survey-header.compact {
+    width: 4.5rem;
+  }
+
+  .survey-header:not(.compact) {
+    width: min(85vw, 20rem);
+    box-shadow: 0.5rem 0 2rem rgba(36, 36, 42, 0.25);
+  }
+
+  .survey-content {
+    margin-left: 4.5rem;
+    width: auto;
+    border: 0;
+  }
+
+  .survey-menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(36, 36, 42, 0.45);
+    border: 0;
+    padding: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
 .eyebrow {
   margin: 0 0 0.5rem;
   color: var(--maroon);
