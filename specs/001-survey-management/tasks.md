@@ -227,6 +227,11 @@ failed submissions remain on the editable survey and preserve entered answers.
 - [ ] T080 Run the full test suite, production build, and completion-summary smoke checks; automated test/build results are recorded, browser smoke checks remain pending in `specs/001-survey-management/quickstart.md`
 - [X] T081 Replace the separate submit action with a context-aware Next/Submit action on the final page in `src/app/survey/pages/survey-view/survey-view.ts`
 - [X] T082 Give the completion summary a minimum height comparable to the three-input survey page in `src/app/survey/components/completion-summary/completion-summary.css`
+- [X] T083 Add the independent eight-step, three-questions-per-step fixture covering all question types in `public/survey-8-step.json`
+- [X] T084 Add query-parameter survey fixture selection while preserving the default survey in `src/app/survey/pages/survey-view/survey-view.ts`
+- [X] T085 Add eight-step fixture selection tests and update `README.md` and `specs/001-survey-management/quickstart.md` with the independent survey URL and coverage rules
+- [X] T086 Keep the survey steps header visible after successful submission while disabling all step navigation buttons in `src/app/survey/components/survey-navigation/survey-navigation.ts`
+- [X] T087 Add submitted-state navigation tests confirming completion steps remain displayed but cannot be clicked in `src/app/survey/components/survey-navigation/survey-navigation.spec.ts` and `src/app/survey/pages/survey-view/survey-view.spec.ts`
 
 ## Dependencies & Execution Order
 
@@ -293,3 +298,5 @@ failed submissions remain on the editable survey and preserve entered answers.
 - Phase 9 adds the reference-driven visual and interaction acceptance criteria while preserving FR-001 through FR-020 and the existing response contract.
 - T070-T071 formalize the shared Bootstrap-compatible form/layout language without adding Bootstrap as a runtime dependency.
 - Phase 10 covers FR-016, FR-017, and FR-021 by making successful completion explicit while preserving respondent data on failure.
+- T083-T085 add an independent eight-step survey fixture without modifying `public/survey.json`.
+- T086-T087 preserve the completed steps header as non-interactive context after submission.

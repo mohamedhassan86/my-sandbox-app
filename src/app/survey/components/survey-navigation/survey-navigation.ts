@@ -17,8 +17,8 @@ export type PageStatus = 'active' | 'completed' | 'upcoming';
               [class.completed]="statusFor(index, currentIndex(), pages().length) === 'completed'">
             <button type="button" class="page-step"
                     [attr.aria-current]="index === currentIndex() ? 'step' : null"
-                    [disabled]="index > currentIndex()"
-                    (click)="goTo.emit(index)">
+                  [disabled]="submitted() || index > currentIndex()"
+                  (click)="selectPage(index)">
               <span class="step-number">{{ index + 1 }}</span>
               <span class="step-title">{{ page.title }}</span>
             </button>
@@ -45,6 +45,14 @@ export class SurveyNavigationComponent {
     if (submitted) return 100;
     if (pageCount <= 0) return 0;
     return Math.round((currentIndex / pageCount) * 100);
+  }
+
+  selectPage(index: number): void {
+    if (!this.submitted()) this.goTo.emit(index);
+  }
+
+  static canNavigate(submitted: boolean): boolean {
+    return !submitted;
   }
 
   statusFor(index: number, currentIndex: number, pageCount: number): PageStatus {

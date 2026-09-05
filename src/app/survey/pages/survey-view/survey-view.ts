@@ -18,7 +18,7 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
       } @else if (survey(); as currentSurvey) {
         <header class="survey-header">
           <p class="eyebrow">Survey {{ currentSurvey.version }}</p>
-          <h3>{{ currentSurvey.title }}</h3>
+          <h2>{{ currentSurvey.title }}</h2>
           @if (currentSurvey.description) { <p class="description">{{ currentSurvey.description }}</p> }
         </header>
         @if (session.currentPage(); as page) {
@@ -75,7 +75,7 @@ export class SurveyViewComponent implements OnInit {
   async loadSurvey(): Promise<void> {
     this.loading.set(true);
     try {
-      this.session.start(await this.config.load('survey.json'));
+      this.session.start(await this.config.load(SurveyViewComponent.surveySource(globalThis.location?.search ?? '')));
     } catch {
       this.error.set('This survey is temporarily unavailable.');
     } finally {
@@ -129,6 +129,10 @@ export class SurveyViewComponent implements OnInit {
 
   static configurationErrorMessage(): string {
     return 'This survey is temporarily unavailable.';
+  }
+
+  static surveySource(search: string): string {
+    return new URLSearchParams(search).get('survey') === 'survey-8-step.json' ? 'survey-8-step.json' : 'survey.json';
   }
 
   static completionMessage(): string {

@@ -85,3 +85,11 @@ describe('completion summary', () => {
     expect(SurveyViewComponent.completionPercentage(1, 4, false)).toBe(25);
   });
 });
+
+describe('survey fixture selection', () => {
+  it('keeps the original fixture as default and supports the eight-step fixture', () => {
+    expect(SurveyViewComponent.surveySource('')).toBe('survey.json');
+    expect(SurveyViewComponent.surveySource('?survey=survey-8-step.json')).toBe('survey-8-step.json');
+    expect(SurveyViewComponent.surveySource('?survey=other.json')).toBe('survey.json');
+  });
+});

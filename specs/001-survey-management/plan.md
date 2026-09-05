@@ -20,6 +20,8 @@ respondent's completion percentage and a clear success message.
 The final page uses the same navigation action for submission: the Next button changes
 to Submit response on the last page, and no separate submit button is shown. The
 completion summary keeps a minimum height comparable to the tallest multi-input page.
+After successful submission, the survey steps header remains displayed for context, but
+all step buttons are disabled and cannot navigate or change the completed response.
 
 ### UX Reference: `public/theme-preview.png`
 

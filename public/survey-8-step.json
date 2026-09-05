@@ -1,0 +1,48 @@
+{
+  "surveyId": "SV008",
+  "title": "Extended Customer Experience Survey",
+  "description": "A structured eight-step survey covering the complete question set.",
+  "version": "1.0",
+  "pages": [
+    { "pageId": "S1", "title": "About You", "questions": [
+      { "questionId": "S1Q1", "type": "textbox", "label": "What is your name?", "required": true, "minLength": 2, "attachmentsRequired": 0 },
+      { "questionId": "S1Q2", "type": "textarea", "label": "Tell us briefly about yourself.", "required": false, "maxLength": 500, "attachmentsRequired": 0 },
+      { "questionId": "S1Q3", "type": "radio", "label": "Which customer group best describes you?", "required": true, "options": [{ "label": "New customer", "value": "new" }, { "label": "Returning customer", "value": "returning" }, { "label": "Business customer", "value": "business" }], "attachmentsRequired": 0 }
+    ] },
+    { "pageId": "S2", "title": "First Impressions", "questions": [
+      { "questionId": "S2Q1", "type": "checkbox", "label": "Which areas did you notice first?", "required": true, "minSelections": 1, "options": [{ "label": "Design", "value": "design" }, { "label": "Speed", "value": "speed" }, { "label": "Content", "value": "content" }], "attachmentsRequired": 0 },
+      { "questionId": "S2Q2", "type": "rating", "label": "How clear was the first experience?", "required": true, "minValue": 1, "maxValue": 10, "leftLabel": "Not clear", "rightLabel": "Very clear", "attachmentsRequired": 0 },
+      { "questionId": "S2Q3", "type": "satisfaction", "label": "How did the first experience feel?", "required": true, "options": [{ "label": "Very positive", "value": "very-positive", "icon": "😊" }, { "label": "Positive", "value": "positive", "icon": "🙂" }, { "label": "Neutral", "value": "neutral", "icon": "😐" }, { "label": "Negative", "value": "negative", "icon": "🙁" }, { "label": "Very negative", "value": "very-negative", "icon": "😞" }], "attachmentsRequired": 0 }
+    ] },
+    { "pageId": "S3", "title": "Product Use", "questions": [
+      { "questionId": "S3Q1", "type": "textbox", "label": "Which product did you use?", "required": true, "minLength": 2, "attachmentsRequired": 0 },
+      { "questionId": "S3Q2", "type": "radio", "label": "How often do you use it?", "required": true, "options": [{ "label": "Daily", "value": "daily" }, { "label": "Weekly", "value": "weekly" }, { "label": "Occasionally", "value": "occasionally" }], "attachmentsRequired": 0 },
+      { "questionId": "S3Q3", "type": "checkbox", "label": "Which features do you use?", "required": false, "options": [{ "label": "Search", "value": "search" }, { "label": "Reports", "value": "reports" }, { "label": "Notifications", "value": "notifications" }], "attachmentsRequired": 0 }
+    ] },
+    { "pageId": "S4", "title": "Service Quality", "questions": [
+      { "questionId": "S4Q1", "type": "textarea", "label": "What worked especially well?", "required": false, "maxLength": 800, "attachmentsRequired": 0 },
+      { "questionId": "S4Q2", "type": "rating", "label": "How would you rate service quality?", "required": true, "minValue": 1, "maxValue": 10, "leftLabel": "Poor", "rightLabel": "Excellent", "attachmentsRequired": 0 },
+      { "questionId": "S4Q3", "type": "satisfaction", "label": "How satisfied are you overall?", "required": true, "options": [{ "label": "Very satisfied", "value": "very-satisfied", "icon": "😊" }, { "label": "Satisfied", "value": "satisfied", "icon": "🙂" }, { "label": "Neutral", "value": "neutral", "icon": "😐" }, { "label": "Unsatisfied", "value": "unsatisfied", "icon": "🙁" }, { "label": "Very unsatisfied", "value": "very-unsatisfied", "icon": "😞" }], "attachmentsRequired": 0 }
+    ] },
+    { "pageId": "S5", "title": "Support Experience", "questions": [
+      { "questionId": "S5Q1", "type": "textbox", "label": "Which support channel did you use?", "required": false, "attachmentsRequired": 0 },
+      { "questionId": "S5Q2", "type": "textarea", "label": "Describe your support experience.", "required": false, "maxLength": 800, "attachmentsRequired": 0 },
+      { "questionId": "S5Q3", "type": "checkbox", "label": "What support topics did you need?", "required": false, "options": [{ "label": "Getting started", "value": "getting-started" }, { "label": "Billing", "value": "billing" }, { "label": "Troubleshooting", "value": "troubleshooting" }], "attachmentsRequired": 0 }
+    ] },
+    { "pageId": "S6", "title": "Future Improvements", "questions": [
+      { "questionId": "S6Q1", "type": "radio", "label": "Which improvement matters most?", "required": true, "options": [{ "label": "More features", "value": "features" }, { "label": "Better speed", "value": "speed" }, { "label": "Simpler workflows", "value": "workflows" }], "attachmentsRequired": 0 },
+      { "questionId": "S6Q2", "type": "satisfaction", "label": "How optimistic are you about future updates?", "required": true, "options": [{ "label": "Very optimistic", "value": "very-optimistic", "icon": "😊" }, { "label": "Optimistic", "value": "optimistic", "icon": "🙂" }, { "label": "Neutral", "value": "neutral", "icon": "😐" }, { "label": "Concerned", "value": "concerned", "icon": "🙁" }, { "label": "Very concerned", "value": "very-concerned", "icon": "😞" }], "attachmentsRequired": 0 },
+      { "questionId": "S6Q3", "type": "rating", "label": "How likely are you to try new improvements?", "required": true, "minValue": 1, "maxValue": 10, "leftLabel": "Not likely", "rightLabel": "Very likely", "attachmentsRequired": 0 }
+    ] },
+    { "pageId": "S7", "title": "Supporting Evidence", "questions": [
+      { "questionId": "S7Q1", "type": "textbox", "label": "What should we investigate?", "required": false, "attachmentsRequired": 0 },
+      { "questionId": "S7Q2", "type": "textarea", "label": "Add any context for your evidence.", "required": false, "maxLength": 600, "attachmentsRequired": 0 },
+      { "questionId": "S7Q3", "type": "textarea", "label": "Upload screenshots or documents.", "required": false, "attachmentsRequired": 1, "acceptedFileTypes": ["image/png", "image/jpeg", "application/pdf"], "maxFileSizeBytes": 5242880 }
+    ] },
+    { "pageId": "S8", "title": "Final Thoughts", "questions": [
+      { "questionId": "S8Q1", "type": "radio", "label": "May we contact you about this feedback?", "required": true, "options": [{ "label": "Yes", "value": "yes" }, { "label": "No", "value": "no" }], "attachmentsRequired": 0 },
+      { "questionId": "S8Q2", "type": "rating", "label": "How likely are you to recommend us?", "required": true, "minValue": 1, "maxValue": 10, "leftLabel": "Not likely", "rightLabel": "Extremely likely", "attachmentsRequired": 0 },
+      { "questionId": "S8Q3", "type": "satisfaction", "label": "How satisfied are you with this survey?", "required": true, "options": [{ "label": "Very satisfied", "value": "very-satisfied", "icon": "😊" }, { "label": "Satisfied", "value": "satisfied", "icon": "🙂" }, { "label": "Neutral", "value": "neutral", "icon": "😐" }, { "label": "Unsatisfied", "value": "unsatisfied", "icon": "🙁" }, { "label": "Very unsatisfied", "value": "very-unsatisfied", "icon": "😞" }], "attachmentsRequired": 0 }
+    ] }
+  ]
+}

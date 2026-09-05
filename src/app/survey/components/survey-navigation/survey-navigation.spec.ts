@@ -14,6 +14,11 @@ describe('SurveyNavigationComponent', () => {
     expect(SurveyNavigationComponent.progressFor(0, 0)).toBe(0);
   });
 
+  it('keeps completed steps visible but disables navigation', () => {
+    expect(SurveyNavigationComponent.canNavigate(false)).toBe(true);
+    expect(SurveyNavigationComponent.canNavigate(true)).toBe(false);
+  });
+
   it('computes progress percentage correctly', () => {
     // 3 pages, on page 0 => 33%, page 1 => 66%, page 2 => 100%
     expect(SurveyNavigationComponent.statusFor(0, 0, 3)).toBe('active');
