@@ -227,11 +227,29 @@ failed submissions remain on the editable survey and preserve entered answers.
 - [ ] T080 Run the full test suite, production build, and completion-summary smoke checks; automated test/build results are recorded, browser smoke checks remain pending in `specs/001-survey-management/quickstart.md`
 - [X] T081 Replace the separate submit action with a context-aware Next/Submit action on the final page in `src/app/survey/pages/survey-view/survey-view.ts`
 - [X] T082 Give the completion summary a minimum height comparable to the three-input survey page in `src/app/survey/components/completion-summary/completion-summary.css`
-- [X] T083 Add the independent eight-step, three-questions-per-step fixture covering all question types in `public/survey-8-step.json`
+- [X] T083 Add the independent six-step, three-questions-per-step fixture covering all question types in `public/survey-8-step.json`
 - [X] T084 Add query-parameter survey fixture selection while preserving the default survey in `src/app/survey/pages/survey-view/survey-view.ts`
-- [X] T085 Add eight-step fixture selection tests and update `README.md` and `specs/001-survey-management/quickstart.md` with the independent survey URL and coverage rules
+- [X] T085 Add six-step fixture selection tests and update `README.md` and `specs/001-survey-management/quickstart.md` with the independent survey URL and coverage rules
 - [X] T086 Keep the survey steps header visible after successful submission while disabling all step navigation buttons in `src/app/survey/components/survey-navigation/survey-navigation.ts`
 - [X] T087 Add submitted-state navigation tests confirming completion steps remain displayed but cannot be clicked in `src/app/survey/components/survey-navigation/survey-navigation.spec.ts` and `src/app/survey/pages/survey-view/survey-view.spec.ts`
+
+## Phase 11: Named Survey Routes
+
+**Purpose**: Replace filename-based query selection with stable, business-friendly
+survey routes and an allowlisted fixture catalog.
+
+**Independent Test**: Open `/` and `/surveys/extended-feedback`; verify each route
+loads its intended survey. Open an unknown survey route and verify a safe configuration
+error is shown without attempting to load an arbitrary file path.
+
+### Named Route Implementation
+
+- [X] T088 Define the generic default and `surveys/:surveyKey` routes in `src/app/app.routes.ts`
+- [X] T089 Create the allowlisted manifest-backed survey catalog in `src/app/core/services/survey-catalog.service.ts` and `public/survey-manifest.json`
+- [X] T090 Update survey loading to consume the route survey key and reject unknown keys without accepting arbitrary file paths in `src/app/survey/pages/survey-view/survey-view.ts`
+- [X] T091 Add route catalog success and unknown-key tests in `src/app/core/services/survey-catalog.service.spec.ts`
+- [X] T092 Update `README.md` and `specs/001-survey-management/quickstart.md` to use `/` and `/surveys/extended-feedback` URLs instead of `?survey=...`
+- [X] T093 Remove filename query-parameter selection and use the manifest-backed route catalog
 
 ## Dependencies & Execution Order
 
@@ -254,6 +272,7 @@ failed submissions remain on the editable survey and preserve entered answers.
 - **UX Enhancement**: Depends on T013-T027 and extends the existing US1/US2 experience without changing the response contract.
 - **Reference-Driven UX**: Depends on T057-T059 before implementation; T060-T067 and T070-T071 can proceed in parallel where files do not overlap; T068 documents the result; T069 is the visual validation gate.
 - **Final Completion Summary**: Depends on the submission state from US3 and the completed reference-driven UX work; T072-T074 can run in parallel, followed by T075-T079 and T081-T082, then T080.
+- **Named Survey Routes**: Depends on the existing survey view and fixture loader; T088-T089 can run in parallel, T090-T091 follow the catalog contract, and T092-T093 complete migration and documentation.
 
 ### Parallel Opportunities
 
@@ -267,6 +286,7 @@ failed submissions remain on the editable survey and preserve entered answers.
 - T044-T047 can run in parallel before implementation; T048, T051, and T053 can run in parallel when their files do not overlap.
 - T057-T059 can run in parallel; T060-T067 and T070-T071 can run in parallel where their files do not overlap; T068 can proceed after the UX contract is settled, with T069 last.
 - T072-T074 can run in parallel; T075-T079 and T081-T082 can proceed in dependency order after the tests define the completion contract; T080 remains last.
+- T088-T089 can run in parallel; T090-T091 depend on the route/catalog contract; T092-T093 finish the migration.
 
 ## Implementation Strategy
 
@@ -286,6 +306,7 @@ failed submissions remain on the editable survey and preserve entered answers.
 5. Add Phase 8 four-page navigation and UX enhancements, then validate desktop, mobile, and keyboard flows.
 6. Implement the Phase 9 reference-driven UX patterns and Bootstrap-compatible form layout, then complete visual smoke checks against `public/theme-preview.png`.
 7. Implement the Phase 10 final completion summary, final-page Submit action, and validate the successful and failed submission states.
+8. Replace filename query selection with named allowlisted survey routes and verify default, extended, and unknown-route behavior.
 
 ## Traceability Summary
 
@@ -298,5 +319,6 @@ failed submissions remain on the editable survey and preserve entered answers.
 - Phase 9 adds the reference-driven visual and interaction acceptance criteria while preserving FR-001 through FR-020 and the existing response contract.
 - T070-T071 formalize the shared Bootstrap-compatible form/layout language without adding Bootstrap as a runtime dependency.
 - Phase 10 covers FR-016, FR-017, and FR-021 by making successful completion explicit while preserving respondent data on failure.
-- T083-T085 add an independent eight-step survey fixture without modifying `public/survey.json`.
+- T083-T085 add an independent six-step survey fixture without modifying `public/survey.json`.
 - T086-T087 preserve the completed steps header as non-interactive context after submission.
+- Phase 11 removes filename exposure from survey selection and prevents arbitrary fixture loading.

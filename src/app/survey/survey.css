@@ -10,11 +10,23 @@
   color: var(--ink);
 }
 
+.survey-layout {
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.survey-content {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--maroon);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--maroon) 4%, var(--panel-surface));
+}
+
 .survey-header {
-  max-width: 68rem;
-  margin: 0 auto 2rem;
+  margin: 0 0 1.25rem;
   border-bottom: 0;
-  padding: 2.5rem 3rem;
+  padding: 1.5rem 1.25rem;
   border-radius: 1.25rem;
   background: var(--panel-surface);
   box-shadow: 0 1.25rem 3rem rgba(90, 38, 48, 0.08);
@@ -274,10 +286,6 @@ textarea:focus-visible {
     padding: 1rem 0.75rem 3rem;
   }
 
-  .survey-header {
-    padding: 1.75rem 1.25rem;
-  }
-
   .question-block {
     padding: 1rem;
   }
@@ -296,5 +304,24 @@ textarea:focus-visible {
 
   .survey-actions button {
     width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .survey-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    margin-inline: -0.75rem;
+  }
+
+  .col-md-4,
+  .col-md-8 {
+    padding-inline: 0.75rem;
+  }
+
+  .survey-header {
+    position: sticky;
+    top: 1rem;
+    margin-bottom: 0;
   }
 }

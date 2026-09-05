@@ -41,10 +41,14 @@ Navigation appears above the page content with a progress bar, clickable page st
 and Previous/Next buttons. Completed pages show a green left border and a checkmark
 cue on answered questions.
 
-An independent eight-step fixture is available at
-`http://localhost:4200/?survey=survey-8-step.json`. It contains exactly eight steps
+An independent six-step fixture is available at
+`http://localhost:4200/surveys/extended-feedback`. It contains exactly six steps
 with three questions per step and covers all supported question types without changing
 the default four-page survey.
+
+New survey variants are added by placing a validated JSON file in `public/` and adding
+one named entry to `public/survey-manifest.json`; no Angular route or component change
+is required.
 
 ## Validation
 

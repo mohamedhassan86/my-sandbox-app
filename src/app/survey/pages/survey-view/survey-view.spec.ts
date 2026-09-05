@@ -1,3 +1,4 @@
+import '@angular/compiler';
 import { describe, expect, it } from 'vitest';
 import { SurveyNavigationComponent } from '../../components/survey-navigation/survey-navigation';
 import { SurveyViewComponent } from './survey-view';
@@ -86,10 +87,3 @@ describe('completion summary', () => {
   });
 });
 
-describe('survey fixture selection', () => {
-  it('keeps the original fixture as default and supports the eight-step fixture', () => {
-    expect(SurveyViewComponent.surveySource('')).toBe('survey.json');
-    expect(SurveyViewComponent.surveySource('?survey=survey-8-step.json')).toBe('survey-8-step.json');
-    expect(SurveyViewComponent.surveySource('?survey=other.json')).toBe('survey.json');
-  });
-});

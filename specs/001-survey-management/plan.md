@@ -23,6 +23,10 @@ completion summary keeps a minimum height comparable to the tallest multi-input 
 After successful submission, the survey steps header remains displayed for context, but
 all step buttons are disabled and cannot navigate or change the completed response.
 
+Survey variants must be selected through named, allowlisted routes rather than exposing
+fixture filenames in query parameters. The default survey is available at `/`, while
+the independent extended fixture is exposed through `/surveys/extended-feedback`.
+
 ### UX Reference: `public/theme-preview.png`
 
 The reference establishes a focused survey panel on a soft pink page backdrop. The
@@ -64,6 +68,9 @@ checks; responsive visual smoke checks against `public/theme-preview.png`
 **Target Platform**: Modern desktop, tablet, and mobile browsers
 
 **Project Type**: Angular single-page web application
+
+**Survey Routing**: Named Angular routes mapped to an allowlisted survey catalog; route
+keys never become arbitrary file paths.
 
 **Performance Goals**: First page within 2 seconds; loaded-page navigation within 500 ms
 

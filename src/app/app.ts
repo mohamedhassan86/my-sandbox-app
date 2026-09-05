@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { SurveyViewComponent } from './survey/pages/survey-view/survey-view';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [SurveyViewComponent],
+  imports: [RouterOutlet],
   selector: 'app-root',
-  template: '<app-survey-view />',
+  template: '<router-outlet />',
 })
 export class App {}

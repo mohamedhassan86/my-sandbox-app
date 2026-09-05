@@ -37,16 +37,19 @@ Expected result: the first page is usable and no configuration error is shown.
 Expected result: all four pages are accessible in order, direct page selection works for
 completed pages, and invalid forward navigation is blocked.
 
-### Eight-step survey fixture
+### Six-step survey fixture
 
-1. Open `http://localhost:4200/?survey=survey-8-step.json`.
-2. Verify that the survey has exactly eight ordered steps.
+1. Open `http://localhost:4200/surveys/extended-feedback`.
+2. Verify that the survey has exactly six ordered steps.
 3. Verify that every step contains exactly three questions.
 4. Verify that radio, checkbox, textbox, textarea, rating, satisfaction, and attachment
    coverage are rendered across the fixture.
 
-Expected result: the eight-step fixture is independently selectable and the original
+Expected result: the six-step fixture is independently selectable and the original
 four-page `survey.json` fixture remains unchanged.
+
+New survey variants are registered by adding a JSON file and a named entry to
+`public/survey-manifest.json`; application source changes are not required.
 
 ### Navigation and answer preservation
 
