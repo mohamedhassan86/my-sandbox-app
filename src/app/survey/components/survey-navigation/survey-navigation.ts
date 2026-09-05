@@ -25,10 +25,6 @@ export type PageStatus = 'active' | 'completed' | 'upcoming';
           </li>
         }
       </ol>
-      <div class="actions">
-        <button type="button" [disabled]="currentIndex() === 0" (click)="previous.emit()">Previous</button>
-        <button type="button" [disabled]="currentIndex() === pages().length - 1" (click)="next.emit()">Next</button>
-      </div>
     </nav>
   `,
   styleUrl: './survey-navigation.css',
@@ -36,15 +32,20 @@ export type PageStatus = 'active' | 'completed' | 'upcoming';
 export class SurveyNavigationComponent {
   readonly pages = input.required<ReadonlyArray<{ pageId: string; title: string }>>();
   readonly currentIndex = input.required<number>();
+  readonly submitted = input(false);
   readonly previous = output<void>();
   readonly next = output<void>();
   readonly goTo = output<number>();
 
   readonly progress = computed(() => {
-    const count = this.pages().length;
-    if (count === 0) return 0;
-    return Math.round(((this.currentIndex() + 1) / count) * 100);
+    return SurveyNavigationComponent.progressFor(this.currentIndex(), this.pages().length, this.submitted());
   });
+
+  static progressFor(currentIndex: number, pageCount: number, submitted = false): number {
+    if (submitted) return 100;
+    if (pageCount <= 0) return 0;
+    return Math.round((currentIndex / pageCount) * 100);
+  }
 
   statusFor(index: number, currentIndex: number, pageCount: number): PageStatus {
     return SurveyNavigationComponent.statusFor(index, currentIndex, pageCount);

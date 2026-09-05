@@ -8,12 +8,12 @@ type TextQuestion = TextboxQuestion | TextareaQuestion;
   selector: 'app-text-question',
   standalone: true,
   template: `
-    <label class="text-question">
-      <span>{{ question().label }} @if (question().required) { <span aria-hidden="true">*</span> }</span>
+    <label class="text-question form-group">
+      <span class="form-label">{{ question().label }} @if (question().required) { <span aria-hidden="true">*</span> }</span>
       @if (question().type === 'textarea') {
-        <textarea [value]="value()" [attr.maxlength]="question().maxLength ?? null" (input)="update($any($event.target).value)"></textarea>
+        <textarea class="form-control" [value]="value()" [attr.maxlength]="question().maxLength ?? null" (input)="update($any($event.target).value)"></textarea>
       } @else {
-        <input type="text" [value]="value()" [attr.maxlength]="question().maxLength ?? null" (input)="update($any($event.target).value)" />
+        <input class="form-control" type="text" [value]="value()" [attr.maxlength]="question().maxLength ?? null" (input)="update($any($event.target).value)" />
       }
     </label>
   `,

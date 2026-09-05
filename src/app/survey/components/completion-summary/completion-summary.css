@@ -1,0 +1,37 @@
+:host {
+  display: block;
+}
+
+.completion-summary {
+  display: grid;
+  min-height: 22rem;
+  align-content: center;
+  padding: 2rem;
+  border: 1px solid color-mix(in srgb, var(--maroon) 18%, white);
+  border-radius: 1rem;
+  background: var(--panel-surface);
+  box-shadow: 0 1rem 2.5rem rgba(90, 38, 48, 0.08);
+  color: var(--ink);
+  text-align: center;
+}
+
+.completion-eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--maroon);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h4 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.completion-percentage {
+  margin: 0.75rem 0 0;
+  color: var(--selection-blue);
+  font-size: 1.15rem;
+  font-weight: 700;
+}

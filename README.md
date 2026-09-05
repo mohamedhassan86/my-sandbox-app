@@ -65,9 +65,26 @@ The JSON contract is documented in
 three attachments and may define selection, text length, file type, and file size rules.
 
 The response submission boundary is documented in
-`specs/001-survey-management/contracts/response-submission.md`. The default adapter
-posts to `/api/survey-responses`; connect that route to the response service before
-using production submissions.
+`specs/001-survey-management/contracts/response-submission.md`. The default local
+adapter simulates an accepted response so the completion flow can be reviewed without
+a backend. For production transport, instantiate the service with simulation disabled
+and connect `/api/survey-responses` to the response service.
+
+## UX reference
+
+The respondent experience follows [`public/theme-preview.png`](public/theme-preview.png):
+a centered white survey panel on a soft pink backdrop, generous question spacing,
+rounded neutral controls, and vivid blue selected states. Rating questions use 1-10
+tiles with endpoint labels. Satisfaction questions use accessible icon choices with
+text labels. Maroon remains the product accent for navigation, validation, and supporting
+states.
+
+When reviewing the UI, check desktop and mobile widths, keyboard focus, selected and
+unselected states, readable labels, and preservation of answers during navigation.
+
+After a successful submission, the editable survey is replaced by a completion summary
+showing `100% complete` and a clear success message. Failed submissions keep the survey
+editable and preserve the respondent's answers.
 
 ## Project design
 

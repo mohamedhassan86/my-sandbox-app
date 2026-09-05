@@ -33,6 +33,18 @@ describe('SurveySessionService', () => {
     expect(session.buildResponse()?.surveyId).toBe('SV001');
   });
 
+  it('reports completed-page progress and reaches 100% after submission', () => {
+    const session = new SurveySessionService();
+    session.start(survey);
+    expect(session.completionPercentage()).toBe(0);
+    session.setAnswer({ questionId: 'Q1', value: 'Ada' });
+    session.next();
+    expect(session.completionPercentage()).toBe(50);
+    session.markSubmitted();
+    expect(session.isSubmitted()).toBe(true);
+    expect(session.completionPercentage()).toBe(100);
+  });
+
   it('supports a 100-page, 500-question configuration', () => {
     const session = new SurveySessionService();
     const largeSurvey = {

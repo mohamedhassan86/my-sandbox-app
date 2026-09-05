@@ -2,6 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import type { Answer, ResponseAttachment, SurveyResponse } from '../../core/models/response.models';
 import type { Survey } from '../../core/models/survey.models';
 import { validatePageResponse, validateSurveyResponse } from '../../core/validators/response.validator';
+import type { ResponseIssue } from '../../core/validators/response.validator';
 
 @Injectable({ providedIn: 'root' })
 export class SurveySessionService {
@@ -9,6 +10,8 @@ export class SurveySessionService {
   private readonly answers = signal<Answer[]>([]);
   private readonly attachments = signal<ResponseAttachment[]>([]);
   private readonly currentPageIndex = signal(0);
+  private readonly submitted = signal(false);
+  private readonly validationAttempted = signal(false);
 
   readonly currentSurvey = this.survey.asReadonly();
   readonly currentAnswers = this.answers.asReadonly();
@@ -18,12 +21,25 @@ export class SurveySessionService {
   readonly pageCount = computed(() => this.survey()?.pages.length ?? 0);
   readonly isFirstPage = computed(() => this.currentPageIndex() === 0);
   readonly isLastPage = computed(() => this.pageCount() === 0 || this.currentPageIndex() === this.pageCount() - 1);
+  readonly isSubmitted = this.submitted.asReadonly();
+  readonly completionPercentage = computed(() => this.submitted() ? 100 : this.pageCount() === 0 ? 0 : Math.round((this.currentPageIndex() / this.pageCount()) * 100));
+  readonly currentPageIssues = computed<ResponseIssue[]>(() => {
+    if (!this.validationAttempted()) return [];
+    const page = this.currentPage();
+    return page ? validatePageResponse(page, this.answers(), this.attachments()) : [];
+  });
 
   start(survey: Survey): void {
     this.survey.set(survey);
     this.answers.set([]);
     this.attachments.set([]);
     this.currentPageIndex.set(0);
+    this.submitted.set(false);
+    this.validationAttempted.set(false);
+  }
+
+  markSubmitted(): void {
+    this.submitted.set(true);
   }
 
   setAnswer(answer: Answer): void {
@@ -40,14 +56,20 @@ export class SurveySessionService {
   }
 
   next(): boolean {
-    if (!this.survey() || this.validateCurrentPage().length > 0) return false;
+    const issues = this.validateCurrentPage();
+    if (!this.survey() || issues.length > 0) {
+      this.validationAttempted.set(issues.length > 0);
+      return false;
+    }
     if (this.currentPageIndex() >= (this.survey()?.pages.length ?? 1) - 1) return false;
+    this.validationAttempted.set(false);
     this.currentPageIndex.update((index) => index + 1);
     return true;
   }
 
   previous(): boolean {
     if (this.currentPageIndex() === 0) return false;
+    this.validationAttempted.set(false);
     this.currentPageIndex.update((index) => index - 1);
     return true;
   }
@@ -57,6 +79,7 @@ export class SurveySessionService {
     if (index < 0 || index >= count || index === this.currentPageIndex()) return false;
     // Going backward is always allowed (answers preserved)
     if (index < this.currentPageIndex()) {
+      this.validationAttempted.set(false);
       this.currentPageIndex.set(index);
       return true;
     }
@@ -66,9 +89,11 @@ export class SurveySessionService {
     for (let i = this.currentPageIndex(); i < index; i++) {
       const page = survey.pages[i];
       if (page && validatePageResponse(page, this.answers(), this.attachments()).length > 0) {
+        this.validationAttempted.set(true);
         return false;
       }
     }
+    this.validationAttempted.set(false);
     this.currentPageIndex.set(index);
     return true;
   }
@@ -80,7 +105,11 @@ export class SurveySessionService {
 
   buildResponse(): SurveyResponse | null {
     const survey = this.survey();
-    if (!survey || this.validateAll().length > 0) return null;
+    if (!survey) return null;
+    if (this.validateAll().length > 0) {
+      this.validationAttempted.set(true);
+      return null;
+    }
     return {
       surveyId: survey.surveyId,
       surveyVersion: survey.version,

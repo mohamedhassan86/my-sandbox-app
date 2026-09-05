@@ -67,6 +67,34 @@ Expected result: every invalid state has visible feedback and cannot advance or 
 Expected result: success appears only after acceptance; failures preserve entered data and
 show an actionable message.
 
+For local UI review, the default submission adapter simulates an accepted response. This
+allows the completion summary to be reached without a backend. The real endpoint remains
+available when simulation is disabled in the submission service.
+
+### Completion summary
+
+1. Complete all required pages and submit a valid response.
+2. Verify the editable survey is replaced by a completion summary.
+3. Verify the summary shows `100% complete` and a clear success message.
+4. Simulate a failed submission and verify the survey remains editable with answers intact.
+
+Expected result: successful submission ends in an accessible high-level completion state;
+failed submission preserves the respondent's work.
+
+### Reference-driven UX
+
+1. Open `public/theme-preview.png` as the visual reference.
+2. Open the default four-page survey at desktop and mobile widths.
+3. Verify the centered white panel, soft pink page background, generous spacing, rounded
+   controls, dark typography, and vivid blue selected states.
+4. On the experience page, verify the five satisfaction choices and their labels.
+5. On the same page, verify the 1-10 rating tiles, endpoint labels, keyboard focus, and
+   selected state.
+6. Navigate away and back, confirming both answers remain selected.
+
+Expected result: the survey follows the reference composition without reducing keyboard
+access, visible validation, responsive layout, or answer preservation.
+
 ## Automated checks
 
 ```powershell
@@ -77,11 +105,14 @@ pnpm exec ng build
 Expected result: unit and integration tests pass, and the production build completes
 without errors.
 
-### Latest results (2026-09-04)
+### Latest results (2026-09-05)
 
-- **Tests**: 41 passed, 0 failed (10 test files)
-- **Build**: Production bundle generated successfully (237.39 kB initial, 63.47 kB estimated transfer)
+- **Tests**: 46 passed, 0 failed (12 test files)
+- **Build**: Production bundle generated successfully (248.69 kB initial, 65.61 kB estimated transfer)
 - **Sample survey**: Four-page demo with progress bar, clickable page steps, and question numbering
+- **Completion summary**: Implemented with submitted-state percentage and success message
+- **Browser smoke checks**: Pending desktop and mobile visual comparison against `public/theme-preview.png`
+- **Build warning**: `src/app/survey/survey.css` is 24 bytes over the 4 kB warning budget
 
 ## Related artifacts
 

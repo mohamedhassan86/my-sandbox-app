@@ -5,17 +5,21 @@ import { CheckboxQuestionComponent } from '../checkbox-question/checkbox-questio
 import { RadioQuestionComponent } from '../radio-question/radio-question';
 import { TextQuestionComponent } from '../text-question/text-question';
 import { FileUploadComponent } from '../file-upload/file-upload';
+import { RatingQuestionComponent } from '../rating-question/rating-question';
+import { SatisfactionQuestionComponent } from '../satisfaction-question/satisfaction-question';
 
 @Component({
   selector: 'app-question-renderer',
   standalone: true,
-  imports: [CheckboxQuestionComponent, RadioQuestionComponent, TextQuestionComponent, FileUploadComponent],
+  imports: [CheckboxQuestionComponent, RadioQuestionComponent, TextQuestionComponent, RatingQuestionComponent, SatisfactionQuestionComponent, FileUploadComponent],
   template: `
     @switch (question().type) {
       @case ('radio') { <app-radio-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
       @case ('checkbox') { <app-checkbox-question [question]="$any(question())" [value]="$any(value() ?? [])" (answerChange)="answerChange.emit($event)" /> }
       @case ('textbox') { <app-text-question [question]="$any(question())" [value]="$any(value() ?? '')" (answerChange)="answerChange.emit($event)" /> }
       @case ('textarea') { <app-text-question [question]="$any(question())" [value]="$any(value() ?? '')" (answerChange)="answerChange.emit($event)" /> }
+      @case ('rating') { <app-rating-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
+      @case ('satisfaction') { <app-satisfaction-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
     }
     @if (question().attachmentsRequired > 0) {
       <app-file-upload [question]="question()" [files]="attachments()" (filesChange)="filesChange.emit($event)" />
@@ -29,7 +33,7 @@ export class QuestionRendererComponent {
   readonly answerChange = output<Answer>();
   readonly filesChange = output<{ questionId: string; files: import('../../../core/models/response.models').ResponseAttachment[] }>();
 
-  static componentFor(type: QuestionType): 'radio' | 'checkbox' | 'text' {
-    return type === 'radio' ? 'radio' : type === 'checkbox' ? 'checkbox' : 'text';
+  static componentFor(type: QuestionType): 'radio' | 'checkbox' | 'text' | 'rating' | 'satisfaction' {
+    return type === 'radio' ? 'radio' : type === 'checkbox' ? 'checkbox' : type === 'rating' ? 'rating' : type === 'satisfaction' ? 'satisfaction' : 'text';
   }
 }

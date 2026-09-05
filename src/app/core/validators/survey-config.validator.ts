@@ -10,7 +10,7 @@ export interface ConfigIssue {
   message: string;
 }
 
-const questionTypes = new Set(['radio', 'checkbox', 'textbox', 'textarea']);
+const questionTypes = new Set(['radio', 'checkbox', 'textbox', 'textarea', 'rating', 'satisfaction']);
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
@@ -41,7 +41,16 @@ const validateQuestion = (value: unknown, path: string, issues: ConfigIssue[]): 
   if (value['maxLength'] !== undefined && (!isInteger(value['maxLength']) || value['maxLength'] < 0)) issues.push({ path: `${path}.maxLength`, message: 'Maximum length must be non-negative.' });
   if (isInteger(value['minLength']) && isInteger(value['maxLength']) && value['minLength'] > value['maxLength']) issues.push({ path, message: 'Minimum length cannot exceed maximum length.' });
 
-  if (value['type'] === 'radio' || value['type'] === 'checkbox') {
+  if (value['type'] === 'rating') {
+    const minValue = value['minValue'] ?? 1;
+    const maxValue = value['maxValue'] ?? 10;
+    const step = value['step'] ?? 1;
+    if (!isInteger(minValue) || !isInteger(maxValue) || minValue >= maxValue) issues.push({ path, message: 'Rating minimum and maximum must be integers with minimum below maximum.' });
+    if (!isInteger(step) || step <= 0) issues.push({ path: `${path}.step`, message: 'Rating step must be a positive integer.' });
+    if (isInteger(minValue) && isInteger(maxValue) && isInteger(step) && (maxValue - minValue) % step !== 0) issues.push({ path, message: 'Rating range must be divisible by its step.' });
+  }
+
+  if (value['type'] === 'radio' || value['type'] === 'checkbox' || value['type'] === 'satisfaction') {
     if (!Array.isArray(value['options']) || value['options'].length === 0) {
       issues.push({ path: `${path}.options`, message: 'Selectable questions require options.' });
     } else {

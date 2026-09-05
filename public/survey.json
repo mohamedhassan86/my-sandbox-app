@@ -48,16 +48,27 @@
       "questions": [
         {
           "questionId": "Q4",
-          "type": "radio",
+          "type": "satisfaction",
           "label": "Are you satisfied with our service?",
           "required": true,
           "options": [
-            { "label": "Very satisfied", "value": "very-satisfied" },
-            { "label": "Satisfied", "value": "satisfied" },
-            { "label": "Neutral", "value": "neutral" },
-            { "label": "Unsatisfied", "value": "unsatisfied" },
-            { "label": "Very unsatisfied", "value": "very-unsatisfied" }
+            { "label": "Very satisfied", "value": "very-satisfied", "icon": "😊" },
+            { "label": "Satisfied", "value": "satisfied", "icon": "🙂" },
+            { "label": "Neutral", "value": "neutral", "icon": "😐" },
+            { "label": "Unsatisfied", "value": "unsatisfied", "icon": "🙁" },
+            { "label": "Very unsatisfied", "value": "very-unsatisfied", "icon": "😞" }
           ],
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q4b",
+          "type": "rating",
+          "label": "How likely are you to recommend us?",
+          "required": true,
+          "minValue": 1,
+          "maxValue": 10,
+          "leftLabel": "Not at all likely",
+          "rightLabel": "Extremely likely",
           "attachmentsRequired": 0
         },
         {

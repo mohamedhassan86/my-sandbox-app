@@ -49,3 +49,19 @@ and integration tests for models, validators, services, and renderers.
 
 **Alternatives considered**: Introducing a second test runner would add maintenance
 without improving the feature's required coverage.
+
+## Decision: Use Bootstrap-compatible form and layout conventions without adding Bootstrap
+
+**Rationale**: Survey questions need a consistent, familiar form language across text,
+radio, checkbox, file, rating, and satisfaction controls. Bootstrap-compatible classes
+such as `container`, `row`, `col-12`, `form-group`, `form-label`, `form-control`, and
+`form-check` provide that structure while keeping the current Angular standalone
+components, PrimeFlex utilities, and reference-specific blue and maroon tokens intact.
+The project will define the small required subset in `src/styles.css` rather than add a
+second component framework or duplicate Bootstrap's full stylesheet.
+
+**Alternatives considered**: Installing Bootstrap was rejected because the application
+already uses PrimeNG and PrimeFlex, and importing a second full design system would add
+unused CSS and competing component behavior. Keeping bespoke per-question styling was
+rejected because it makes spacing, focus states, and responsive form behavior harder to
+maintain consistently.

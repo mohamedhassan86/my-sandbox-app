@@ -9,13 +9,21 @@ const response = {
 };
 
 describe('ResponseSubmissionService', () => {
+  it('simulates an accepted response by default for local survey demos', async () => {
+    await expect(new ResponseSubmissionService().submit(response)).resolves.toMatchObject({ status: 'submitted' });
+  });
+
   it('returns a submission identifier on success', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ submissionId: 'SUB001' }), { status: 201 })));
-    await expect(new ResponseSubmissionService().submit(response)).resolves.toEqual({ status: 'submitted', submissionId: 'SUB001' });
+    const service = new ResponseSubmissionService();
+    service.simulateApi = false;
+    await expect(service.submit(response)).resolves.toEqual({ status: 'submitted', submissionId: 'SUB001' });
   });
 
   it('returns a safe failure without discarding the response', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('', { status: 503 })));
-    await expect(new ResponseSubmissionService().submit(response)).resolves.toEqual({ status: 'failed', message: expect.any(String) });
+    const service = new ResponseSubmissionService();
+    service.simulateApi = false;
+    await expect(service.submit(response)).resolves.toEqual({ status: 'failed', message: expect.any(String) });
   });
 });

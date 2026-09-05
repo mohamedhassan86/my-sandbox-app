@@ -10,7 +10,7 @@ export interface ResponseAttachment {
   fileName: string;
   mediaType: string;
   sizeBytes: number;
-  file: File;
+  file?: File;
 }
 
 export interface SurveyResponse {

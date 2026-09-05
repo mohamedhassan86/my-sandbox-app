@@ -1,4 +1,4 @@
-export type QuestionType = 'radio' | 'checkbox' | 'textbox' | 'textarea';
+export type QuestionType = 'radio' | 'checkbox' | 'textbox' | 'textarea' | 'rating' | 'satisfaction';
 
 export interface Survey {
   surveyId: string;
@@ -17,6 +17,7 @@ export interface SurveyPage {
 export interface Option {
   label: string;
   value: string;
+  icon?: string;
 }
 
 export interface QuestionBase {
@@ -50,4 +51,18 @@ export interface TextareaQuestion extends QuestionBase {
   type: 'textarea';
 }
 
-export type Question = RadioQuestion | CheckboxQuestion | TextboxQuestion | TextareaQuestion;
+export interface RatingQuestion extends QuestionBase {
+  type: 'rating';
+  minValue?: number;
+  maxValue?: number;
+  leftLabel?: string;
+  rightLabel?: string;
+  step?: number;
+}
+
+export interface SatisfactionQuestion extends QuestionBase {
+  type: 'satisfaction';
+  options: Option[];
+}
+
+export type Question = RadioQuestion | CheckboxQuestion | TextboxQuestion | TextareaQuestion | RatingQuestion | SatisfactionQuestion;

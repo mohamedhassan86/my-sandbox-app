@@ -7,6 +7,8 @@ export interface ResponseSubmissionGateway {
 
 @Injectable({ providedIn: 'root' })
 export class ResponseSubmissionService implements ResponseSubmissionGateway {
+  simulateApi = true;
+
   async submit(response: SurveyResponse): Promise<SubmissionResult> {
     const body = new FormData();
     body.append('response', JSON.stringify({
@@ -14,7 +16,15 @@ export class ResponseSubmissionService implements ResponseSubmissionGateway {
       surveyVersion: response.surveyVersion,
       answers: response.answers,
     }));
-    response.attachments.forEach((attachment) => body.append(attachment.questionId, attachment.file, attachment.fileName));
+    response.attachments.forEach((attachment) => {
+      if (attachment.file) {
+        body.append(attachment.questionId, attachment.file, attachment.fileName);
+      }
+    });
+
+    if (this.simulateApi) {
+      return { status: 'submitted', submissionId: `SIM-${Date.now()}` };
+    }
 
     const result = await fetch('/api/survey-responses', { method: 'POST', body });
     if (!result.ok) return { status: 'failed', message: 'The response could not be submitted. Please try again.' };

@@ -155,6 +155,8 @@ no partial survey is presented and a meaningful error is shown.
   tablet, and mobile screen sizes.
 - **FR-020**: The system MUST support keyboard navigation, associated labels, visible
   validation feedback, and sufficient color contrast for the survey workflow.
+- **FR-021**: After successful submission, the system MUST display a final completion
+  summary with a high-level completion percentage and a clear success message.
 
 ### Key Entities
 

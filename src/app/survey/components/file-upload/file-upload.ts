@@ -6,9 +6,9 @@ import type { Question } from '../../../core/models/survey.models';
   selector: 'app-file-upload',
   standalone: true,
   template: `
-    <label class="file-upload">
-      <span>Supporting files ({{ question().attachmentsRequired }} required)</span>
-      <input type="file" [attr.accept]="question().acceptedFileTypes?.join(',') ?? null" multiple (change)="selectFiles($event)" />
+    <label class="file-upload form-group">
+      <span class="form-label">Supporting files ({{ question().attachmentsRequired }} required)</span>
+      <input class="form-control" type="file" [attr.accept]="question().acceptedFileTypes?.join(',') ?? null" multiple (change)="selectFiles($event)" />
       @if (files().length > 0) {
         <ul>
           @for (file of files(); track file.fileName) { <li>{{ file.fileName }}</li> }

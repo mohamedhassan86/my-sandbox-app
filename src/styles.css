@@ -1,1 +1,122 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --maroon: #800000;
+  --maroon-dark: #600000;
+  --maroon-light: #a00000;
+  --maroon-contrast: #ffffff;
+  --page-pink: #fff7f8;
+  --panel-surface: #ffffff;
+  --ink: #24242a;
+  --muted-ink: #777780;
+  --control-surface: #f7f7f9;
+  --control-border: #d9d9df;
+  --selection-blue: #246bfe;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--page-pink);
+  color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 68rem;
+  margin-inline: auto;
+  padding-inline: 0.75rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-inline: -0.75rem;
+}
+
+.col-12 {
+  width: 100%;
+  padding-inline: 0.75rem;
+}
+
+.question-block {
+  margin-bottom: 20px;
+}
+
+.form-group,
+.question-fieldset {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.form-label {
+  display: inline-block;
+  margin-bottom: 0;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--control-border);
+  border-radius: 0.5rem;
+  background: var(--panel-surface);
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus {
+  border-color: var(--selection-blue);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--selection-blue) 20%, transparent);
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 1.5rem;
+}
+
+.form-check-input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  accent-color: var(--selection-blue);
+}
+
+.form-check-label {
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.question-block > app-validation-message {
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #ead1d5;
+  border-radius: 0.5rem;
+  background: #f8eef0;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: 1.5rem;
+  }
+}

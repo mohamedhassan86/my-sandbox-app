@@ -1,28 +1,19 @@
 import { Component, input, output } from '@angular/core';
 import type { Answer, ResponseAttachment } from '../../../core/models/response.models';
 import type { SurveyPage } from '../../../core/models/survey.models';
+import type { ResponseIssue } from '../../../core/validators/response.validator';
+import { ValidationMessageComponent } from '../../../shared/components/validation-message/validation-message';
 import { QuestionRendererComponent } from '../../components/question-renderer/question-renderer';
 
 @Component({
   selector: 'app-survey-page',
   standalone: true,
-  imports: [QuestionRendererComponent],
+  imports: [QuestionRendererComponent, ValidationMessageComponent],
   template: `
-    <section aria-labelledby="page-title">
-      <h2 id="page-title">{{ page().title }}</h2>
+    <section>
       <div class="questions">
-        @for (question of page().questions; track question.questionId; let qIndex = $index) {
+        @for (question of page().questions; track question.questionId) {
           <div class="question-block" [class.answered]="isAnswered(question.questionId)">
-            <div class="question-header">
-              <span class="question-number">{{ qIndex + 1 }}</span>
-              <span class="question-label">{{ question.label }}</span>
-              @if (question.required) {
-                <span class="required-badge" aria-hidden="true">*</span>
-              }
-              @if (isAnswered(question.questionId)) {
-                <span class="answered-cue" aria-label="Answered">✓</span>
-              }
-            </div>
             <app-question-renderer
               [question]="question"
               [value]="answerFor(question.questionId)"
@@ -30,6 +21,9 @@ import { QuestionRendererComponent } from '../../components/question-renderer/qu
               (answerChange)="answerChange.emit($event)"
               (filesChange)="filesChange.emit($event)"
             />
+            @for (issue of issuesFor(question.questionId); track issue) {
+              <app-validation-message [message]="issue.message" />
+            }
           </div>
         }
       </div>
@@ -40,6 +34,7 @@ export class SurveyPageComponent {
   readonly page = input.required<SurveyPage>();
   readonly answers = input<Answer[]>([]);
   readonly attachments = input<ResponseAttachment[]>([]);
+  readonly issues = input<ResponseIssue[]>([]);
   readonly answerChange = output<Answer>();
   readonly filesChange = output<{ questionId: string; files: ResponseAttachment[] }>();
 
@@ -53,6 +48,10 @@ export class SurveyPageComponent {
 
   isAnswered(questionId: string): boolean {
     return SurveyPageComponent.isAnsweredValue(SurveyPageComponent.findAnswerValue(this.answers(), questionId));
+  }
+
+  issuesFor(questionId: string): ResponseIssue[] {
+    return this.issues().filter((issue) => issue.questionId === questionId);
   }
 
   /** Pure function: checks if a value counts as answered */

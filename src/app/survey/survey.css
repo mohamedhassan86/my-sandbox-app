@@ -4,69 +4,68 @@
 
 .survey-shell {
   box-sizing: border-box;
-  max-width: 52rem;
+  max-width: 68rem;
   margin: 0 auto;
-  padding: 3rem 1.25rem;
-  color: #2b1a1e;
+  padding: 3.5rem 1.25rem 5rem;
+  color: var(--ink);
 }
 
 .survey-header {
-  margin-bottom: 2rem;
-  border-bottom: 4px solid #800000;
-  padding-bottom: 1.5rem;
+  max-width: 68rem;
+  margin: 0 auto 2rem;
+  border-bottom: 0;
+  padding: 2.5rem 3rem;
+  border-radius: 1.25rem;
+  background: var(--panel-surface);
+  box-shadow: 0 1.25rem 3rem rgba(90, 38, 48, 0.08);
 }
 
 .eyebrow {
   margin: 0 0 0.5rem;
-  color: #800000;
+  color: var(--maroon);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-h1,
-h2 {
+h3 {
   margin: 0;
-  color: #800000;
+  color: var(--ink);
 }
 
-h1 {
-  font-size: clamp(2rem, 5vw, 3.25rem);
-}
-
-h2 {
-  margin-bottom: 1.5rem;
-  font-size: 1.6rem;
+h3 {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  line-height: 1.05;
 }
 
 .description {
   margin: 0.75rem 0 0;
-  color: #624f53;
+  color: var(--muted-ink);
 }
 
 /* Question blocks */
 .questions {
   display: grid;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .question-block {
-  border: 1px solid #e8e0e2;
-  border-radius: 10px;
-  padding: 1.25rem;
-  background: #fff;
+  border: 1px solid #eeeef2;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background: var(--panel-surface);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .question-block:hover {
   border-color: #c4b2b7;
-  box-shadow: 0 2px 8px rgba(128, 0, 0, 0.06);
+  box-shadow: 0 0.75rem 2rem rgba(90, 38, 48, 0.06);
 }
 
 .question-block:focus-within {
-  border-color: #800000;
-  box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.08);
+  border-color: var(--selection-blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--selection-blue) 12%, transparent);
 }
 
 .question-block.answered {
@@ -95,7 +94,7 @@ h2 {
 
 .question-label {
   font-weight: 600;
-  color: #2b1a1e;
+  color: var(--ink);
   line-height: 1.4;
 }
 
@@ -119,21 +118,21 @@ fieldset,
 .text-question {
   display: grid;
   gap: 0.75rem;
-  border: 1px solid #d9c9cc;
-  border-radius: 8px;
-  padding: 1rem;
-  background: #faf8f8;
+  border: 1px solid var(--control-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  background: var(--control-surface);
   transition: background 0.2s;
 }
 
 fieldset:hover,
 .text-question:hover {
-  background: #f5f0f1;
+  background: #f1f1f5;
 }
 
 legend,
 .text-question > span {
-  color: #2b1a1e;
+  color: var(--ink);
   font-weight: 700;
 }
 
@@ -157,7 +156,7 @@ legend,
 
 input[type='radio'],
 input[type='checkbox'] {
-  accent-color: #800000;
+  accent-color: var(--selection-blue);
   width: 1.1rem;
   height: 1.1rem;
   cursor: pointer;
@@ -167,8 +166,8 @@ input[type='text'],
 textarea {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid #9f858b;
-  border-radius: 4px;
+  border: 1px solid var(--control-border);
+  border-radius: 0.55rem;
   padding: 0.7rem;
   font: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -176,7 +175,7 @@ textarea {
 
 input[type='text']:hover,
 textarea:hover {
-  border-color: #800000;
+  border-color: var(--selection-blue);
 }
 
 textarea {
@@ -186,9 +185,9 @@ textarea {
 
 input:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid #d69a9a;
+  outline: 3px solid color-mix(in srgb, var(--selection-blue) 28%, transparent);
   outline-offset: 2px;
-  border-color: #800000;
+  border-color: var(--selection-blue);
 }
 
 /* Submission area */
@@ -208,7 +207,7 @@ textarea:focus-visible {
   max-width: 20rem;
   margin: 0 auto;
   border: 0;
-  border-radius: 8px;
+  border-radius: 0.65rem;
   padding: 0.85rem 1.5rem;
   background: #800000;
   color: #fff;
@@ -217,6 +216,36 @@ textarea:focus-visible {
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
+}
+
+.survey-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.survey-actions button {
+  min-width: 8rem;
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  background: var(--maroon);
+  color: var(--maroon-contrast);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.survey-actions button:disabled {
+  background: #d9c9cc;
+  color: #624f53;
+  cursor: not-allowed;
+}
+
+.survey-actions button:focus-visible {
+  outline: 3px solid #d69a9a;
+  outline-offset: 2px;
 }
 
 .submit-button:hover:not(:disabled) {
@@ -242,7 +271,11 @@ textarea:focus-visible {
 /* Responsive */
 @media (max-width: 600px) {
   .survey-shell {
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.75rem 3rem;
+  }
+
+  .survey-header {
+    padding: 1.75rem 1.25rem;
   }
 
   .question-block {
@@ -255,5 +288,13 @@ textarea:focus-visible {
 
   .submit-button {
     max-width: 100%;
+  }
+
+  .survey-actions {
+    flex-direction: column;
+  }
+
+  .survey-actions button {
+    width: 100%;
   }
 }

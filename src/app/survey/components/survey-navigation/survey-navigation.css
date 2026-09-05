@@ -116,34 +116,6 @@ li.completed .step-number {
   white-space: nowrap;
 }
 
-.actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-button {
-  border: 0;
-  border-radius: 4px;
-  padding: 0.7rem 1.2rem;
-  background: #800000;
-  color: #fff;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 700;
-}
-
-button:disabled {
-  background: #d9c9cc;
-  color: #624f53;
-  cursor: not-allowed;
-}
-
-button:focus-visible {
-  outline: 3px solid #d69a9a;
-  outline-offset: 2px;
-}
-
 @media (max-width: 600px) {
   ol {
     flex-direction: column;
@@ -155,11 +127,4 @@ button:focus-visible {
     font-size: 0.8rem;
   }
 
-  .actions {
-    flex-direction: column;
-  }
-
-  .actions button {
-    width: 100%;
-  }
 }

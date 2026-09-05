@@ -13,7 +13,34 @@ pages and supported question types, preserves answers during navigation, validat
 requirements, and submits responses with attachments. The implementation will use the
 existing Angular application, standalone feature components, typed domain models,
 services for configuration and submission, and PrimeNG controls styled with the
-approved maroon visual language.
+approved maroon visual language. The UX implementation must also use
+`public/theme-preview.png` as the visual reference for the respondent experience. After
+successful submission, the flow ends with a concise completion summary showing the
+respondent's completion percentage and a clear success message.
+The final page uses the same navigation action for submission: the Next button changes
+to Submit response on the last page, and no separate submit button is shown. The
+completion summary keeps a minimum height comparable to the tallest multi-input page.
+
+### UX Reference: `public/theme-preview.png`
+
+The reference establishes a focused survey panel on a soft pink page backdrop. The
+experience should use a centered white surface with generous spacing, large dark
+display typography, rounded controls, and clear vertical grouping between questions.
+Interactive states should use a vivid blue selection color for rating tiles, radio
+controls, and satisfaction choices, with neutral gray controls for unselected states.
+The survey should support three reference patterns where the configured question type
+allows them: 1-10 rating tiles with endpoint labels, compact radio/checkbox choices,
+and icon or emoji-based satisfaction options with text labels. The existing product
+maroon remains the documented brand color for shared errors, navigation, and supporting
+accents; the blue selection state is reserved for active respondent choices.
+
+### Form and Layout Decision
+
+Use a small local set of Bootstrap-compatible form and layout conventions for every
+question type: `container`, `row`, `col-12`, `form-group`, `form-label`, `form-control`,
+`form-check`, and `form-check-input`. These conventions are implemented in the existing
+global stylesheet and component templates; Bootstrap itself is not added as a second
+component framework because PrimeNG and PrimeFlex are already project dependencies.
 
 ## Technical Context
 
@@ -25,11 +52,12 @@ approved maroon visual language.
 
 **Language/Version**: TypeScript 6.0 with Angular 22.1
 
-**Primary Dependencies**: Angular 22, RxJS 7.8, PrimeNG, PrimeFlex, Vitest
+**Primary Dependencies**: Angular 22, RxJS 7.8, PrimeNG, PrimeFlex, Vitest; Bootstrap-compatible form and layout conventions implemented in the local design tokens
 
 **Storage**: In-memory response state; configured JSON source; submission service boundary
 
-**Testing**: Vitest unit and integration tests; Angular production build; accessibility checks
+**Testing**: Vitest unit and integration tests; Angular production build; accessibility
+checks; responsive visual smoke checks against `public/theme-preview.png`
 
 **Target Platform**: Modern desktop, tablet, and mobile browsers
 
@@ -41,6 +69,10 @@ approved maroon visual language.
   submit; files restricted by count, type, and size; no secrets in client assets
 
 **Scale/Scope**: One survey session; target definitions up to 100 pages and 500 questions
+
+**Implementation Status**: Reference-driven question types, shared UX tokens, responsive
+panel styling, Bootstrap-compatible form markup, and documentation are implemented.
+Remaining work includes browser-level responsive, keyboard, and visual smoke validation.
 
 ## Constitution Check
 

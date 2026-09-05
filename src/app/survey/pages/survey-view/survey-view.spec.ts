@@ -77,3 +77,11 @@ describe('responsive and keyboard interaction regression', () => {
     expect(SurveyViewComponent.accessibilityRequirements()).toContain('semantic-labels');
   });
 });
+
+describe('completion summary', () => {
+  it('uses a high-level completion message and percentage', () => {
+    expect(SurveyViewComponent.completionMessage()).toContain('successfully');
+    expect(SurveyViewComponent.completionPercentage(4, 4, true)).toBe(100);
+    expect(SurveyViewComponent.completionPercentage(1, 4, false)).toBe(25);
+  });
+});

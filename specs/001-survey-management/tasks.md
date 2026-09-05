@@ -170,6 +170,64 @@ that responsive and keyboard interactions remain usable.
 - [X] T055 Update the sample survey documentation and four-page UX behavior in `README.md` and `specs/001-survey-management/quickstart.md`
 - [X] T056 Run the complete test, build, and responsive smoke-check commands and record results in `specs/001-survey-management/quickstart.md`
 
+## Phase 9: Reference-Driven Survey UX
+
+**Purpose**: Implement the respondent experience represented by `public/theme-preview.png`
+without changing the JSON-driven domain contract or accessibility requirements.
+
+**Independent Test**: Open the survey at desktop and mobile widths and verify a centered
+white survey surface on the soft pink backdrop, clear question grouping, blue selected
+states, usable rating tiles, compact choices, and satisfaction controls. Confirm that
+keyboard focus, labels, validation, and answer persistence remain functional.
+
+### UX Reference Tests
+
+- [X] T057 [P] Add reference-pattern rendering tests for rating tiles, choice groups, and satisfaction controls in `src/app/survey/components/question-renderer/question-renderer.spec.ts`
+- [X] T058 [P] Add responsive layout and keyboard-state regression tests against the reference behavior in `src/app/survey/pages/survey-view/survey-view.spec.ts`
+- [X] T059 [P] Add selected/unselected visual-state assertions for rating, radio, checkbox, and satisfaction answers in the relevant survey component specs
+
+### UX Reference Implementation
+
+- [X] T060 Define shared UX tokens for the soft pink backdrop, white panel, dark typography, neutral gray controls, blue selected state, and maroon product accents in `src/styles.css`
+- [X] T061 Implement the centered survey surface, generous spacing, rounded grouping, and responsive panel behavior in `src/app/survey/survey.css`
+- [X] T062 Add a reusable 1-10 rating presentation with endpoint labels and keyboard semantics in `src/app/survey/components/rating-question/rating-question.ts`
+- [X] T063 Add rating tile styles with neutral, hover, focus, and vivid-blue selected states in `src/app/survey/components/rating-question/rating-question.css`
+- [X] T064 Add satisfaction/icon option rendering with text labels and accessible names in `src/app/survey/components/satisfaction-question/satisfaction-question.ts`
+- [X] T065 Add satisfaction option styles and responsive wrapping behavior in `src/app/survey/components/satisfaction-question/satisfaction-question.css`
+- [X] T066 Update the question model, validator, renderer, and sample configuration contracts for the new reference-supported question types in `src/app/core/models/survey.models.ts`, `src/app/core/validators/survey-config.validator.ts`, `src/app/survey/components/question-renderer/question-renderer.ts`, and `public/survey.json`
+- [X] T067 Align existing radio, checkbox, file, navigation, validation, and submit controls with the reference spacing, Bootstrap-compatible form classes, and state tokens while preserving maroon brand accents in `src/app/survey/components/`, `src/app/shared/components/`, and `src/app/survey/survey.css`
+- [X] T068 Update `README.md` and `specs/001-survey-management/quickstart.md` with the reference image, UX rules, supported question patterns, and responsive acceptance checks
+- [ ] T069 Run the full test suite, production build, and desktop/mobile visual smoke checks; automated results are recorded, browser visual comparison remains pending in `specs/001-survey-management/quickstart.md`
+- [X] T070 Apply the local Bootstrap-compatible form and layout subset across all question templates in `src/app/survey/components/` and `src/styles.css`
+- [X] T071 Record the Bootstrap-compatible styling decision and dependency rationale in `specs/001-survey-management/research.md` and `specs/001-survey-management/plan.md`
+
+## Phase 10: Final Completion Summary
+
+**Purpose**: Give respondents a clear final state after successful submission, including
+a high-level completion percentage and a concise success message.
+
+**Independent Test**: Complete all required survey pages and submit successfully. Verify
+that the survey actions are replaced or followed by a final summary showing `100%`
+completion, a success message, and no misleading editable-state controls. Verify that
+failed submissions remain on the editable survey and preserve entered answers.
+
+### Completion Summary Tests
+
+- [X] T072 [P] Add completion-summary rendering tests for successful submission, percentage display, and success messaging in `src/app/survey/pages/survey-view/survey-view.spec.ts`
+- [X] T073 [P] Add completion percentage calculation tests for partial, complete, and submitted session states in `src/app/survey/services/survey-session.service.spec.ts`
+- [X] T074 [P] Add keyboard, semantic-region, and visible-status assertions for the final summary in `src/app/survey/pages/survey-view/survey-view.spec.ts`
+
+### Completion Summary Implementation
+
+- [X] T075 Add an explicit submitted/completion state and completion percentage selector to `src/app/survey/services/survey-session.service.ts`
+- [X] T076 Create the final completion summary component with a high-level percentage and success message in `src/app/survey/components/completion-summary/completion-summary.ts`
+- [X] T077 Render the completion summary after successful submission and keep the editable survey visible on submission failure in `src/app/survey/pages/survey-view/survey-view.ts`
+- [X] T078 Add responsive, accessible completion-summary styling consistent with the reference panel and maroon product accents in `src/app/survey/components/completion-summary/completion-summary.css`
+- [X] T079 Update `README.md` and `specs/001-survey-management/quickstart.md` with the final completion-state behavior and acceptance scenario
+- [ ] T080 Run the full test suite, production build, and completion-summary smoke checks; automated test/build results are recorded, browser smoke checks remain pending in `specs/001-survey-management/quickstart.md`
+- [X] T081 Replace the separate submit action with a context-aware Next/Submit action on the final page in `src/app/survey/pages/survey-view/survey-view.ts`
+- [X] T082 Give the completion summary a minimum height comparable to the three-input survey page in `src/app/survey/components/completion-summary/completion-summary.css`
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -189,6 +247,8 @@ that responsive and keyboard interactions remain usable.
 - **US3**: Depends on T004-T012 and the response/page state from US1 and US2.
 - **US4**: Depends on T006 and the survey view error boundary; can proceed after US1 view scaffolding.
 - **UX Enhancement**: Depends on T013-T027 and extends the existing US1/US2 experience without changing the response contract.
+- **Reference-Driven UX**: Depends on T057-T059 before implementation; T060-T067 and T070-T071 can proceed in parallel where files do not overlap; T068 documents the result; T069 is the visual validation gate.
+- **Final Completion Summary**: Depends on the submission state from US3 and the completed reference-driven UX work; T072-T074 can run in parallel, followed by T075-T079 and T081-T082, then T080.
 
 ### Parallel Opportunities
 
@@ -200,6 +260,8 @@ that responsive and keyboard interactions remain usable.
 - In US4, T036-T037 can run in parallel.
 - T040-T041 can run in parallel after all story behavior is available.
 - T044-T047 can run in parallel before implementation; T048, T051, and T053 can run in parallel when their files do not overlap.
+- T057-T059 can run in parallel; T060-T067 and T070-T071 can run in parallel where their files do not overlap; T068 can proceed after the UX contract is settled, with T069 last.
+- T072-T074 can run in parallel; T075-T079 and T081-T082 can proceed in dependency order after the tests define the completion contract; T080 remains last.
 
 ## Implementation Strategy
 
@@ -217,6 +279,8 @@ that responsive and keyboard interactions remain usable.
 3. Add US4 invalid-configuration recovery.
 4. Complete Phase 7 quality and quickstart validation.
 5. Add Phase 8 four-page navigation and UX enhancements, then validate desktop, mobile, and keyboard flows.
+6. Implement the Phase 9 reference-driven UX patterns and Bootstrap-compatible form layout, then complete visual smoke checks against `public/theme-preview.png`.
+7. Implement the Phase 10 final completion summary, final-page Submit action, and validate the successful and failed submission states.
 
 ## Traceability Summary
 
@@ -226,3 +290,6 @@ that responsive and keyboard interactions remain usable.
 - US4 covers FR-002 and configuration-related edge cases.
 - Phase 7 covers FR-019, FR-020, SC-001 through SC-007, and constitution quality gates.
 - Phase 8 strengthens FR-006, FR-018, FR-019, FR-020, and the four-page sample/demo requirement.
+- Phase 9 adds the reference-driven visual and interaction acceptance criteria while preserving FR-001 through FR-020 and the existing response contract.
+- T070-T071 formalize the shared Bootstrap-compatible form/layout language without adding Bootstrap as a runtime dependency.
+- Phase 10 covers FR-016, FR-017, and FR-021 by making successful completion explicit while preserving respondent data on failure.
