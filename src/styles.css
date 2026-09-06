@@ -51,6 +51,19 @@ body {
   margin-bottom: 20px;
 }
 
+body .p-togglebutton-content {
+  justify-content:left;
+  flex:0;
+  padding: 0.5rem;
+  background: white;  
+  border-radius: 0.5rem;
+}
+
+body .p-togglebutton-content[data-p="checked"]  {
+  background: var(--maroon);
+  color: var(--maroon-contrast);
+}
+
 app-survey-navigation {
     margin-top: 30px;
     display: block;

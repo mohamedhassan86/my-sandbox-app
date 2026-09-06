@@ -2,7 +2,7 @@ import type { Survey } from './survey.models';
 
 export interface Answer {
   questionId: string;
-  value: string | string[] | null;
+  value: string | string[] | boolean | null;
 }
 
 export interface ResponseAttachment {

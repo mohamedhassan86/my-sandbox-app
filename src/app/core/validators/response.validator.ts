@@ -11,8 +11,12 @@ const valueIsEmpty = (value: Answer['value']): boolean =>
 
 const validateQuestion = (question: Question, answer: Answer | undefined, attachments: ResponseAttachment[]): ResponseIssue[] => {
   const issues: ResponseIssue[] = [];
-  const value = answer?.value ?? null;
+  const value = answer?.value ?? (question.type === 'toggle_button' ? question.defaultValue ?? null : null);
   if (question.required && valueIsEmpty(value)) issues.push({ questionId: question.questionId, message: 'This question is required.' });
+
+  if (question.type === 'toggle_button' && value !== null && typeof value !== 'boolean') {
+    issues.push({ questionId: question.questionId, message: 'This question requires a true/false answer.' });
+  }
 
   if (question.type === 'checkbox' && Array.isArray(value)) {
     if (question.minSelections !== undefined && value.length < question.minSelections) issues.push({ questionId: question.questionId, message: `Select at least ${question.minSelections} option(s).` });

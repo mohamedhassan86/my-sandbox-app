@@ -10,7 +10,7 @@ export interface ConfigIssue {
   message: string;
 }
 
-const questionTypes = new Set(['radio', 'checkbox', 'textbox', 'textarea', 'rating', 'satisfaction']);
+const questionTypes = new Set(['radio', 'checkbox', 'textbox', 'textarea', 'rating', 'satisfaction', 'toggle_button']);
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
@@ -74,6 +74,19 @@ const validateQuestion = (value: unknown, path: string, issues: ConfigIssue[]): 
     if (checkbox.maxSelections !== undefined && (!isInteger(checkbox.maxSelections) || checkbox.maxSelections < 0)) issues.push({ path: `${path}.maxSelections`, message: 'Maximum selections must be non-negative.' });
     if (isInteger(checkbox.minSelections) && isInteger(checkbox.maxSelections) && checkbox.minSelections > checkbox.maxSelections) issues.push({ path, message: 'Minimum selections cannot exceed maximum selections.' });
     if (Array.isArray(value['options']) && isInteger(checkbox.maxSelections) && checkbox.maxSelections > value['options'].length) issues.push({ path: `${path}.maxSelections`, message: 'Maximum selections cannot exceed option count.' });
+  }
+
+  if (value['type'] === 'toggle_button') {
+    if (value['defaultValue'] !== undefined && typeof value['defaultValue'] !== 'boolean') issues.push({ path: `${path}.defaultValue`, message: 'Default value must be a boolean.' });
+    const toggleOptions = value['options'];
+    if (toggleOptions !== undefined) {
+      if (!isRecord(toggleOptions)) {
+        issues.push({ path: `${path}.options`, message: 'Options must be an object with onLabel/offLabel.' });
+      } else {
+        if (toggleOptions['onLabel'] !== undefined && !isNonEmptyString(toggleOptions['onLabel'])) issues.push({ path: `${path}.options.onLabel`, message: 'On label must be a non-empty string.' });
+        if (toggleOptions['offLabel'] !== undefined && !isNonEmptyString(toggleOptions['offLabel'])) issues.push({ path: `${path}.options.offLabel`, message: 'Off label must be a non-empty string.' });
+      }
+    }
   }
 
   return true;

@@ -30,3 +30,47 @@ describe('response validation', () => {
     expect(issues.some((issue) => issue.questionId === 'Q2' && issue.message.includes('Attach 1'))).toBe(true);
   });
 });
+
+describe('toggle_button response validation', () => {
+  const togglePage = {
+    pageId: 'P2',
+    title: 'Preferences',
+    questions: [
+      { questionId: 'T1', type: 'toggle_button' as const, label: 'Enable notifications?', required: false, defaultValue: false, attachmentsRequired: 0 as const },
+      { questionId: 'T2', type: 'toggle_button' as const, label: 'Accept terms?', required: true, defaultValue: true, attachmentsRequired: 0 as const },
+      { questionId: 'T3', type: 'toggle_button' as const, label: 'Required, no default', required: true, attachmentsRequired: 0 as const },
+    ],
+  };
+
+  it('accepts genuine boolean answers', () => {
+    const issues = validatePageResponse(togglePage, [{ questionId: 'T1', value: true }, { questionId: 'T2', value: true }, { questionId: 'T3', value: false }], []);
+    expect(issues).toEqual([]);
+  });
+
+  it('treats an explicit null value as unanswered rather than an invalid type', () => {
+    const issues = validatePageResponse(togglePage, [{ questionId: 'T3', value: null }], []);
+    expect(issues.some((issue) => issue.questionId === 'T3' && issue.message.includes('required'))).toBe(true);
+    expect(issues.some((issue) => issue.questionId === 'T3' && issue.message.includes('true/false'))).toBe(false);
+  });
+
+  it('rejects string, number, and array values as invalid types', () => {
+    const stringIssues = validatePageResponse(togglePage, [{ questionId: 'T1', value: 'true' }], []);
+    expect(stringIssues.some((issue) => issue.questionId === 'T1' && issue.message.includes('true/false'))).toBe(true);
+
+    const numberIssues = validatePageResponse(togglePage, [{ questionId: 'T1', value: 1 as unknown as boolean }], []);
+    expect(numberIssues.some((issue) => issue.questionId === 'T1' && issue.message.includes('true/false'))).toBe(true);
+
+    const arrayIssues = validatePageResponse(togglePage, [{ questionId: 'T1', value: ['true'] as unknown as boolean }], []);
+    expect(arrayIssues.some((issue) => issue.questionId === 'T1' && issue.message.includes('true/false'))).toBe(true);
+  });
+
+  it('treats a present defaultValue as satisfying a required question with no interaction', () => {
+    const issues = validatePageResponse(togglePage, [], []);
+    expect(issues.some((issue) => issue.questionId === 'T2')).toBe(false);
+  });
+
+  it('fails required validation only when no value and no default are present', () => {
+    const issues = validatePageResponse(togglePage, [], []);
+    expect(issues.some((issue) => issue.questionId === 'T3' && issue.message.includes('required'))).toBe(true);
+  });
+});

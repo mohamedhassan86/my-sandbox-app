@@ -25,6 +25,42 @@ describe('validateSurveyConfig', () => {
     expect(validateSurveyConfig(validSurvey)).toEqual([]);
   });
 
+  it('accepts a valid toggle_button question with defaults applied when options are omitted', () => {
+    const survey = {
+      ...validSurvey,
+      pages: [{
+        ...validSurvey.pages[0],
+        questions: [{
+          questionId: 'T1',
+          type: 'toggle_button',
+          label: 'Enable notifications?',
+          required: false,
+          defaultValue: false,
+          attachmentsRequired: 0,
+        }],
+      }],
+    };
+    expect(validateSurveyConfig(survey)).toEqual([]);
+  });
+
+  it('rejects a toggle_button question with a non-boolean defaultValue', () => {
+    const survey = {
+      ...validSurvey,
+      pages: [{
+        ...validSurvey.pages[0],
+        questions: [{
+          questionId: 'T1',
+          type: 'toggle_button',
+          label: 'Enable notifications?',
+          defaultValue: 'yes',
+          attachmentsRequired: 0,
+        }],
+      }],
+    };
+    const issues = validateSurveyConfig(survey);
+    expect(issues.some((issue) => issue.path.endsWith('.defaultValue'))).toBe(true);
+  });
+
   it('rejects missing pages and unsupported questions', () => {
     const issues = validateSurveyConfig({ ...validSurvey, pages: [] });
     expect(issues.some((issue) => issue.path === '$.pages')).toBe(true);

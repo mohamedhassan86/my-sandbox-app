@@ -39,6 +39,16 @@
             { "label": "Other", "value": "other" }
           ],
           "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q3b",
+          "type": "toggle_button",
+          "label": "Enable Notifications",
+          "description": "Receive email updates about your submission.",
+          "defaultValue": false,
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": { "onLabel": "Enabled", "offLabel": "Disabled" }
         }
       ]
     },

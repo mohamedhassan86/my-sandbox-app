@@ -7,11 +7,12 @@ import { TextQuestionComponent } from '../text-question/text-question';
 import { FileUploadComponent } from '../file-upload/file-upload';
 import { RatingQuestionComponent } from '../rating-question/rating-question';
 import { SatisfactionQuestionComponent } from '../satisfaction-question/satisfaction-question';
+import { ToggleButtonQuestionComponent } from '../toggle-button-question/toggle-button-question';
 
 @Component({
   selector: 'app-question-renderer',
   standalone: true,
-  imports: [CheckboxQuestionComponent, RadioQuestionComponent, TextQuestionComponent, RatingQuestionComponent, SatisfactionQuestionComponent, FileUploadComponent],
+  imports: [CheckboxQuestionComponent, RadioQuestionComponent, TextQuestionComponent, RatingQuestionComponent, SatisfactionQuestionComponent, ToggleButtonQuestionComponent, FileUploadComponent],
   template: `
     @switch (question().type) {
       @case ('radio') { <app-radio-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
@@ -20,6 +21,7 @@ import { SatisfactionQuestionComponent } from '../satisfaction-question/satisfac
       @case ('textarea') { <app-text-question [question]="$any(question())" [value]="$any(value() ?? '')" (answerChange)="answerChange.emit($event)" /> }
       @case ('rating') { <app-rating-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
       @case ('satisfaction') { <app-satisfaction-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
+      @case ('toggle_button') { <app-toggle-button-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
     }
     @if (question().attachmentsRequired > 0) {
       <app-file-upload [question]="question()" [files]="attachments()" (filesChange)="filesChange.emit($event)" />
@@ -28,12 +30,12 @@ import { SatisfactionQuestionComponent } from '../satisfaction-question/satisfac
 })
 export class QuestionRendererComponent {
   readonly question = input.required<Question>();
-  readonly value = input<string | string[] | null>(null);
+  readonly value = input<string | string[] | boolean | null>(null);
   readonly attachments = input<import('../../../core/models/response.models').ResponseAttachment[]>([]);
   readonly answerChange = output<Answer>();
   readonly filesChange = output<{ questionId: string; files: import('../../../core/models/response.models').ResponseAttachment[] }>();
 
-  static componentFor(type: QuestionType): 'radio' | 'checkbox' | 'text' | 'rating' | 'satisfaction' {
-    return type === 'radio' ? 'radio' : type === 'checkbox' ? 'checkbox' : type === 'rating' ? 'rating' : type === 'satisfaction' ? 'satisfaction' : 'text';
+  static componentFor(type: QuestionType): 'radio' | 'checkbox' | 'text' | 'rating' | 'satisfaction' | 'toggle_button' {
+    return type === 'radio' ? 'radio' : type === 'checkbox' ? 'checkbox' : type === 'rating' ? 'rating' : type === 'satisfaction' ? 'satisfaction' : type === 'toggle_button' ? 'toggle_button' : 'text';
   }
 }

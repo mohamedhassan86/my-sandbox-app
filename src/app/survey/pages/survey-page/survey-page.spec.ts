@@ -32,6 +32,16 @@ describe('SurveyPageComponent', () => {
     expect(SurveyPageComponent.findAnswerValue(answers, 'Q1')).toBe('yes');
   });
 
+  it('treats a boolean answer (including false) as answered', () => {
+    expect(SurveyPageComponent.isAnsweredValue(true)).toBe(true);
+    expect(SurveyPageComponent.isAnsweredValue(false)).toBe(true);
+  });
+
+  it('returns a boolean answer value for a toggle question', () => {
+    const answers = [{ questionId: 'T1', value: false }];
+    expect(SurveyPageComponent.findAnswerValue(answers, 'T1')).toBe(false);
+  });
+
   it('filters attachments by question ID', () => {
     const attachments = [
       { questionId: 'Q1', fileName: 'a.pdf', mediaType: 'application/pdf', sizeBytes: 100 },

@@ -22,6 +22,7 @@ describe('QuestionRendererComponent', () => {
     expect(QuestionRendererComponent.componentFor('textarea')).toBe('text');
     expect(QuestionRendererComponent.componentFor('rating')).toBe('rating');
     expect(QuestionRendererComponent.componentFor('satisfaction')).toBe('satisfaction');
+    expect(QuestionRendererComponent.componentFor('toggle_button')).toBe('toggle_button');
   });
 
   it('keeps selected-state rules consistent across all choice controls', () => {

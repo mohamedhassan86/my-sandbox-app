@@ -38,7 +38,7 @@ export class SurveyPageComponent {
   readonly answerChange = output<Answer>();
   readonly filesChange = output<{ questionId: string; files: ResponseAttachment[] }>();
 
-  answerFor(questionId: string): string | string[] | null {
+  answerFor(questionId: string): string | string[] | boolean | null {
     return SurveyPageComponent.findAnswerValue(this.answers(), questionId);
   }
 
@@ -55,14 +55,15 @@ export class SurveyPageComponent {
   }
 
   /** Pure function: checks if a value counts as answered */
-  static isAnsweredValue(value: string | string[] | null): boolean {
+  static isAnsweredValue(value: string | string[] | boolean | null): boolean {
+    if (typeof value === 'boolean') return true;
     if (!value) return false;
     if (Array.isArray(value)) return value.length > 0;
     return value.trim().length > 0;
   }
 
   /** Pure function: finds answer value by questionId */
-  static findAnswerValue(answers: Answer[], questionId: string): string | string[] | null {
+  static findAnswerValue(answers: Answer[], questionId: string): string | string[] | boolean | null {
     return answers.find((a) => a.questionId === questionId)?.value ?? null;
   }
 
