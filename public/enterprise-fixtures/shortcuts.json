@@ -1,0 +1,10 @@
+[
+  { "id": "sc-search", "scope": "global", "keys": ["mod+k"], "label": "Open global search", "action": "open-search" },
+  { "id": "sc-notifications", "scope": "global", "keys": ["mod+shift+n"], "label": "Open notifications", "action": "open-notifications" },
+  { "id": "sc-dark", "scope": "global", "keys": ["mod+shift+d"], "label": "Toggle dark mode", "action": "toggle-dark" },
+  { "id": "sc-a11y", "scope": "global", "keys": ["mod+shift+a"], "label": "Toggle accessibility mode", "action": "toggle-a11y" },
+  { "id": "sc-help", "scope": "global", "keys": ["mod+/"], "label": "Open help & shortcuts", "action": "open-help" },
+  { "id": "sc-home", "scope": "global", "keys": ["alt+h"], "label": "Go to home", "action": "go-home" },
+  { "id": "sc-next-area", "scope": "global", "keys": ["ctrl+alt+arrowright"], "label": "Next area", "action": "next-area" },
+  { "id": "sc-prev-area", "scope": "global", "keys": ["ctrl+alt+arrowleft"], "label": "Previous area", "action": "prev-area" }
+]

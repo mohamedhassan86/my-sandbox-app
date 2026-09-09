@@ -1,0 +1,6 @@
+[
+  { "id": "qa-launch", "label": "Launch a survey", "icon": "rocket", "target": "/enterprise/launch", "order": 1 },
+  { "id": "qa-surveys", "label": "Browse surveys", "icon": "list", "target": "/enterprise/surveys", "order": 2 },
+  { "id": "qa-responses", "label": "Review responses", "icon": "comment", "target": "/enterprise/responses", "order": 3 },
+  { "id": "qa-participants", "label": "Find participants", "icon": "users", "target": "/enterprise/participants", "order": 4 }
+]

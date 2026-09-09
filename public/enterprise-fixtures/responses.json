@@ -1,0 +1,16 @@
+[
+  { "id": "rsp-001", "surveyId": "svy-001", "participantId": "prt-004", "score": 86, "durationMinutes": 4, "device": "Desktop", "completion": "complete", "createdAt": "2026-09-09T06:20:00Z", "updatedAt": "2026-09-09T06:20:00Z" },
+  { "id": "rsp-002", "surveyId": "svy-001", "participantId": "prt-003", "score": 71, "durationMinutes": 6, "device": "Mobile", "completion": "complete", "createdAt": "2026-09-08T18:10:00Z", "updatedAt": "2026-09-08T18:10:00Z" },
+  { "id": "rsp-003", "surveyId": "svy-002", "participantId": "prt-007", "score": 92, "durationMinutes": 9, "device": "Desktop", "completion": "complete", "createdAt": "2026-09-08T14:40:00Z", "updatedAt": "2026-09-08T14:40:00Z" },
+  { "id": "rsp-004", "surveyId": "svy-002", "participantId": "prt-008", "score": 64, "durationMinutes": 12, "device": "Tablet", "completion": "partial", "createdAt": "2026-09-08T12:00:00Z", "updatedAt": "2026-09-08T12:05:00Z" },
+  { "id": "rsp-005", "surveyId": "svy-006", "participantId": "prt-001", "score": 95, "durationMinutes": 5, "device": "Desktop", "completion": "complete", "createdAt": "2026-09-09T08:00:00Z", "updatedAt": "2026-09-09T08:00:00Z" },
+  { "id": "rsp-006", "surveyId": "svy-006", "participantId": "prt-006", "score": 78, "durationMinutes": 7, "device": "Mobile", "completion": "complete", "createdAt": "2026-09-07T16:30:00Z", "updatedAt": "2026-09-07T16:30:00Z" },
+  { "id": "rsp-007", "surveyId": "svy-010", "participantId": "prt-010", "score": 58, "durationMinutes": 11, "device": "Mobile", "completion": "abandoned", "createdAt": "2026-09-07T09:45:00Z", "updatedAt": "2026-09-07T09:56:00Z" },
+  { "id": "rsp-008", "surveyId": "svy-010", "participantId": "prt-002", "score": 81, "durationMinutes": 8, "device": "Desktop", "completion": "complete", "createdAt": "2026-09-06T13:20:00Z", "updatedAt": "2026-09-06T13:20:00Z" },
+  { "id": "rsp-009", "surveyId": "svy-004", "participantId": "prt-005", "score": 47, "durationMinutes": 14, "device": "Tablet", "completion": "partial", "createdAt": "2026-07-29T10:00:00Z", "updatedAt": "2026-07-29T10:06:00Z" },
+  { "id": "rsp-010", "surveyId": "svy-008", "participantId": "prt-009", "score": 66, "durationMinutes": 6, "device": "Desktop", "completion": "complete", "createdAt": "2026-07-15T09:00:00Z", "updatedAt": "2026-07-15T09:00:00Z" },
+  { "id": "rsp-011", "surveyId": "svy-001", "participantId": "prt-001", "score": 90, "durationMinutes": 3, "device": "Desktop", "completion": "complete", "createdAt": "2026-09-05T10:10:00Z", "updatedAt": "2026-09-05T10:10:00Z" },
+  { "id": "rsp-012", "surveyId": "svy-002", "participantId": "prt-003", "score": 73, "durationMinutes": 10, "device": "Mobile", "completion": "complete", "createdAt": "2026-09-04T15:00:00Z", "updatedAt": "2026-09-04T15:00:00Z" },
+  { "id": "rsp-013", "surveyId": "svy-006", "participantId": "prt-007", "score": 88, "durationMinutes": 4, "device": "Desktop", "completion": "complete", "createdAt": "2026-09-03T11:30:00Z", "updatedAt": "2026-09-03T11:30:00Z" },
+  { "id": "rsp-014", "surveyId": "svy-010", "participantId": "prt-008", "score": 69, "durationMinutes": 9, "device": "Mobile", "completion": "complete", "createdAt": "2026-09-02T08:20:00Z", "updatedAt": "2026-09-02T08:20:00Z" }
+]

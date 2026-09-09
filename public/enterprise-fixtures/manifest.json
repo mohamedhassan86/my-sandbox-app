@@ -1,0 +1,14 @@
+{
+  "area": "enterprise",
+  "version": 1,
+  "fixtures": {
+    "surveys": "surveys.json",
+    "responses": "responses.json",
+    "participants": "participants.json",
+    "notifications": "notifications.json",
+    "activity": "activity.json",
+    "quickActions": "quick-actions.json",
+    "helpContent": "help-content.json",
+    "shortcuts": "shortcuts.json"
+  }
+}

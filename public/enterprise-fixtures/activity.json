@@ -1,0 +1,8 @@
+[
+  { "id": "act-001", "targetType": "response", "targetRef": "/enterprise/responses/rsp-005", "title": "Opened response from Jamie Chen", "occurredAt": "2026-09-09T08:05:00Z" },
+  { "id": "act-002", "targetType": "survey", "targetRef": "/enterprise/surveys/svy-001", "title": "Viewed Customer Satisfaction Pulse", "occurredAt": "2026-09-09T07:58:00Z" },
+  { "id": "act-003", "targetType": "task", "targetRef": "/enterprise/launch", "title": "Started \u201cLaunch a survey\u201d task", "occurredAt": "2026-09-09T07:50:00Z" },
+  { "id": "act-004", "targetType": "view", "targetRef": "", "title": "Saved view \u201cHigh responders\u201d", "occurredAt": "2026-09-08T16:20:00Z" },
+  { "id": "act-005", "targetType": "participant", "targetRef": "/enterprise/participants/prt-010", "title": "Viewed Aisha Bello profile", "occurredAt": "2026-09-08T11:00:00Z" },
+  { "id": "act-006", "targetType": "page", "targetRef": "/enterprise/responses", "title": "Browsed Responses collection", "occurredAt": "2026-09-08T10:15:00Z" }
+]

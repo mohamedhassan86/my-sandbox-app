@@ -1,0 +1,15 @@
+{
+  "helpTopics": [
+    { "locationKey": "home", "title": "Home dashboard", "summary": "Start here: launch tasks from Quick actions, reopen Recent activity, and jump to Favorites.", "link": "/enterprise/home" },
+    { "locationKey": "surveys", "title": "Surveys collection", "summary": "Filter, sort, personalize columns, and save views of your survey catalog. Rows are read-only demo data.", "link": "/enterprise/surveys" },
+    { "locationKey": "responses", "title": "Responses collection", "summary": "Review incoming responses with score, device, and completion insights. Export any view.", "link": "/enterprise/responses" },
+    { "locationKey": "participants", "title": "Participants collection", "summary": "Search respondent profiles, regions, and opt-in status.", "link": "/enterprise/participants" },
+    { "locationKey": "launch", "title": "Launch a survey", "summary": "A guided multi-step task. Your draft is saved automatically so you can resume later.", "link": "/enterprise/launch" }
+  ],
+  "tourSteps": [
+    { "id": "ts-1", "target": "shell", "title": "Welcome to Survey Hub", "body": "This is your operations workspace. Use the navigation on the left to move between Surveys, Responses, and Participants." },
+    { "id": "ts-2", "target": "search", "title": "Find anything fast", "body": "Press Ctrl+K (Cmd+K on Mac) to search across pages, records, and saved views from anywhere." },
+    { "id": "ts-3", "target": "launch", "title": "Launch your first survey", "body": "Try the Quick actions panel on the dashboard to start the guided \u201cLaunch a survey\u201d task." },
+    { "id": "ts-4", "target": "profile", "title": "Make it yours", "body": "Open your profile menu to switch dark mode, enable accessibility mode, and reset demo data any time." }
+  ]
+}

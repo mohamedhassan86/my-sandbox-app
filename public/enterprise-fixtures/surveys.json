@@ -1,0 +1,14 @@
+[
+  { "id": "svy-001", "title": "Customer Satisfaction Pulse", "status": "active", "owner": "Alex Rivera", "questionCount": 8, "responseCount": 214, "targetAudience": "Customers", "rating": 8.4, "createdAt": "2026-06-02T09:00:00Z", "updatedAt": "2026-09-08T11:20:00Z" },
+  { "id": "svy-002", "title": "Employee Engagement Survey", "status": "active", "owner": "Priya Nair", "questionCount": 14, "responseCount": 431, "targetAudience": "All staff", "rating": 7.9, "createdAt": "2026-06-10T09:00:00Z", "updatedAt": "2026-09-07T15:40:00Z" },
+  { "id": "svy-003", "title": "Product Onboarding Feedback", "status": "draft", "owner": "Sam Okafor", "questionCount": 6, "responseCount": 0, "createdAt": "2026-08-22T10:00:00Z", "updatedAt": "2026-09-05T09:12:00Z" },
+  { "id": "svy-004", "title": "Annual Partner Survey", "status": "paused", "owner": "Alex Rivera", "questionCount": 22, "responseCount": 87, "rating": 6.2, "createdAt": "2026-05-14T08:30:00Z", "updatedAt": "2026-07-30T12:00:00Z" },
+  { "id": "svy-005", "title": "Mobile App Usability Test", "status": "archived", "owner": "Priya Nair", "questionCount": 10, "responseCount": 56, "rating": 7.1, "createdAt": "2026-03-01T09:00:00Z", "updatedAt": "2026-06-20T16:00:00Z" },
+  { "id": "svy-006", "title": "Event Satisfaction — Summer Summit", "status": "active", "owner": "Dana White", "questionCount": 12, "responseCount": 143, "targetAudience": "Attendees", "rating": 8.9, "createdAt": "2026-07-01T09:00:00Z", "updatedAt": "2026-09-09T08:00:00Z" },
+  { "id": "svy-007", "title": "Checkout Flow Optimization", "status": "draft", "owner": "Sam Okafor", "questionCount": 5, "responseCount": 0, "createdAt": "2026-09-01T10:00:00Z", "updatedAt": "2026-09-02T10:00:00Z" },
+  { "id": "svy-008", "title": "Support Case Follow-up", "status": "paused", "owner": "Dana White", "questionCount": 7, "responseCount": 96, "rating": 7.5, "createdAt": "2026-04-18T09:00:00Z", "updatedAt": "2026-08-01T12:00:00Z" },
+  { "id": "svy-009", "title": "Quarterly Executive Briefing", "status": "archived", "owner": "Alex Rivera", "questionCount": 9, "responseCount": 32, "rating": 6.8, "createdAt": "2026-01-15T09:00:00Z", "updatedAt": "2026-03-31T12:00:00Z" },
+  { "id": "svy-010", "title": "Community Health Check", "status": "active", "owner": "Priya Nair", "questionCount": 11, "responseCount": 178, "targetAudience": "Community members", "rating": 8.1, "createdAt": "2026-08-05T09:00:00Z", "updatedAt": "2026-09-08T14:00:00Z" },
+  { "id": "svy-011", "title": "New Hire Orientation Feedback", "status": "draft", "owner": "Dana White", "questionCount": 8, "responseCount": 0, "createdAt": "2026-09-06T09:00:00Z", "updatedAt": "2026-09-06T09:00:00Z" },
+  { "id": "svy-012", "title": "Renewal Risk Assessment", "status": "paused", "owner": "Sam Okafor", "questionCount": 15, "responseCount": 41, "rating": 5.9, "createdAt": "2026-02-20T09:00:00Z", "updatedAt": "2026-05-15T12:00:00Z" }
+]

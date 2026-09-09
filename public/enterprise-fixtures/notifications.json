@@ -1,0 +1,7 @@
+[
+  { "id": "ntf-001", "category": "response", "severity": "info", "title": "New response to Customer Satisfaction Pulse", "body": "Sofia Reyes completed the survey in 4 minutes.", "deepLink": "/enterprise/responses/rsp-001", "createdAt": "2026-09-09T06:21:00Z" },
+  { "id": "ntf-002", "category": "response", "severity": "success", "title": "New response to Event Satisfaction", "body": "Jamie Chen scored 95 \u2014 the highest yet.", "deepLink": "/enterprise/responses/rsp-005", "createdAt": "2026-09-09T08:02:00Z" },
+  { "id": "ntf-003", "category": "survey", "severity": "warning", "title": "Employee Engagement response dropped off", "body": "Isabella Rossi left the survey at 64% completion.", "deepLink": "/enterprise/responses/rsp-004", "createdAt": "2026-09-08T12:06:00Z" },
+  { "id": "ntf-004", "category": "survey", "severity": "success", "title": "Onboarding Feedback ready to launch", "body": "Product Onboarding Feedback passed review and is ready to launch.", "deepLink": "/enterprise/surveys/svy-003", "createdAt": "2026-09-05T09:13:00Z" },
+  { "id": "ntf-005", "category": "participant", "severity": "info", "title": "New participant registered", "body": "Aisha Bello opted in to research participation.", "deepLink": "/enterprise/participants/prt-010", "createdAt": "2026-09-01T10:01:00Z" }
+]
