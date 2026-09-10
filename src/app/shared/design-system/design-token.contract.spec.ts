@@ -24,6 +24,10 @@ import {
 const CONTRACT_DIR = 'specs/004-survey-design-system/contracts';
 const TOKEN_CONTRACT = readFileSync(join(CONTRACT_DIR, 'design-tokens.md'), 'utf8');
 const CLASS_CONTRACT = readFileSync(join(CONTRACT_DIR, 'css-classes.md'), 'utf8');
+const UI_SIZE_CONTRACT = readFileSync(
+  'specs/005-dropdown-menu-sizing/contracts/ui-sizes.md',
+  'utf8',
+);
 
 function stylesheetsIn(directory: string): string[] {
   const found: string[] = [];
@@ -266,5 +270,169 @@ describe('design system contract: token layer', () => {
     expect(unmapped).toEqual([]);
     expect(primeng).toContain('--p-select-');
     expect(primeng).toContain('--p-togglebutton-');
+  });
+});
+
+/**
+ * Survey answer geometry contract — see
+ * `specs/005-dropdown-menu-sizing/contracts/ui-sizes.md` for the documented heights and
+ * widths this block enforces. The numbers are documentation; what the check protects is
+ * that the sizes are token-driven, that the dropdown panel stays attached to its field,
+ * that an open panel layers above sibling cards, and that the panel and list stay bounded.
+ */
+const SIZE_TOKENS = [
+  '--ds-control-height',
+  '--ds-select-list-max-height',
+  '--ds-select-panel-max-height',
+  '--ds-select-option-min-height',
+  '--ds-z-active-card',
+] as const;
+
+/** Flattens a stylesheet into `{ selectors, declarations }` rules (ignores nesting/comments). */
+function flatRules(css: string): { selectors: string; declarations: string }[] {
+  const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  return [...withoutComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((match) => ({
+    selectors: match[1].trim().replace(/\s+/g, ' '),
+    declarations: match[2].replace(/\s+/g, ' ').trim(),
+  }));
+}
+
+const PRIMENG_CSS = readFileSync('src/styles/integrations/primeng.css', 'utf8');
+const COMPAT_CSS = readFileSync('src/styles/compat.css', 'utf8');
+const PRIMENG_RULES = flatRules(PRIMENG_CSS);
+const COMPAT_RULES = flatRules(COMPAT_CSS);
+
+function rulesMatching(selectors: RegExp): { selectors: string; declarations: string }[] {
+  return PRIMENG_RULES.filter((rule) => selectors.test(rule.selectors));
+}
+
+describe('design system contract: survey answer geometry', () => {
+  it('ships the size tokens that drive every question surface', () => {
+    for (const token of SIZE_TOKENS) {
+      expect(TOKENS.has(token), `${token} should be defined in the token layer`).toBe(true);
+    }
+  });
+
+  it('documents every size token in the size and token contracts', () => {
+    const documented = documentedTokens(TOKEN_CONTRACT);
+    for (const token of SIZE_TOKENS) {
+      expect(UI_SIZE_CONTRACT, `${token} should appear in the size contract`).toContain(token);
+      expect(
+        documentedTokenCoverage(token, documented),
+        `${token} should appear in the token contract`,
+      ).toBe(true);
+    }
+    // The contract is only a contract if it states the measured values for the documented
+    // reference viewports.
+    for (const viewport of ['320', '375', '768', '1280', '1440']) {
+      expect(UI_SIZE_CONTRACT, `viewport ${viewport} should be documented`).toContain(viewport);
+    }
+  });
+
+  it('derives one control height from the same steps the text input uses', () => {
+    const controlHeight = TOKENS.get('--ds-control-height') ?? '';
+    for (const step of ['--ds-space-sm', '--ds-line-height-normal', '--ds-font-size-lg', 'calc(']) {
+      expect(controlHeight, `--ds-control-height should be derived from ${step}`).toContain(step);
+    }
+    const formControl = COMPAT_RULES.find((rule) =>
+      rule.selectors.split(',').some((selector) => selector.trim() === '.form-control'),
+    );
+    expect(formControl, '.form-control should be styled').toBeDefined();
+    for (const step of [
+      'var(--ds-space-sm)',
+      'var(--ds-font-size-lg)',
+      'var(--ds-line-height-normal)',
+    ]) {
+      expect(
+        formControl?.declarations,
+        `.form-control should use ${step}, the same step the control height contract uses`,
+      ).toContain(step);
+    }
+  });
+
+  it('sizes the select field, its label, and its option rows from tokens', () => {
+    const selectRules = rulesMatching(/^\.p-select(?![\w-])/);
+    expect(selectRules.length, 'the select field should be styled').toBeGreaterThan(0);
+    const selectField = selectRules.find((rule) => rule.selectors === '.p-select');
+    expect(selectField?.declarations).toContain('min-height: var(--ds-control-height)');
+    expect(selectField?.declarations).not.toMatch(/\d+px/);
+
+    const overlayRules = rulesMatching(/^\.p-select-overlay/);
+    expect(overlayRules.length, 'the option panel should be styled').toBeGreaterThan(0);
+    const sizedByTokens = overlayRules.some(
+      (rule) =>
+        rule.declarations.includes('max-height:') &&
+        rule.declarations.includes('var(--ds-select-panel-max-height)'),
+    );
+    expect(sizedByTokens, 'the panel ceiling should come from --ds-select-panel-max-height').toBe(
+      true,
+    );
+    const optionRow = overlayRules.find((rule) =>
+      rule.declarations.includes('min-height: var(--ds-select-option-min-height)'),
+    );
+    expect(optionRow, 'option rows should use --ds-select-option-min-height').toBeDefined();
+
+    // No literal size may decide the geometry of the select surfaces.
+    const literalSizes = [...selectRules, ...overlayRules].flatMap(
+      (rule) => rule.declarations.match(/\d+(?:\.\d+)?(?:px|rem|em|vw|vh)/g) ?? [],
+    );
+    expect(literalSizes, 'select surfaces should be sized by tokens only').toEqual([]);
+  });
+
+  it('keeps the option panel attached to its field while it is open', () => {
+    const placed = PRIMENG_RULES.find((rule) =>
+      rule.selectors.includes('.p-select-overlay.p-component-overlay.p-component'),
+    );
+    expect(
+      placed,
+      'the panel needs an explicit rule to override the library overlay default placement',
+    ).toBeDefined();
+    expect(placed?.declarations).toContain('position: absolute');
+    expect(placed?.declarations).toContain('top: 0');
+  });
+
+  it('can flip the option panel above its field when there is no room below', () => {
+    const above = PRIMENG_RULES.find(
+      (rule) =>
+        rule.selectors.includes('.panel-above') && rule.selectors.includes('.p-select-overlay'),
+    );
+    expect(
+      above,
+      'the upwards placement needs a selector the component can switch on',
+    ).toBeDefined();
+    expect(above?.declarations).toContain('bottom: 100%');
+    expect(above?.declarations).toContain('top: auto');
+    const component = readFileSync(
+      'src/app/survey/components/dropdown-question/dropdown-question.ts',
+      'utf8',
+    );
+    expect(component).toContain('[class.panel-above]');
+    expect(component).toContain('shouldOpenAbove');
+  });
+
+  it('lifts the card that owns an open option panel above its siblings', () => {
+    const active = COMPAT_RULES.find((rule) => rule.selectors.includes(':has(.p-select-overlay)'));
+    expect(active, 'the open-panel card needs an explicit z-index').toBeDefined();
+    expect(active?.declarations).toContain('z-index: var(--ds-z-active-card)');
+  });
+
+  it('passes the option-list viewport token to the dropdown control, never a literal', () => {
+    const component = readFileSync(
+      'src/app/survey/components/dropdown-question/dropdown-question.ts',
+      'utf8',
+    );
+    const placement = readFileSync(
+      'src/app/survey/components/dropdown-question/dropdown-panel-placement.ts',
+      'utf8',
+    );
+    expect(placement).toContain('var(--ds-select-list-max-height)');
+    expect(component).toContain('[scrollHeight]="listViewport()"');
+    expect(component).not.toMatch(/scrollHeight[^\n]*\d+px/);
+    // The measured viewport height may only lower the token ceiling, never replace it.
+    expect(component).toContain('[style.--ds-select-available-height]');
+    const overlayCeiling = rulesMatching(/^\.p-select-overlay/).find((rule) =>
+      rule.declarations.includes('max-height:'),
+    );
+    expect(overlayCeiling?.declarations).toContain('var(--ds-select-available-height');
   });
 });

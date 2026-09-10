@@ -68,6 +68,20 @@
   --ds-layout-xl: 3rem;
   --ds-layout-2xl: 3.5rem;
 
+  /* Survey control sizing contract (see
+     `specs/005-dropdown-menu-sizing/contracts/ui-sizes.md`).
+
+     `--ds-control-height` is the height every single-line answer control resolves to:
+     two block padding steps + one line of control text + the two 1px borders. It is
+     expressed as the same derivation the text inputs use, so a dropdown field and a text
+     box measure the same at every viewport instead of drifting apart. */
+  --ds-control-height: calc(
+    var(--ds-space-sm) * 2 + var(--ds-line-height-normal) * var(--ds-font-size-lg) + 2 * 1px
+  );
+  --ds-select-list-max-height: min(16rem, 32vh);
+  --ds-select-panel-max-height: min(20rem, 45vh);
+  --ds-select-option-min-height: var(--ds-touch-target);
+
   /* Breakpoint contract (media queries use these values literally) */
   --ds-bp-sm: 30rem;
   --ds-bp-md: 48rem;
@@ -76,6 +90,9 @@
 
   /* Layering contract */
   --ds-z-sticky: 10;
+  /* A question card that owns an open option panel paints above its sibling cards, so an
+     open dropdown is never covered by the next question. */
+  --ds-z-active-card: 20;
   --ds-z-overlay: 40;
   --ds-z-modal: 50;
   --ds-z-toast: 60;

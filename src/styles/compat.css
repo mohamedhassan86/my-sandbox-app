@@ -83,6 +83,10 @@ app-validation-message {
 .question-block {
   position: relative;
   display: block;
+  /* The card is a grid item: without an explicit minimum it refuses to shrink below its
+     content's intrinsic width (the option grid), which pushed the cards ~49px past the
+     panel edge on a 320px viewport. */
+  min-width: 0;
   background-color: var(--ds-color-surface);
   border: 1px solid var(--ds-color-border);
   border-radius: var(--ds-radius-xl);
@@ -120,6 +124,13 @@ app-validation-message {
 .question-block:focus-within {
   border-color: var(--ds-color-selection);
   box-shadow: var(--ds-focus-ring);
+}
+
+/* A card that owns an open option panel is lifted above its sibling cards. Each card gets a
+   stacking context from its entrance animation, so without this the following card paints
+   over the open dropdown list and hides the options. */
+.question-block:has(.p-select-overlay) {
+  z-index: var(--ds-z-active-card);
 }
 
 /* Answered: success accent bar + a check cue drawn on the card chrome. */

@@ -29,11 +29,38 @@ describe('DropdownQuestionComponent', () => {
   });
 
   it('emits the selected option value as the answer', () => {
-    expect(DropdownQuestionComponent.selectedAnswer('D1', 'ae')).toEqual({ questionId: 'D1', value: 'ae' });
+    expect(DropdownQuestionComponent.selectedAnswer('D1', 'ae')).toEqual({
+      questionId: 'D1',
+      value: 'ae',
+    });
   });
 
   it('emits null as the answer when cleared', () => {
-    expect(DropdownQuestionComponent.clearedAnswer('D1')).toEqual({ questionId: 'D1', value: null });
+    expect(DropdownQuestionComponent.clearedAnswer('D1')).toEqual({
+      questionId: 'D1',
+      value: null,
+    });
+  });
+
+  it('exposes the panel placement rules the component template uses', () => {
+    expect(DropdownQuestionComponent.shouldOpenAbove({ top: 437, bottom: 490 }, 312, 900)).toBe(
+      false,
+    );
+    expect(DropdownQuestionComponent.shouldOpenAbove({ top: 300, bottom: 376 }, 189, 420)).toBe(
+      true,
+    );
+    expect(
+      DropdownQuestionComponent.panelCeiling({ top: 437, bottom: 490 }, 312, 900, false),
+    ).toBeNull();
+    expect(DropdownQuestionComponent.panelCeiling({ top: 300, bottom: 376 }, 189, 420, false)).toBe(
+      42,
+    );
+  });
+
+  it('drives the option-list viewport from the sizing token, never a literal', () => {
+    const viewport = DropdownQuestionComponent.listViewportHeight();
+    expect(viewport).toBe('var(--ds-select-list-max-height)');
+    expect(viewport).not.toMatch(/\d+px/);
   });
 
   it('always resolves to a non-empty accessible label (schema validation rejects blank labels)', () => {

@@ -68,6 +68,10 @@
 
 .survey-content {
   min-width: 0;
+  /* The collapsed drawer offset is a margin, so the panel takes the remaining width. With a
+     full 100% width the questions would hang past the viewport edge and the page would
+     scroll sideways on phones. */
+  width: auto;
   margin-inline-start: calc(var(--ds-touch-target) + var(--ds-space-sm));
   padding: var(--ds-space-fluid-lg);
   border-radius: var(--ds-radius-2xl);
