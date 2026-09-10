@@ -13,6 +13,7 @@ import { SurveyCatalogService } from '../../../core/services/survey-catalog.serv
 import { ResponseSubmissionService } from '../../../core/services/response-submission.service';
 import { CompletionSummaryComponent } from '../../components/completion-summary/completion-summary';
 import { SurveyNavigationComponent } from '../../components/survey-navigation/survey-navigation';
+import { buildCompletionTiles } from '../../presenters/completion-tiles';
 import { SurveySessionService } from '../../services/survey-session.service';
 import { SurveyPageComponent } from '../survey-page/survey-page';
 
@@ -137,7 +138,7 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
             </div>
             <div class="content-wrap">
               @if (!isDesktop()) {
-                <p class="visually-hidden">
+                <p class="ds-sr-only">
                   Page {{ session.pageIndex() + 1 }} of {{ currentSurvey.pages.length }}:
                   {{ session.currentPage()?.title }}
                 </p>
@@ -195,7 +196,11 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
               @if (session.currentPage(); as page) {
                 <section class="survey-card">
                   @if (session.isSubmitted()) {
-                    <app-completion-summary [percentage]="session.completionPercentage()" />
+                    <app-completion-summary
+                      [percentage]="session.completionPercentage()"
+                      [tiles]="completionTiles()"
+                      (newResponse)="restart()"
+                    />
                   } @else {
                     <header class="card-header">
                       <div class="card-eyebrow-row">
@@ -282,6 +287,16 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
     typeof window !== 'undefined' ? window.matchMedia('(min-width: 64rem)') : null;
   readonly isDesktop = signal(this.desktopQuery?.matches ?? true);
   readonly isRail = computed(() => this.isDesktop() && this.dockCollapsed());
+  readonly completionTiles = computed(() => {
+    const current = this.survey();
+    return current
+      ? buildCompletionTiles(
+          current,
+          this.session.currentAnswers(),
+          this.session.currentAttachments(),
+        )
+      : [];
+  });
   private readonly handleDesktopChange = (event: MediaQueryListEvent) =>
     this.isDesktop.set(event.matches);
 
@@ -360,6 +375,16 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
 
   toggleRail(): void {
     this.dockCollapsed.update((collapsed) => !collapsed);
+  }
+
+  restart(): void {
+    const current = this.survey();
+    if (!current) return;
+    if (this.toastTimer !== null) clearTimeout(this.toastTimer);
+    this.toast.set(null);
+    this.submissionState.set('idle');
+    this.mobileNavOpen.set(false);
+    this.session.start(current);
   }
 
   @HostListener('document:keydown.escape')

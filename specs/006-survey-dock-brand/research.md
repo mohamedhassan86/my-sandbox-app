@@ -10,7 +10,7 @@ all sampled values below come from it.
   cream, red) plus a deeper maroon step, re-point the semantic roles in `semantic.css`
   (canvas → cream, selection → maroon, tertiary → cream, danger → red, focus core follows
   selection to maroon), and add one new semantic family (`--ds-color-accent-*`, gold) plus
-  shell layout tokens (dock widths, drawer cap, ring size). Token *names* stay stable; only
+  shell layout tokens (dock widths, drawer cap, ring size). Token _names_ stay stable; only
   values and role mappings change. See [contracts/brand-delta.md](contracts/brand-delta.md).
 - **Rationale**: FR-018/FR-019 require the rebrand to ride the existing contract-first
   workflow and change brand/chrome/layout only. The 004/005 automated checks, the PrimeNG
@@ -28,16 +28,17 @@ all sampled values below come from it.
   ring stroke, medallion) and to filled backgrounds carrying dark text (submit action:
   `#3d000f` on `#d4af37` = 8.29:1 ✓). Verified by machine, not by eye:
 
-  | Pair | Ratio | Verdict |
-  | ---- | ----: | ------- |
-  | maroon `#800020` on white / cream | 10.83 / 10.14 | ✓ text |
-  | white / gold-300 `#f3e5ab` on dock deep `#3d000f` | 17.42 / 13.78 | ✓ dock text |
-  | maroon-900 `#3d000f` on gold `#d4af37` (submit) | 8.29 | ✓ |
-  | gold-700 `#8f6f16` on white (stars, symbols) | 4.72 | ✓ text/symbols |
-  | white on step green `#15803d` | 5.02 | ✓ completed tiles |
-  | muted `#6e6e6e` on cream `#faf7f2` | 4.77 | ✓ |
-  | rose-600 `#e11d48` on white (errors) | 4.70 | ✓ |
-  | gold-600 `#b89320` / gold-500 `#d4af37` on white | 2.90 / 2.10 | ✗ decorative only |
+  | Pair                                              |         Ratio | Verdict           |
+  | ------------------------------------------------- | ------------: | ----------------- |
+  | maroon `#800020` on white / cream                 | 10.83 / 10.14 | ✓ text            |
+  | white / gold-300 `#f3e5ab` on dock deep `#3d000f` | 17.42 / 13.78 | ✓ dock text       |
+  | maroon-900 `#3d000f` on gold `#d4af37` (submit)   |          8.29 | ✓                 |
+  | gold-700 `#8f6f16` on white (stars, symbols)      |          4.72 | ✓ text/symbols    |
+  | white on step green `#15803d`                     |          5.02 | ✓ completed tiles |
+  | muted `#6e6e6e` on cream `#faf7f2`                |          4.77 | ✓                 |
+  | rose-600 `#e11d48` on white (errors)              |          4.70 | ✓                 |
+  | gold-600 `#b89320` / gold-500 `#d4af37` on white  |   2.90 / 2.10 | ✗ decorative only |
+
 - **Rationale**: The reference paints gold stars on white; the shipped product must keep
   the 004 contrast contract (3:1 minimum for symbols/fills). The dark gold step reads as
   gold and passes as text.
@@ -47,7 +48,7 @@ all sampled values below come from it.
 
 ## Decision: Additive, optional JSON extension for page chrome copy
 
-- **Decision**: Extend the survey JSON contract with three *optional* fields —
+- **Decision**: Extend the survey JSON contract with three _optional_ fields —
   `Survey.estimatedMinutes?`, `SurveyPage.description?`, `SurveyPage.icon?` — validated
   when present (non-empty, bounded length; icon is a key into the documented icon set
   with a graceful default for unknown keys) and ignored when absent. All existing
@@ -66,7 +67,7 @@ all sampled values below come from it.
 
 - **Decision**: `survey-view` gains the dock sidebar, sticky topbar, progress card,
   survey-card header/footer, mobile step pills, and toast markup. All navigation,
-  validation, and submission *rules* stay in `SurveySessionService` and the validators;
+  validation, and submission _rules_ stay in `SurveySessionService` and the validators;
   the template only reads signals and forwards events. New view state is limited to
   `dockCollapsed` (desktop rail), `drawerOpen` (mobile, reusing the existing
   `mobileNavOpen` signal), and transient toast state. The drawer breakpoint moves from
@@ -103,11 +104,11 @@ all sampled values below come from it.
 
 - **Decision**: `CompletionSummaryComponent` gains a `tiles` input
   (`ReadonlyArray<{ label, value }>`). A pure, unit-tested `buildCompletionTiles(survey,
-  answers, attachments)` presenter produces one tile per page (`"<title>": "n/m answered"`)
+answers, attachments)` presenter produces one tile per page (`"<title>": "n/m answered"`)
   plus one attachments tile (`"Files": "k file(s) attached"`), capped at a documented
   tile count with an overflow tile. The component stays presentational.
 - **Rationale**: FR-013 forbids the reference's hard-coded GCC fields; tiles must be
-  survey-derived for *every* catalog survey regardless of page count or question mix. A
+  survey-derived for _every_ catalog survey regardless of page count or question mix. A
   pure presenter is independently testable and keeps the component free of domain logic.
 - **Alternatives considered**: Templating per-question answers (rejected: unbounded —
   a 24-question survey would render 24 tiles); reusing the reference's four fixed tiles
@@ -116,7 +117,7 @@ all sampled values below come from it.
 ## Decision: Toast is presentational and event-driven
 
 - **Decision**: A toast region in the survey-view template (`role="status"`, promoted to
-  `role="alert"` for blocking errors) driven by the *existing* return values of
+  `role="alert"` for blocking errors) driven by the _existing_ return values of
   `session.next()`, `session.goToPage()`, and `buildResponse()`/`submit()`. Message text
   comes from a tiny pure mapper (unit-tested); auto-dismiss is view-local with a
   documented duration; no domain state is added.
@@ -133,7 +134,7 @@ all sampled values below come from it.
   `--ds-icon-chevrons`, and `--ds-icon-upload` masks to `icons.css`, drawn as black
   geometric SVG paths tinted by `background-color` tokens (the established pattern).
   Satisfaction keeps its emoji glyphs; rating keeps numeric buttons. Star-shaped rating
-  buttons are explicitly *not* introduced — the numeric control is re-skinned (gold-dark
+  buttons are explicitly _not_ introduced — the numeric control is re-skinned (gold-dark
   selected fill + `N / max` readout, with a Poor…Excellent descriptor only on 5-step
   scales via a pure, tested mapper).
 - **Rationale**: FR-016 forbids the reference's Font Awesome CDN; the mask pattern is the
@@ -179,7 +180,7 @@ all sampled values below come from it.
   references, zero literal hues), so re-pointing the semantics re-themes the dropdown
   and toggle automatically. The plan verifies the mapping (dropdown field/overlay/option
   states and toggle on/off against the reference treatments) and adjusts only any
-  mapping whose *semantic choice* is now wrong (e.g. a selection-soft tint that must
+  mapping whose _semantic choice_ is now wrong (e.g. a selection-soft tint that must
   read maroon rather than blue-soft — which follows automatically — versus a decorative
   blue that must become gold, which needs a deliberate edit).
 - **Rationale**: The whole point of the bridge (004) is that library controls inherit
@@ -192,7 +193,7 @@ all sampled values below come from it.
 - **Decision**: 006 ships `contracts/brand-delta.md` (ramps, re-pointed roles, new
   tokens, added contrast pairs, JSON amendment) and `contracts/shell-sizes.md` (dock/
   chrome geometry + measured values at the five documented viewports). The automated
-  check is extended to merge documented tokens from the 004 *and* 006 token contracts,
+  check is extended to merge documented tokens from the 004 _and_ 006 token contracts,
   to enforce the added contrast pairs, and to assert the shell-geometry tokens exist,
   are documented, and drive the shell surfaces. The 004/005 contract files are left
   untouched so their checks keep their original meaning; measured shell sizes are filled

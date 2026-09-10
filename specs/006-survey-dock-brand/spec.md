@@ -8,7 +8,7 @@
 
 **Input**: User description: "new survey brand as "public/index.html""
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Survey wears the GCC dock brand (Priority: P1)
 
@@ -188,7 +188,7 @@ perceptible.
 
 1. **Given** a successfully submitted response, **When** the completion summary
    renders, **Then** it shows a success medallion, a clear success message, `100%
-   complete`, and summary tiles derived from the submitted survey's questions and
+complete`, and summary tiles derived from the submitted survey's questions and
    answers.
 2. **Given** the completion summary, **When** the respondent starts a new response,
    **Then** a fresh editable survey begins with no answers carried over.
@@ -224,7 +224,7 @@ perceptible.
   and card cues all return to the unanswered state with no error styling on optional
   questions.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -309,7 +309,7 @@ perceptible.
   control/panel geometry all keep their current contracts; this feature changes
   brand, chrome, and navigation layout only.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Brand role**: One of the three named color roles (maroon primary, gold secondary,
   cream tertiary) with its scale steps and documented usages; the only colors
@@ -327,7 +327,7 @@ perceptible.
 - **Completion summary**: The post-submission presentation — medallion, success
   message, `100% complete`, survey-derived summary tiles, and new-response action.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

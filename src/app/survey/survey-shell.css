@@ -561,7 +561,7 @@
 }
 
 .progress-card-bar {
-  height: var(--ds-space-sm);
+  height: var(--ds-space-2xs);
   margin-top: var(--ds-space-sm);
   overflow: hidden;
   border-radius: var(--ds-radius-pill);

@@ -82,7 +82,7 @@ plus attachments):
 
 1. Submit a complete survey: medallion pop + single ring pulse, success message,
    `100% complete`, one tile per page (`n/m answered`) plus a files tile, and a
-   working new-response action. Tiles reflect *this* survey's pages — never fixed
+   working new-response action. Tiles reflect _this_ survey's pages — never fixed
    demo fields.
 2. Enable "reduce motion" and repeat: no celebration movement, no sheen, no entrance
    travel — the success state is still unmistakable.
@@ -112,3 +112,15 @@ contrast pairs pass, the shell-geometry tokens drive the dock/drawer/topbar/ring
 surfaces, and no literal color, spacing length, or shell width escapes the token
 layer. All pre-existing tests must pass unmodified in behavior (answer values,
 validation messages, gating, payloads byte-identical for the same inputs).
+
+### Verification results (T041, recorded 2026-09-10)
+
+- `pnpm exec vitest run src/app/core src/app/survey src/app/shared` — **18 files,
+  149 tests, all green** (baseline was 16 files / 121; the delta is new dock-shell,
+  toast, tiles, rating-readout, and file-upload coverage plus the extended contract
+  checks).
+- `pnpm exec ng build` — **green**, bundle generation complete, no errors.
+- `pnpm exec prettier --check .` — red on 54 files, all pre-existing: the T001
+  baseline was red on 74 files, and an intersection check confirms **zero**
+  feature-touched files are red (the feature's own edits were verified per-file
+  clean, which incidentally cleaned 20 baseline-red files).

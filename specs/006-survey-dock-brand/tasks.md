@@ -116,14 +116,14 @@ plus announced validation feedback; US1–US4 are independently functional.
 **Goal**: Post-submission summary with medallion, `100% complete`, survey-derived tiles,
 new-response action, and motion-safe celebration.
 
-**Independent Test**: Submit a complete survey; confirm the summary reflects *this*
+**Independent Test**: Submit a complete survey; confirm the summary reflects _this_
 survey's pages (never fixed demo fields) and that reduced motion removes all celebration
 movement while success stays unmistakable (quickstart §6).
 
-- [ ] T034 [P] [US5] Write unit tests for pure `buildCompletionTiles()` (per-page `n/m answered` + files tile + overflow cap) in new `src/app/survey/presenters/completion-tiles.spec.ts` (fail first)
-- [ ] T035 [US5] Implement `buildCompletionTiles()` in new `src/app/survey/presenters/completion-tiles.ts`
-- [ ] T036 [US5] Add the `tiles` input, medallion/summary-tiles/actions markup, and re-skin in `src/app/survey/components/completion-summary/completion-summary.ts` (+ `completion-summary.css`)
-- [ ] T037 [US5] Add the celebration ring/pulse keyframes (`opacity`/`transform` only) in `src/styles/components/motion.css` and apply them to the completion styles
+- [x] T034 [P] [US5] Write unit tests for pure `buildCompletionTiles()` (per-page `n/m answered` + files tile + overflow cap) in new `src/app/survey/presenters/completion-tiles.spec.ts` (fail first)
+- [x] T035 [US5] Implement `buildCompletionTiles()` in new `src/app/survey/presenters/completion-tiles.ts`
+- [x] T036 [US5] Add the `tiles` input, medallion/summary-tiles/actions markup, and re-skin in `src/app/survey/components/completion-summary/completion-summary.ts` (+ `completion-summary.css`)
+- [x] T037 [US5] Add the celebration ring/pulse keyframes (`opacity`/`transform` only) in `src/styles/components/motion.css` and apply them to the completion styles
 
 **Checkpoint**: All user stories are independently functional; the full flow matches the
 reference end to end.
@@ -134,10 +134,11 @@ reference end to end.
 feature.
 
 - [ ] T038 Measure and fill the shell-size table in [contracts/shell-sizes.md](contracts/shell-sizes.md) §2 at 320/375/768/1280/1440 (16 px root) and confirm ≤1 px drift from the shipped CSS
-- [ ] T039 [P] Update `README.md` (dock-brand section, optional JSON fields, merged contract check, shell geometry contract)
-- [ ] T040 [P] Update `src/index.html` (document title, description, theme-color) to the dock brand
-- [ ] T041 Run the full verification (`pnpm exec vitest run src/app/core src/app/survey src/app/shared`, `pnpm exec prettier --check .`, `pnpm exec ng build`) and record the results in [quickstart.md](quickstart.md) §8
+- [x] T039 [P] Update `README.md` (dock-brand section, optional JSON fields, merged contract check, shell geometry contract)
+- [x] T040 [P] Update `src/index.html` (document title, description, theme-color) to the dock brand
+- [x] T041 Run the full verification (`pnpm exec vitest run src/app/core src/app/survey src/app/shared`, `pnpm exec prettier --check .`, `pnpm exec ng build`) and record the results in [quickstart.md](quickstart.md) §8
 - [ ] T042 Browser review pass at 320/375/768/1280/1440 + 200% zoom + keyboard-only + reduced motion per [quickstart.md](quickstart.md) §§2–7 (reviewer step; confirm zero reference mismatches and identical behavior for the same inputs)
+  - Agent static pre-review 2026-09-10 (live pass still needs a human + browser): reduced-motion universal collapse covers `dock-ping`, `ds-celebrate-*`, sheen, and all transitions; keyboard paths are native buttons/inputs with visible rings (gold on dock) + Escape-to-close + aria-current/labels on steps; z-order sticky 10 < overlay 40 < dock 50 < toast 60; zoom reflows through the 1024 px breakpoint; fixed bug found in review (`.visually-hidden` → `.ds-sr-only`, class did not exist). Serve with `pnpm start` and open `/` (4-page) + `/surveys/extended-feedback` (6-step).
 
 ## Dependencies & Execution Order
 
