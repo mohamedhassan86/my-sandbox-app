@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GCC Resident Insights — Survey Dock</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        maroon: {50:'#fdf2f4',100:'#fbe5e9',200:'#f7ced6',300:'#ef9cae',400:'#c94a67',500:'#9e2b45',600:'#800020',700:'#6b001b',800:'#540015',900:'#3d000f',950:'#25000a'},
+        gold: {100:'#fbf3d9',200:'#f7e8b5',300:'#f3e5ab',400:'#e6ca65',500:'#d4af37',600:'#b89320',700:'#8f6f16'},
+        cream: {50:'#fcfcf9',100:'#faf7f2',200:'#f2eae0',300:'#e5d7c5',400:'#d3c1a4'}
+      },
+      fontFamily: { sans: ['Plus Jakarta Sans','Inter','sans-serif'], serif:['Fraunces','serif'] },
+      boxShadow: {
+        'dock':'0 20px 60px -15px rgba(61,0,15,.35)',
+        'card':'0 10px 40px -12px rgba(128,0,32,.15)',
+        'gold':'0 8px 24px -6px rgba(212,175,55,.45)'
+      }
+    }
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap" rel="stylesheet">
+<style>
+  *{ -webkit-tap-highlight-color: transparent; }
+  body{ font-family:'Plus Jakarta Sans',sans-serif; background:#faf7f2; color:#1e293b; overflow-x:hidden; }
+  body::before{
+    content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: radial-gradient(rgba(128,0,32,.07) 1px, transparent 1px);
+    background-size:22px 22px;
+    mask-image: linear-gradient(to bottom, black 0%, transparent 55%);
+  }
+  .orb{ position:fixed; border-radius:9999px; filter:blur(90px); opacity:.35; pointer-events:none; z-index:0; }
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-track{ background:#f2eae0; }
+  ::-webkit-scrollbar-thumb{ background:linear-gradient(#800020,#b89320); border-radius:99px; }
+
+  /* ===== DOCK LAYOUT ===== */
+  #sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:322px; z-index:50;
+    background: linear-gradient(180deg,#25000a 0%, #3d000f 22%, #540015 55%, #6b001b 100%);
+    color:#fff; display:flex; flex-direction:column;
+    transition: width .38s cubic-bezier(.22,1,.36,1), transform .38s cubic-bezier(.22,1,.36,1);
+    box-shadow: 20px 0 60px -20px rgba(61,0,15,.5);
+    border-right:1px solid rgba(212,175,55,.25);
+    overflow:hidden;
+  }
+  #sidebar::after{
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:.12;
+    background-image:url("data:image/svg+xml,%3Csvg width='56' height='56' viewBox='0 0 56 56' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M28 0l6 10 10-6-6 10 10 6-10 6 6 10-10-6-6 10-6-10-10 6 6-10-10-6 10-6-6-10 10 6z' fill='none' stroke='%23d4af37' stroke-width='1'/%3E%3C/svg%3E");
+    background-size:56px 56px;
+  }
+  #main-column{ min-height:100vh; position:relative; z-index:1; transition: margin .38s cubic-bezier(.22,1,.36,1); }
+  #sidebar-overlay{ position:fixed; inset:0; background:rgba(15,0,5,.6); backdrop-filter:blur(4px); z-index:40; opacity:0; pointer-events:none; transition:opacity .3s; }
+
+  @media (min-width:1024px){
+    body[data-sidebar="expanded"] #main-column{ margin-left:322px; }
+    body[data-sidebar="collapsed"] #main-column{ margin-left:96px; }
+    body[data-sidebar="collapsed"] #sidebar{ width:96px; }
+    body[data-sidebar="collapsed"] .collapse-hide{ display:none !important; }
+    body[data-sidebar="collapsed"] .collapse-show{ display:flex !important; }
+    body[data-sidebar="collapsed"] .step-btn{ justify-content:center; padding:.9rem .5rem; }
+    body[data-sidebar="collapsed"] .step-connector{ left:50%; transform:translateX(-50%); }
+  }
+  @media (max-width:1023.98px){
+    #sidebar{ width:330px; max-width:88vw; transform:translateX(-108%); }
+    body[data-mobile="open"] #sidebar{ transform:translateX(0); }
+    body[data-mobile="open"] #sidebar-overlay{ opacity:1; pointer-events:auto; }
+    #main-column{ margin-left:0 !important; }
+    .collapse-show{ display:none !important; }
+  }
+  .collapse-show{ display:none; }
+
+  .step-btn{ position:relative; width:100%; text-align:left; border-radius:16px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.06); transition:all .25s; overflow:hidden; }
+  .step-btn:hover{ background:rgba(255,255,255,.11); border-color:rgba(212,175,55,.5); transform:translateX(3px); }
+  body[data-sidebar="collapsed"] .step-btn:hover{ transform:none; }
+  .step-btn.active{ background:linear-gradient(135deg, rgba(212,175,55,.22), rgba(255,255,255,.12)); border-color:#d4af37; box-shadow:0 8px 24px -8px rgba(212,175,55,.5); }
+  .step-btn.completed{ border-color:rgba(212,175,55,.4); background:rgba(212,175,55,.08); }
+  .step-num{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; transition:all .25s; }
+  .step-btn.active .step-num{ background:linear-gradient(135deg,#d4af37,#b89320); color:#3d000f; box-shadow:0 6px 16px -4px rgba(212,175,55,.7); }
+  .step-btn.completed .step-num{ background:#15803d; color:#fff; }
+  .step-btn.todo .step-num{ background:rgba(255,255,255,.12); color:#f3e5ab; border:1px solid rgba(255,255,255,.15); }
+
+  .gold-divider{ height:1px; background:linear-gradient(90deg, transparent, rgba(212,175,55,.6), transparent); }
+
+  /* ===== FORM STYLES ===== */
+  .fade-enter-active{ animation:fadeUp .45s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:translateY(0)} }
+  .q-card{ transition:all .25s; }
+  .q-card:focus-within{ border-color:rgba(128,0,32,.35); box-shadow:0 10px 30px -12px rgba(128,0,32,.15); }
+  .option-card{ transition:all .22s cubic-bezier(.22,1,.36,1); position:relative; overflow:hidden; }
+  .option-card:hover{ border-color:#d4af37; transform:translateY(-1px); box-shadow:0 8px 20px -8px rgba(212,175,55,.4); }
+  .option-card.selected{ border-color:#800020; background:linear-gradient(180deg,#fdf2f4,#fff); box-shadow:0 8px 20px -8px rgba(128,0,32,.25); }
+  .option-card.selected::after{ content:'\f00c'; font-family:'Font Awesome 6 Free'; font-weight:900; position:absolute; top:10px; right:10px; width:22px; height:22px; border-radius:9999px; background:#800020; color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center; }
+  .star-btn{ transition:transform .15s; }
+  .star-btn:hover{ transform:scale(1.2) rotate(-8deg); }
+  .dropzone-active{ border-color:#800020 !important; background-color:#fdf2f4 !important; transform:scale(1.01); box-shadow:0 0 0 4px rgba(128,0,32,.1); }
+  input,select,textarea{ transition:all .2s; }
+  input:focus,select:focus,textarea:focus{ box-shadow:0 0 0 4px rgba(128,0,32,.08) !important; }
+
+  .btn-primary{ background:linear-gradient(135deg,#800020,#6b001b); position:relative; overflow:hidden; }
+  .btn-primary::before{ content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent); transform:skewX(-20deg); transition:left .6s; }
+  .btn-primary:hover::before{ left:120%; }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 12px 28px -8px rgba(128,0,32,.5); }
+  .btn-gold{ background:linear-gradient(135deg,#e6ca65,#d4af37 50%,#b89320); color:#3d000f; }
+  .btn-gold:hover{ transform:translateY(-1px); box-shadow:0 12px 28px -8px rgba(212,175,55,.6); filter:brightness(1.05); }
+
+  .pill{ font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+  #toast{ transition:all .35s cubic-bezier(.22,1,.36,1); }
+  .progress-glow{ box-shadow:0 0 12px rgba(212,175,55,.6); }
+  .check-pop{ animation:pop .5s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes pop{ 0%{transform:scale(.4); opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1); opacity:1} }
+  .float-anim{ animation:float 5s ease-in-out infinite; }
+  @keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+</style>
+</head>
+<body data-sidebar="expanded" data-mobile="closed" class="selection:bg-maroon-600 selection:text-white">
+
+<div class="orb w-[420px] h-[420px] bg-maroon-500 -top-24 -right-24"></div>
+<div class="orb w-[320px] h-[320px] bg-gold-400 top-[55%] -left-24" style="opacity:.22"></div>
+
+<!-- Mobile overlay -->
+<div id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+<!-- ============ LEFT DOCK MENU ============ -->
+<aside id="sidebar">
+  <!-- Dock header -->
+  <div class="relative z-10 px-5 pt-5 pb-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-gold-300 via-gold-500 to-gold-600 flex items-center justify-center text-maroon-900 text-xl shadow-gold flex-shrink-0">
+          <i class="fa-solid fa-clipboard-question"></i>
+        </div>
+        <div class="collapse-hide min-w-0">
+          <h1 class="font-extrabold text-[17px] leading-tight tracking-tight text-white truncate">GCC Insights</h1>
+          <p class="text-[11px] text-gold-300 font-semibold tracking-wide">RESIDENT SURVEY • 2026</p>
+        </div>
+      </div>
+      <!-- Desktop collapse -->
+      <button onclick="toggleSidebar()" class="hidden lg:flex collapse-hide w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 items-center justify-center text-white/80 hover:text-white transition" title="Collapse dock">
+        <i class="fa-solid fa-angles-left text-xs"></i>
+      </button>
+      <!-- Mobile close -->
+      <button onclick="closeMobileSidebar()" class="lg:hidden w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white/80" title="Close menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <!-- Collapsed expand button -->
+    <button onclick="toggleSidebar()" class="collapse-show hidden w-10 h-10 mx-auto mt-1 rounded-xl bg-gold-500 hover:bg-gold-400 text-maroon-900 items-center justify-center transition shadow-gold" title="Expand dock">
+      <i class="fa-solid fa-angles-right text-sm"></i>
+    </button>
+
+    <div class="collapse-hide mt-4 rounded-2xl bg-white/[.07] border border-white/10 p-3.5 backdrop-blur-sm">
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span></span>
+        <span class="pill text-emerald-300">Live survey</span>
+        <span class="ml-auto pill text-white/40" id="elapsed-pill"><i class="fa-regular fa-clock mr-1"></i><span id="elapsed-time">00:00</span></span>
+      </div>
+      <p class="text-[13px] font-bold text-white mt-2 leading-snug">Demographics & Digital Experience</p>
+      <p class="text-[11px] text-white/60 mt-0.5">3 sections • ~4 min • Encrypted</p>
+    </div>
+  </div>
+
+  <div class="gold-divider mx-5 relative z-10"></div>
+
+  <!-- Steps nav -->
+  <div class="relative z-10 flex-1 overflow-y-auto px-5 py-4">
+    <p class="collapse-hide pill text-gold-400/90 mb-3 px-1"><i class="fa-solid fa-list-check mr-1.5"></i>Survey Steps</p>
+    <nav id="steps-nav" class="space-y-3"></nav>
+
+    <div class="collapse-hide mt-5 rounded-2xl border border-gold-500/30 bg-gradient-to-br from-gold-500/15 to-transparent p-4">
+      <div class="flex items-start gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gold-500/20 border border-gold-500/30 flex items-center justify-center text-gold-300 flex-shrink-0"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <p class="text-[12px] font-bold text-white">Private & secure</p>
+          <p class="text-[11px] text-white/60 leading-relaxed mt-0.5">Responses are encrypted. Files never leave your browser in this demo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dock footer: progress -->
+  <div class="relative z-10 p-5 pt-3">
+    <div class="gold-divider mb-4 collapse-hide"></div>
+    <div class="collapse-hide">
+      <div class="flex items-center gap-4 rounded-2xl bg-black/25 border border-white/10 p-3.5">
+        <div class="relative w-[58px] h-[58px] flex-shrink-0">
+          <svg class="w-[58px] h-[58px] -rotate-90" viewBox="0 0 58 58">
+            <circle cx="29" cy="29" r="24" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"/>
+            <circle id="dock-ring" cx="29" cy="29" r="24" fill="none" stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" style="transition:stroke-dashoffset .6s ease"/>
+            <defs><linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f3e5ab"/><stop offset="100%" stop-color="#d4af37"/></linearGradient></defs>
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center text-[12px] font-extrabold text-white" id="dock-pct">0%</div>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-[12px] font-bold text-white" id="dock-status">Getting started</p>
+          <p class="text-[11px] text-white/55" id="dock-sub">Step 1 of 3</p>
+          <div class="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden"><div id="dock-bar" class="h-full rounded-full bg-gradient-to-r from-gold-400 to-gold-600 transition-all duration-500" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mt-3">
+        <button onclick="toggleDebugModal()" class="px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-[11px] font-bold text-cream-100 transition flex items-center justify-center gap-1.5"><i class="fa-solid fa-code text-gold-400"></i>JSON</button>
+        <button onclick="resetSurvey()" class="px-3 py-2.5 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-[11px] font-bold text-white/70 hover:text-white transition flex items-center justify-center gap-1.5"><i class="fa-solid fa-rotate-left"></i>Reset</button>
+      </div>
+      <p class="text-center text-[10px] text-white/30 mt-3 font-medium">Maroon • Gold • Cream Theme</p>
+    </div>
+    <!-- collapsed mini progress -->
+    <div class="collapse-show hidden-col flex-col items-center gap-2" style="display:none">
+      <div class="w-12 h-12 rounded-2xl bg-white/10 border border-gold-500/40 flex items-center justify-center text-[11px] font-extrabold text-gold-300" id="dock-pct-mini">0%</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============ MAIN COLUMN ============ -->
+<div id="main-column" class="flex flex-col min-h-screen">
+
+  <!-- Topbar -->
+  <header class="sticky top-0 z-30 backdrop-blur-xl bg-cream-50/85 border-b border-cream-200/80">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3.5 flex items-center gap-3">
+      <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-maroon-600 hover:bg-maroon-700 text-white flex items-center justify-center shadow-lg shadow-maroon-600/25 transition active:scale-95" title="Toggle steps menu">
+        <i id="menu-icon" class="fa-solid fa-bars-staggered"></i>
+      </button>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+          <span class="hidden sm:inline">Survey</span><span class="hidden sm:inline text-slate-300">/</span><span id="crumb-step" class="text-maroon-600 truncate">Step 1 — Demographics</span>
+        </div>
+        <h2 class="font-extrabold text-slate-900 text-[15px] sm:text-base leading-tight truncate">GCC Regional Insights Survey</h2>
+      </div>
+      <div class="hidden md:flex items-center gap-2 text-[11px] font-bold text-slate-500 bg-white border border-cream-200 rounded-full px-3 py-1.5 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span id="autosave-label">Draft saved</span>
+      </div>
+      <button onclick="toggleDebugModal()" class="hidden sm:flex items-center gap-2 text-[12px] font-bold px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition shadow-md">
+        <i class="fa-solid fa-code text-gold-400"></i> Payload
+      </button>
+    </div>
+    <!-- mobile mini stepper -->
+    <div class="lg:hidden border-t border-cream-200/70 bg-white/60">
+      <div id="mobile-stepper" class="max-w-4xl mx-auto px-4 py-2.5 flex items-center gap-2 overflow-x-auto"></div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <!-- Progress card -->
+    <div id="progress-container" class="mb-5 bg-white/90 backdrop-blur rounded-2xl p-5 shadow-card border border-cream-200">
+      <div class="flex justify-between items-center mb-2.5">
+        <span id="page-indicator" class="pill text-maroon-600 bg-maroon-50 border border-maroon-100 px-2.5 py-1 rounded-full">Page 1 of 3</span>
+        <span id="progress-percentage" class="text-xs font-extrabold text-gold-600">33% Completed</span>
+      </div>
+      <div class="w-full bg-cream-200 rounded-full h-2.5 overflow-hidden">
+        <div id="progress-bar" class="bg-gradient-to-r from-maroon-600 via-maroon-500 to-gold-500 h-2.5 rounded-full transition-all duration-700 ease-out progress-glow" style="width:33%"></div>
+      </div>
+      <div class="flex items-center justify-between mt-2.5 text-[11px] text-slate-400 font-medium">
+        <span><i class="fa-solid fa-lock mr-1 text-emerald-600"></i>Encrypted submission</span>
+        <span id="answered-count">0 of 8 answered</span>
+      </div>
+    </div>
+
+    <!-- Survey card -->
+    <div id="survey-card" class="bg-white rounded-3xl shadow-dock border border-cream-200 overflow-hidden">
+      <div class="relative bg-gradient-to-b from-cream-100 via-cream-50 to-white px-6 sm:px-8 pt-7 pb-5 border-b border-cream-200 overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-gradient-to-br from-maroon-600/10 to-gold-500/15 blur-2xl"></div>
+        <div class="absolute right-6 top-6 hidden sm:flex w-12 h-12 rounded-2xl bg-gradient-to-br from-maroon-600 to-maroon-800 text-gold-300 items-center justify-center text-lg shadow-lg float-anim" id="page-icon"><i class="fa-solid fa-id-card"></i></div>
+        <div class="flex items-center gap-2 mb-1.5">
+          <span id="step-badge" class="pill bg-maroon-600 text-white px-2.5 py-1 rounded-full shadow">Step 1</span>
+          <span id="req-badge" class="pill text-slate-500">2 required • 1 optional</span>
+        </div>
+        <h2 id="survey-page-title" class="text-xl sm:text-2xl font-extrabold text-maroon-900 tracking-tight">Loading…</h2>
+        <p id="survey-page-desc" class="text-[13px] sm:text-sm text-slate-500 mt-1">Please answer all required questions below.</p>
+      </div>
+
+      <form id="survey-form" onsubmit="event.preventDefault();" class="p-6 sm:p-8">
+        <div id="questions-container" class="space-y-6"></div>
+      </form>
+
+      <div class="bg-cream-50 px-6 sm:px-8 py-5 border-t border-cream-200 flex items-center gap-3">
+        <button id="btn-prev" onclick="handlePrevious()" class="hidden px-5 py-3 rounded-xl border-2 border-slate-200 hover:border-maroon-600 text-slate-600 hover:text-maroon-600 font-bold text-sm transition items-center gap-2 bg-white">
+          <i class="fa-solid fa-arrow-left"></i> Back
+        </button>
+        <div class="flex-1"></div>
+        <button id="btn-save" onclick="saveDraft(true)" class="hidden sm:flex px-4 py-3 rounded-xl text-slate-500 hover:text-maroon-700 hover:bg-maroon-50 font-bold text-sm transition items-center gap-2">
+          <i class="fa-regular fa-floppy-disk"></i> Save draft
+        </button>
+        <button id="btn-next" onclick="handleNext()" class="btn-primary px-7 py-3 rounded-xl text-white font-bold text-sm shadow-lg shadow-maroon-600/25 transition flex items-center gap-2">
+          Continue <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        <button id="btn-submit" onclick="handleSubmit()" class="btn-gold hidden px-7 py-3 rounded-xl font-extrabold text-sm shadow-lg transition items-center gap-2">
+          Submit Survey <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <p class="text-center text-[11px] text-slate-400 mt-5 font-medium">Palette — <span class="inline-block w-2.5 h-2.5 rounded-full bg-maroon-600 align-middle"></span> Maroon primary &nbsp;•&nbsp; <span class="inline-block w-2.5 h-2.5 rounded-full bg-gold-500 align-middle"></span> Metallic gold secondary &nbsp;•&nbsp; <span class="inline-block w-2.5 h-2.5 rounded-full bg-cream-200 border border-slate-300 align-middle"></span> Warm cream tertiary</p>
+  </main>
+
+  <footer class="text-center py-5 text-[11px] text-slate-400 font-medium">© 2026 Regional Survey Platform • Secured & Encrypted • <span class="text-maroon-600 font-bold">Dock Navigation Edition</span></footer>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-24 opacity-0 z-[70] bg-slate-900 text-white text-[13px] font-bold px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-[92vw]">
+  <span id="toast-icon" class="w-7 h-7 rounded-full bg-rose-500 flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-triangle-exclamation"></i></span>
+  <span id="toast-msg">Please complete required fields</span>
+</div>
+
+<!-- Debug modal -->
+<div id="debug-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[60] hidden items-center justify-center p-4">
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-cream-200 overflow-hidden flex flex-col max-h-[85vh]">
+    <div class="bg-gradient-to-r from-maroon-800 to-maroon-600 text-white px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-2"><i class="fa-solid fa-code text-gold-400"></i><h3 class="font-bold text-sm sm:text-base">Live Survey Payload (JSON)</h3></div>
+      <div class="flex items-center gap-2">
+        <button onclick="copyJSON()" class="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 border border-white/20 transition"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+        <button onclick="toggleDebugModal()" class="text-white/70 hover:text-white w-8 h-8"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+    </div>
+    <div class="p-5 overflow-y-auto bg-slate-950 font-mono text-[11px] sm:text-xs text-emerald-400 flex-1"><pre id="json-output">// …</pre></div>
+    <div class="bg-cream-100 px-6 py-3 border-t border-cream-200 flex justify-between items-center">
+      <span class="text-[11px] text-slate-500 font-semibold">Updates in real-time as you answer</span>
+      <button onclick="toggleDebugModal()" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-lg hover:bg-slate-700">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   SURVEY SCHEMA — Q1 exactly as specified
+================================================================ */
+const surveySchema = {
+  title: "GCC Resident Insights Survey",
+  pages: [
+    {
+      pageId: "page_demographics",
+      title: "Demographics & Residency",
+      description: "Help us understand your geographic location and residence details.",
+      icon: "fa-id-card",
+      questions: [
+        {
+          "questionId": "country_of_residence",
+          "type": "dropdown",
+          "label": "Country of residence",
+          "required": true,
+          "options": [
+            { "label": "United Arab Emirates", "value": "ae" },
+            { "label": "Saudi Arabia", "value": "sa" },
+            { "label": "Qatar", "value": "qa" }
+          ],
+          "attachmentsRequired": 0
+        },
+        { questionId:"residency_status", type:"radio", label:"What is your current residency status?", required:true,
+          options:[
+            {label:"Citizen", value:"citizen", description:"National passport holder"},
+            {label:"Resident Expatriate", value:"resident", description:"Holding valid employment / family visa"},
+            {label:"GCC National Resident", value:"gcc_national", description:"GCC citizen living in host country"}
+          ], attachmentsRequired:0 },
+        { questionId:"years_in_gcc", type:"text", label:"How many years have you lived in your current country of residence?", placeholder:"e.g. 5", required:false, attachmentsRequired:0 }
+      ]
+    },
+    {
+      pageId: "page_experience",
+      title: "Government & Digital Services",
+      description: "Tell us about your interactions with public digital portals in the last 12 months.",
+      icon: "fa-laptop-file",
+      questions: [
+        { questionId:"frequently_used_services", type:"checkbox", label:"Which public digital services do you utilize frequently?", required:true,
+          options:[
+            {label:"Visa & Immigration Portals", value:"immigration"},
+            {label:"Utilities & Telecommunications", value:"utilities"},
+            {label:"Health & Medical ID Services", value:"health"},
+            {label:"Traffic, Vehicle & Driving Permits", value:"traffic"}
+          ], attachmentsRequired:0 },
+        { questionId:"satisfaction_rating", type:"rating", label:"Overall satisfaction with digital public service speed and reliability", required:true, maxStars:5, attachmentsRequired:0 },
+        { questionId:"user_feedback", type:"textarea", label:"What improvements would you like to see in digital public portals?", placeholder:"Share your thoughts or recommendations here...", required:false, attachmentsRequired:0 }
+      ]
+    },
+    {
+      pageId: "page_verification",
+      title: "Verification & Attachments",
+      description: "Please upload required document proof to complete your survey entry.",
+      icon: "fa-file-shield",
+      questions: [
+        { questionId:"residence_proof_document", type:"file", label:"Proof of Residence Document (Utility bill, Rent contract, or E-ID)", helpText:"Supported formats: PDF, PNG, JPG (Max 5MB)", required:true, attachmentsRequired:1 },
+        { questionId:"terms_and_optin", type:"checkbox", label:"Survey Consent & Communications", required:true,
+          options:[
+            {label:"I confirm that all provided information is accurate and true.", value:"consent_agreed"},
+            {label:"Send me future regional statistical report findings via email.", value:"email_optin"}
+          ], attachmentsRequired:0 }
+      ]
+    }
+  ]
+};
+
+/* ================= STATE ================= */
+let currentPageIndex = 0;
+let highestReached = 0;
+let surveyAnswers = {};
+let attachedFiles = {};
+let completed = false;
+const startTime = Date.now();
+
+const $ = id => document.getElementById(id);
+
+/* ================= SIDEBAR / DOCK ================= */
+function isDesktop(){ return window.innerWidth >= 1024; }
+function initSidebar(){
+  if(isDesktop()){ document.body.dataset.sidebar = "expanded"; document.body.dataset.mobile="closed"; }
+  else { document.body.dataset.sidebar = "expanded"; document.body.dataset.mobile="closed"; }
+  updateMenuIcon();
+}
+function toggleSidebar(){
+  if(isDesktop()){
+    document.body.dataset.sidebar = document.body.dataset.sidebar === "expanded" ? "collapsed" : "expanded";
+  } else {
+    document.body.dataset.mobile = document.body.dataset.mobile === "open" ? "closed" : "open";
+  }
+  updateMenuIcon();
+}
+function closeMobileSidebar(){ document.body.dataset.mobile="closed"; updateMenuIcon(); }
+function updateMenuIcon(){
+  const icon = $("menu-icon");
+  if(!icon) return;
+  if(!isDesktop() && document.body.dataset.mobile==="open") icon.className="fa-solid fa-xmark";
+  else if(isDesktop() && document.body.dataset.sidebar==="collapsed") icon.className="fa-solid fa-bars";
+  else icon.className="fa-solid fa-bars-staggered";
+}
+window.addEventListener("resize", ()=>{ if(isDesktop()) document.body.dataset.mobile="closed"; updateMenuIcon(); });
+
+/* ================= HELPERS ================= */
+function findQuestion(qId){ for(const p of surveySchema.pages){ const q=p.questions.find(i=>i.questionId===qId); if(q) return q; } return null; }
+function getOptionLabel(qId,val){ const q=findQuestion(qId); if(!q||!q.options) return val||'N/A'; const o=q.options.find(x=>x.value===val); return o?o.label:val; }
+function totalQuestions(){ return surveySchema.pages.reduce((a,p)=>a+p.questions.length,0); }
+function answeredCount(){
+  let n=0;
+  surveySchema.pages.forEach(p=>p.questions.forEach(q=>{
+    const a=surveyAnswers[q.questionId];
+    if(q.type==="checkbox"){ if(a&&a.length) n++; }
+    else if(q.type==="file"){ if((attachedFiles[q.questionId]||[]).length) n++; }
+    else if(a!==undefined&&a!==null&&String(a).trim()!=="") n++;
+  }));
+  return n;
+}
+function pageProgress(pIdx){
+  const p=surveySchema.pages[pIdx];
+  let done=0;
+  p.questions.forEach(q=>{
+    const a=surveyAnswers[q.questionId]; const f=attachedFiles[q.questionId]||[];
+    let ok=false;
+    if(q.type==="checkbox") ok = a&&a.length>0;
+    else if(q.type==="file") ok = f.length >= (q.attachmentsRequired||1);
+    else ok = a!==undefined&&a!==null&&String(a).trim()!=="";
+    if(q.attachmentsRequired>0 && q.type!=="file") ok = ok && (f.length>=q.attachmentsRequired);
+    if(ok) done++;
+  });
+  return {done, total:p.questions.length, pct:Math.round(done/p.questions.length*100)};
+}
+function pageComplete(pIdx){
+  const p=surveySchema.pages[pIdx];
+  return p.questions.every(q=>{
+    if(!q.required && !(q.attachmentsRequired>0)) {
+      if(q.type==="file" && q.required) return (attachedFiles[q.questionId]||[]).length>=(q.attachmentsRequired||1);
+      return true;
+    }
+    const a=surveyAnswers[q.questionId]; const f=attachedFiles[q.questionId]||[];
+    let base=true;
+    if(q.required){
+      if(q.type==="checkbox") base = a&&Array.isArray(a)&&a.length>0;
+      else if(q.type==="file") base = true;
+      else base = a!==undefined&&a!==null&&String(a).trim()!=="";
+    }
+    let att=true;
+    if(q.attachmentsRequired>0) att = f.length>=q.attachmentsRequired;
+    return base&&att;
+  });
+}
+function overallPct(){ return Math.round(((currentPageIndex)/surveySchema.pages.length*100) + (pageProgress(currentPageIndex).pct/surveySchema.pages.length)); }
+
+let toastTimer=null;
+function toast(msg, type="error"){
+  $("toast-msg").textContent=msg;
+  $("toast-icon").className = "w-7 h-7 rounded-full flex items-center justify-center text-xs flex-shrink-0 " + (type==="error"?"bg-rose-500":type==="success"?"bg-emerald-500":"bg-gold-500 text-maroon-900");
+  $("toast-icon").innerHTML = type==="error"?'<i class="fa-solid fa-triangle-exclamation"></i>':type==="success"?'<i class="fa-solid fa-check"></i>':'<i class="fa-solid fa-circle-info"></i>';
+  const t=$("toast");
+  t.style.transform="translate(-50%,0)"; t.style.opacity="1";
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{ t.style.transform="translate(-50%,6rem)"; t.style.opacity="0"; },2600);
+}
+
+/* ================= RENDER: SIDEBAR STEPS ================= */
+function renderSidebar(){
+  const nav=$("steps-nav"); nav.innerHTML="";
+  surveySchema.pages.forEach((p,i)=>{
+    const prog=pageProgress(i);
+    const isActive=i===currentPageIndex;
+    const isDone=pageComplete(i) && i!==currentPageIndex || (pageComplete(i)&&i<currentPageIndex) || (i<currentPageIndex&&pageComplete(i));
+    const done = i<currentPageIndex ? pageComplete(i) : (pageComplete(i)&&!isActive);
+    const actuallyDone = pageComplete(i) && (i!==currentPageIndex);
+    const status = isActive?"active":(actuallyDone|| (i<highestReached&&pageComplete(i))?"completed":"todo");
+    const btn=document.createElement("button");
+    btn.className=`step-btn ${status} p-3.5 flex items-center gap-3`;
+    btn.onclick=()=>goToStep(i);
+    btn.innerHTML=`
+      <div class="step-num">${actuallyDone||status==="completed"?'<i class="fa-solid fa-check"></i>':(i+1)}</div>
+      <div class="collapse-hide flex-1 min-w-0">
+        <div class="flex items-center gap-2">
+          <p class="text-[13px] font-extrabold text-white truncate">${p.title}</p>
+        </div>
+        <p class="text-[11px] text-white/55 font-medium truncate mt-0.5"><i class="fa-solid ${p.icon} mr-1 text-gold-400/80"></i>${p.questions.length} questions • ${prog.done}/${prog.total} done</p>
+        <div class="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full ${isActive?'bg-gradient-to-r from-gold-300 to-gold-500':'bg-white/30'} transition-all duration-500" style="width:${prog.pct}%"></div></div>
+      </div>
+      <div class="collapse-hide flex-shrink-0 text-white/40">${isActive?'<i class="fa-solid fa-chevron-right text-xs text-gold-400"></i>':actuallyDone?'<i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>':'<i class="fa-regular fa-circle text-xs"></i>'}</div>
+      ${isActive?'<div class="absolute left-0 top-0 bottom-0 w-1 bg-gold-400"></div>':''}
+    `;
+    nav.appendChild(btn);
+    if(i<surveySchema.pages.length-1){
+      const conn=document.createElement("div");
+      conn.className="step-connector collapse-hide ml-[32px] w-px h-2 bg-gradient-to-b from-gold-500/60 to-white/10";
+      nav.appendChild(conn);
+    }
+  });
+
+  // dock ring
+  const pct = completed?100:Math.round((answeredCount()/totalQuestions())*100);
+  const ring=$("dock-ring");
+  if(ring){ const C=150.8; ring.style.strokeDashoffset = C - (C*pct/100); }
+  $("dock-pct").textContent=pct+"%";
+  const mini=$("dock-pct-mini"); if(mini) mini.textContent=pct+"%";
+  $("dock-bar").style.width=pct+"%";
+  $("dock-sub").textContent = completed?"All steps complete":`Step ${currentPageIndex+1} of ${surveySchema.pages.length}`;
+  $("dock-status").textContent = completed?"Ready to submit ✓": pct===0?"Getting started":pct<50?"In progress":pct<100?"Almost there":"Review & submit";
+
+  renderMobileStepper();
+}
+function renderMobileStepper(){
+  const c=$("mobile-stepper"); if(!c) return; c.innerHTML="";
+  surveySchema.pages.forEach((p,i)=>{
+    const active=i===currentPageIndex; const done=pageComplete(i)&&i!==currentPageIndex;
+    const b=document.createElement("button");
+    b.onclick=()=>goToStep(i);
+    b.className=`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-extrabold whitespace-nowrap border transition ${active?'bg-maroon-600 text-white border-maroon-600 shadow':done?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-white text-slate-500 border-cream-200'}`;
+    b.innerHTML=`<span class="w-5 h-5 rounded-full ${active?'bg-white/20':done?'bg-emerald-500 text-white':'bg-slate-100'} flex items-center justify-center text-[10px]">${done?'<i class="fa-solid fa-check"></i>':(i+1)}</span>${p.title.split('&')[0].split(' ')[0]}`;
+    c.appendChild(b);
+    if(i<surveySchema.pages.length-1){ const s=document.createElement("span"); s.className="text-slate-300 text-[10px]"; s.innerHTML='<i class="fa-solid fa-chevron-right"></i>'; c.appendChild(s); }
+  });
+}
+
+/* ================= RENDER: PAGE ================= */
+const pageIcons={page_demographics:"fa-id-card",page_experience:"fa-laptop-file",page_verification:"fa-file-shield"};
+function renderCurrentPage(){
+  if(completed) return;
+  const page=surveySchema.pages[currentPageIndex];
+  const total=surveySchema.pages.length;
+  $("survey-page-title").innerText=page.title;
+  $("survey-page-desc").innerText=page.description;
+  $("page-icon").innerHTML=`<i class="fa-solid ${page.icon||'fa-clipboard-list'}"></i>`;
+  $("step-badge").textContent=`Step ${currentPageIndex+1} of ${total}`;
+  const req=page.questions.filter(q=>q.required).length;
+  const opt=page.questions.length-req;
+  $("req-badge").textContent=`${req} required${opt?` • ${opt} optional`:''}`;
+  $("crumb-step").textContent=`Step ${currentPageIndex+1} — ${page.title}`;
+
+  const pct=Math.round(((currentPageIndex+1)/total)*100);
+  $("page-indicator").innerText=`Page ${currentPageIndex+1} of ${total}`;
+  $("progress-percentage").innerText=`${pct}% Completed`;
+  $("progress-bar").style.width=pct+"%";
+  $("answered-count").innerText=`${answeredCount()} of ${totalQuestions()} answered`;
+
+  const prev=$("btn-prev"), next=$("btn-next"), sub=$("btn-submit");
+  prev.classList.toggle("hidden", currentPageIndex===0);
+  prev.classList.toggle("flex", currentPageIndex!==0);
+  if(currentPageIndex===total-1){ next.classList.add("hidden"); next.classList.remove("flex"); sub.classList.remove("hidden"); sub.classList.add("flex"); }
+  else { next.classList.remove("hidden"); next.classList.add("flex"); sub.classList.add("hidden"); sub.classList.remove("flex"); }
+
+  const qc=$("questions-container"); qc.innerHTML="";
+  qc.classList.remove("fade-enter-active"); void qc.offsetWidth; qc.classList.add("fade-enter-active");
+
+  page.questions.forEach((q,idx)=>{
+    const card=document.createElement("div");
+    card.className="q-card bg-cream-50/70 rounded-2xl p-5 sm:p-6 border border-cream-200 hover:border-cream-300";
+    card.id=`q-card-${q.questionId}`;
+    let head=`<div class="mb-3.5 flex items-start gap-3">
+      <span class="mt-0.5 w-7 h-7 rounded-lg ${q.required?'bg-maroon-600 text-white':'bg-white text-slate-400 border border-slate-200'} flex items-center justify-center text-[12px] font-extrabold flex-shrink-0 shadow-sm">${idx+1}</span>
+      <div class="min-w-0 flex-1">
+        <label class="block text-sm sm:text-[15px] font-bold text-slate-800 leading-snug">${q.label}
+        ${q.required?'<span class="text-maroon-600 font-extrabold ml-1">*</span>':'<span class="text-[10px] text-slate-400 font-bold ml-2 bg-slate-100 px-2 py-0.5 rounded-full uppercase tracking-wide">Optional</span>'}</label>
+        ${q.helpText?`<p class="text-xs text-slate-500 mt-1 flex items-center gap-1"><i class="fa-regular fa-circle-question text-gold-600"></i>${q.helpText}</p>`:''}
+      </div></div>`;
+    let body="";
+    switch(q.type){
+      case "dropdown": body=renderDropdown(q); break;
+      case "radio": body=renderRadio(q); break;
+      case "checkbox": body=renderCheckbox(q); break;
+      case "rating": body=renderRating(q); break;
+      case "textarea": body=renderTextarea(q); break;
+      case "text": body=renderText(q); break;
+      case "file": body=renderDropzone(q); break;
+    }
+    if(q.attachmentsRequired>0 && q.type!=="file") body+=renderDropzone(q,true);
+    body+=`<p id="err-${q.questionId}" class="text-xs font-bold text-rose-600 mt-2.5 hidden items-center gap-1.5 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2"><i class="fa-solid fa-circle-exclamation"></i><span></span></p>`;
+    card.innerHTML=head+body;
+    qc.appendChild(card);
+  });
+
+  restoreFormValues(page);
+  renderSidebar();
+  updateDebugJSON();
+}
+
+function flagEmoji(v){ return v==="ae"?"🇦🇪":v==="sa"?"🇸🇦":v==="qa"?"🇶🇦":""; }
+function renderDropdown(q){
+  return `<div class="relative">
+    <select id="${q.questionId}" onchange="saveValue('${q.questionId}',this.value)" class="w-full bg-white border-2 border-slate-200 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-700 focus:outline-none focus:border-maroon-600 appearance-none cursor-pointer shadow-sm pr-11">
+      <option value="" disabled selected>— Select ${q.label.toLowerCase()} —</option>
+      ${q.options.map(o=>`<option value="${o.value}">${flagEmoji(o.value)}&nbsp;&nbsp;${o.label}</option>`).join('')}
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-maroon-600"><span class="w-7 h-7 rounded-lg bg-maroon-50 flex items-center justify-center"><i class="fa-solid fa-chevron-down text-[11px]"></i></span></div>
+  </div>
+  <div id="country-preview-${q.questionId}" class="mt-2.5 hidden items-center gap-2.5 bg-white border border-gold-500/30 rounded-xl px-3.5 py-2.5">
+    <span id="country-flag-${q.questionId}" class="text-2xl"></span>
+    <div><p id="country-name-${q.questionId}" class="text-[13px] font-extrabold text-maroon-800"></p><p class="text-[11px] text-slate-500">Selected country of residence</p></div>
+    <i class="fa-solid fa-circle-check text-emerald-500 ml-auto"></i>
+  </div>`;
+}
+function renderRadio(q){
+  return `<div class="space-y-2.5">${q.options.map(o=>`
+    <label id="lbl-${q.questionId}-${o.value}" onclick="saveRadioValue('${q.questionId}','${o.value}')" class="option-card border-2 border-slate-200 bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer">
+      <input type="radio" name="${q.questionId}" value="${o.value}" class="mt-1 accent-maroon-600 w-4 h-4">
+      <span class="text-sm flex-1"><span class="font-bold text-slate-800">${o.label}</span>${o.description?`<span class="block text-xs text-slate-500 mt-0.5 font-medium">${o.description}</span>`:''}</span>
+    </label>`).join('')}</div>`;
+}
+function renderCheckbox(q){
+  return `<div class="space-y-2.5">${q.options.map(o=>`
+    <label id="lbl-${q.questionId}-${o.value}" onclick="toggleCheckboxValue('${q.questionId}','${o.value}')" class="option-card border-2 border-slate-200 bg-white rounded-xl p-4 flex items-start gap-3 cursor-pointer">
+      <input type="checkbox" name="${q.questionId}" value="${o.value}" class="mt-1 rounded accent-maroon-600 w-4 h-4">
+      <span class="text-sm font-bold text-slate-800 flex-1">${o.label}</span>
+    </label>`).join('')}</div>`;
+}
+function renderRating(q){
+  return `<div class="bg-white border-2 border-slate-100 rounded-2xl p-4 sm:p-5">
+    <div class="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2">${[1,2,3,4,5].map(s=>`
+      <button type="button" onclick="saveRating('${q.questionId}',${s})" onmouseenter="hoverRating('${q.questionId}',${s})" onmouseleave="unhoverRating('${q.questionId}')" id="star-${q.questionId}-${s}" class="star-btn text-3xl sm:text-4xl text-slate-200 transition-colors focus:outline-none"><i class="fa-solid fa-star drop-shadow-sm"></i></button>`).join('')}
+    </div>
+    <div class="flex items-center justify-between mt-3">
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Poor</span>
+      <span id="rating-text-${q.questionId}" class="text-[11px] font-extrabold text-maroon-700 uppercase tracking-wide bg-maroon-50 px-3 py-1 rounded-full border border-maroon-100">Tap a star</span>
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Excellent</span>
+    </div></div>`;
+}
+function renderTextarea(q){
+  return `<div class="relative"><textarea id="${q.questionId}" oninput="saveValue('${q.questionId}',this.value);updateCount('${q.questionId}',this.value)" rows="4" maxlength="800" placeholder="${q.placeholder||''}" class="w-full bg-white border-2 border-slate-200 rounded-xl p-4 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-maroon-600 transition shadow-sm resize-y"></textarea>
+  <span id="count-${q.questionId}" class="absolute bottom-3 right-3 text-[10px] font-bold text-slate-400 bg-cream-100 px-2 py-0.5 rounded-full">0 / 800</span></div>`;
+}
+function renderText(q){
+  const isYears=q.questionId==="years_in_gcc";
+  return `<div class="relative">
+    ${isYears?'<div class="absolute inset-y-0 left-0 flex items-center pl-4 text-maroon-600"><i class="fa-solid fa-calendar-days"></i></div>':''}
+    <input type="${isYears?'number':'text'}" ${isYears?'min="0" max="100"':''} id="${q.questionId}" oninput="saveValue('${q.questionId}',this.value)" placeholder="${q.placeholder||''}" class="w-full bg-white border-2 border-slate-200 rounded-xl ${isYears?'pl-11':''} px-4 py-3.5 text-sm font-semibold text-slate-800 placeholder-slate-400 placeholder:font-normal focus:outline-none focus:border-maroon-600 transition shadow-sm">
+  </div>`;
+}
+function renderDropzone(q,isExtra=false){
+  return `<div class="${isExtra?'mt-4':''}">
+    <div id="dropzone-${q.questionId}" ondragover="handleDragOver(event,'${q.questionId}')" ondragleave="handleDragLeave(event,'${q.questionId}')" ondrop="handleFileDrop(event,'${q.questionId}')" class="border-2 border-dashed border-slate-300 hover:border-maroon-500 rounded-2xl p-6 sm:p-7 text-center bg-white transition cursor-pointer group">
+      <input type="file" id="file-input-${q.questionId}" onchange="handleFileSelect(event,'${q.questionId}')" class="hidden" multiple accept=".pdf,.png,.jpg,.jpeg">
+      <div onclick="document.getElementById('file-input-${q.questionId}').click()">
+        <div class="w-14 h-14 bg-gradient-to-br from-maroon-50 to-gold-100 text-maroon-600 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl group-hover:scale-110 transition shadow-sm"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <p class="text-sm font-extrabold text-slate-700">Click to upload <span class="font-medium text-slate-400">or drag & drop</span></p>
+        <p class="text-[11px] text-slate-400 mt-1.5">Required: <span class="font-extrabold text-maroon-600">${q.attachmentsRequired||1} file(s)</span> • PDF, PNG, JPG • Max 5MB each</p>
+      </div>
+    </div><div id="file-list-${q.questionId}" class="mt-3 space-y-2"></div></div>`;
+}
+
+/* ================= SAVE HANDLERS ================= */
+function saveValue(id,val){ surveyAnswers[id]=val; clearError(id); if(id==="country_of_residence") updateCountryPreview(val); persist(); refreshCounts(); updateDebugJSON(); }
+function updateCountryPreview(val){
+  const names={ae:"United Arab Emirates",sa:"Saudi Arabia",qa:"Qatar"};
+  const box=$("country-preview-country_of_residence"); if(!box) return;
+  if(val&&names[val]){ box.classList.remove("hidden"); box.classList.add("flex"); $("country-flag-country_of_residence").textContent=flagEmoji(val); $("country-name-country_of_residence").textContent=names[val]; }
+  else { box.classList.add("hidden"); box.classList.remove("flex"); }
+}
+function updateCount(id,val){ const c=$("count-"+id); if(c) c.textContent=`${(val||'').length} / 800`; }
+function saveRadioValue(qid,val){
+  surveyAnswers[qid]=val; clearError(qid);
+  const q=findQuestion(qid);
+  q.options.forEach(o=>{ const card=$("lbl-"+qid+"-"+o.value); if(card){ const on=o.value===val; card.classList.toggle("selected",on); const inp=card.querySelector("input"); if(inp) inp.checked=on; }});
+  persist(); refreshCounts(); updateDebugJSON();
+}
+function toggleCheckboxValue(qid,val){
+  let cur=surveyAnswers[qid]||[]; if(!Array.isArray(cur)) cur=[];
+  cur = cur.includes(val)?cur.filter(v=>v!==val):[...cur,val];
+  surveyAnswers[qid]=cur; clearError(qid);
+  const card=$("lbl-"+qid+"-"+val);
+  if(card){ const on=cur.includes(val); card.classList.toggle("selected",on); const inp=card.querySelector("input"); if(inp) inp.checked=on; }
+  // prevent double-toggle from label default
+  setTimeout(()=>{ const c=$("lbl-"+qid+"-"+val); if(c){ const inp=c.querySelector("input"); if(inp) inp.checked=cur.includes(val); } },0);
+  persist(); refreshCounts(); updateDebugJSON();
+}
+function saveRating(qid,r){
+  surveyAnswers[qid]=r; clearError(qid); paintStars(qid,r);
+  const labels=["Poor","Fair","Satisfactory","Good","Excellent"];
+  const t=$("rating-text-"+qid); if(t) t.innerText=`${r} / 5 — ${labels[r-1]}`;
+  persist(); refreshCounts(); updateDebugJSON();
+}
+function paintStars(qid,r){ for(let i=1;i<=5;i++){ const s=$("star-"+qid+"-"+i); if(!s) continue; if(i<=r){ s.classList.remove("text-slate-200"); s.classList.add("text-gold-500"); } else { s.classList.add("text-slate-200"); s.classList.remove("text-gold-500"); } } }
+function hoverRating(qid,r){ if(surveyAnswers[qid]) return; paintStars(qid,r); }
+function unhoverRating(qid){ paintStars(qid, surveyAnswers[qid]||0); }
+
+/* ================= FILES ================= */
+function handleDragOver(e,id){ e.preventDefault(); $("dropzone-"+id)?.classList.add("dropzone-active"); }
+function handleDragLeave(e,id){ e.preventDefault(); $("dropzone-"+id)?.classList.remove("dropzone-active"); }
+function handleFileDrop(e,id){ e.preventDefault(); $("dropzone-"+id)?.classList.remove("dropzone-active"); if(e.dataTransfer.files?.length) addFiles(id,Array.from(e.dataTransfer.files)); }
+function handleFileSelect(e,id){ if(e.target.files?.length){ addFiles(id,Array.from(e.target.files)); e.target.value=""; } }
+function fileIcon(name){ const x=name.split('.').pop().toLowerCase(); if(x==="pdf") return "fa-file-pdf text-rose-600"; if(["png","jpg","jpeg","gif","webp"].includes(x)) return "fa-file-image text-blue-500"; return "fa-file-lines text-maroon-600"; }
+function addFiles(qid,files){
+  if(!attachedFiles[qid]) attachedFiles[qid]=[];
+  let added=0;
+  files.forEach(f=>{
+    if(f.size>5*1024*1024){ toast(`"${f.name}" exceeds 5MB limit`); return; }
+    attachedFiles[qid].push({name:f.name,size:(f.size/1024).toFixed(1)+' KB',type:f.type||'file'});
+    added++;
+  });
+  if(added){ toast(`${added} file(s) attached`,"success"); }
+  clearError(qid); renderFileList(qid); persist(); refreshCounts(); updateDebugJSON();
+}
+function removeFile(qid,idx){ attachedFiles[qid].splice(idx,1); renderFileList(qid); persist(); refreshCounts(); updateDebugJSON(); }
+function renderFileList(qid){
+  const c=$("file-list-"+qid); if(!c) return;
+  const files=attachedFiles[qid]||[];
+  if(!files.length){ c.innerHTML=""; return; }
+  c.innerHTML=files.map((f,i)=>`
+    <div class="check-pop flex items-center justify-between bg-white border-2 border-emerald-100 rounded-xl px-4 py-2.5 text-xs shadow-sm">
+      <div class="flex items-center gap-2.5 min-w-0"><span class="w-8 h-8 rounded-lg bg-cream-100 flex items-center justify-center flex-shrink-0"><i class="fa-solid ${fileIcon(f.name)}"></i></span>
+      <div class="min-w-0"><p class="font-bold text-slate-700 truncate">${f.name}</p><p class="text-slate-400 font-medium">${f.size} • Ready</p></div></div>
+      <button type="button" onclick="removeFile('${qid}',${i})" class="w-8 h-8 rounded-lg bg-rose-50 text-slate-400 hover:text-rose-600 hover:bg-rose-100 transition flex-shrink-0 ml-2"><i class="fa-solid fa-trash-can"></i></button>
+    </div>`).join('');
+}
+
+/* ================= RESTORE ================= */
+function restoreFormValues(page){
+  page.questions.forEach(q=>{
+    const v=surveyAnswers[q.questionId];
+    if(q.type==="dropdown"&&v){ const s=$(q.questionId); if(s) s.value=v; updateCountryPreview(v); }
+    else if((q.type==="text"||q.type==="textarea")&&v){ const el=$(q.questionId); if(el){ el.value=v; if(q.type==="textarea") updateCount(q.questionId,v); } }
+    else if(q.type==="radio"&&v){ const qq=findQuestion(q.questionId); qq.options.forEach(o=>{ const card=$("lbl-"+q.questionId+"-"+o.value); if(card){ const on=o.value===v; card.classList.toggle("selected",on); const inp=card.querySelector("input"); if(inp) inp.checked=on; }}); }
+    else if(q.type==="checkbox"&&Array.isArray(v)){ v.forEach(val=>{ const card=$("lbl-"+q.questionId+"-"+val); if(card){ card.classList.add("selected"); const inp=card.querySelector("input"); if(inp) inp.checked=true; }}); }
+    else if(q.type==="rating"&&v){ paintStars(q.questionId,v); const labels=["Poor","Fair","Satisfactory","Good","Excellent"]; const t=$("rating-text-"+q.questionId); if(t) t.innerText=`${v} / 5 — ${labels[v-1]}`; }
+    if(attachedFiles[q.questionId]) renderFileList(q.questionId);
+  });
+}
+
+/* ================= VALIDATION ================= */
+function validatePage(idx, showUI=true){
+  const page=surveySchema.pages[idx]; let ok=true;
+  page.questions.forEach(q=>{
+    const a=surveyAnswers[q.questionId]; const f=attachedFiles[q.questionId]||[];
+    if(q.required){
+      if(q.type==="checkbox"){ if(!a||!a.length){ if(showUI) showError(q.questionId,"Please select at least one option."); ok=false; } }
+      else if(q.type==="file"){ /* attachment check below */ }
+      else if(a===undefined||a===null||String(a).trim()===""){ if(showUI) showError(q.questionId,"This field is required."); ok=false; }
+    }
+    if(q.attachmentsRequired>0){ if(f.length<q.attachmentsRequired){ if(showUI) showError(q.questionId,`Please attach at least ${q.attachmentsRequired} required file(s).`); ok=false; } }
+  });
+  return ok;
+}
+function showError(qid,msg){
+  const e=$("err-"+qid); const card=$("q-card-"+qid);
+  if(e){ e.querySelector("span").innerText=msg; e.classList.remove("hidden"); e.classList.add("flex"); }
+  if(card){ card.classList.add("border-rose-300"); card.style.background="#fff5f6"; }
+}
+function clearError(qid){
+  const e=$("err-"+qid); const card=$("q-card-"+qid);
+  if(e){ e.classList.add("hidden"); e.classList.remove("flex"); }
+  if(card){ card.classList.remove("border-rose-300"); card.style.background=""; }
+}
+
+/* ================= NAVIGATION ================= */
+function handleNext(){
+  if(validatePage(currentPageIndex)){
+    if(currentPageIndex<surveySchema.pages.length-1){
+      currentPageIndex++; highestReached=Math.max(highestReached,currentPageIndex);
+      renderCurrentPage(); persist();
+      $("main-column").scrollIntoView({behavior:"smooth"});
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+  } else {
+    toast("Please complete the required fields on this step");
+    const firstErr=document.querySelector('#questions-container .border-rose-300');
+    if(firstErr) firstErr.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+}
+function handlePrevious(){ if(currentPageIndex>0){ currentPageIndex--; renderCurrentPage(); window.scrollTo({top:0,behavior:"smooth"}); } }
+function goToStep(target){
+  if(target===currentPageIndex){ if(!isDesktop()) closeMobileSidebar(); return; }
+  if(target<currentPageIndex){ currentPageIndex=target; renderCurrentPage(); if(!isDesktop()) closeMobileSidebar(); window.scrollTo({top:0,behavior:"smooth"}); return; }
+  // forward: validate chain
+  for(let i=currentPageIndex;i<target;i++){
+    if(!validatePage(i,false)){ currentPageIndex=i; renderCurrentPage(); validatePage(i,true); toast(`Please complete Step ${i+1} first`); if(!isDesktop()) closeMobileSidebar(); return; }
+  }
+  currentPageIndex=target; highestReached=Math.max(highestReached,target);
+  renderCurrentPage(); if(!isDesktop()) closeMobileSidebar(); window.scrollTo({top:0,behavior:"smooth"});
+}
+function handleSubmit(){
+  if(!validatePage(currentPageIndex)){ toast("Please complete the required fields"); return; }
+  // validate all
+  for(let i=0;i<surveySchema.pages.length;i++){ if(!validatePage(i,false)){ currentPageIndex=i; renderCurrentPage(); validatePage(i,true); toast(`Please complete Step ${i+1} first`); return; } }
+  confetti({particleCount:130,spread:80,origin:{y:.55},colors:['#800020','#d4af37','#ffffff','#f3e5ab']});
+  setTimeout(()=>confetti({particleCount:70,angle:60,spread:60,origin:{x:0,y:.7},colors:['#800020','#d4af37']}),300);
+  setTimeout(()=>confetti({particleCount:70,angle:120,spread:60,origin:{x:1,y:.7},colors:['#800020','#d4af37']}),450);
+  completed=true; renderCompletion(); renderSidebar(); persist();
+}
+function renderCompletion(){
+  $("progress-container").classList.add("hidden");
+  const files=Object.keys(attachedFiles).reduce((a,k)=>a+attachedFiles[k].length,0);
+  const country=getOptionLabel('country_of_residence',surveyAnswers.country_of_residence);
+  const res=getOptionLabel('residency_status',surveyAnswers.residency_status);
+  $("survey-card").innerHTML=`
+    <div class="p-8 sm:p-12 text-center">
+      <div class="check-pop w-24 h-24 bg-gradient-to-tr from-maroon-600 via-maroon-500 to-gold-500 rounded-full flex items-center justify-center mx-auto text-white text-4xl shadow-dock relative">
+        <i class="fa-solid fa-check"></i>
+        <span class="absolute -inset-2 rounded-full border-2 border-gold-400/40 animate-ping" style="animation-duration:2s"></span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-maroon-900 mt-6 tracking-tight">Thank You for Your Feedback!</h2>
+      <p class="text-sm text-slate-500 mt-2 max-w-md mx-auto">Your responses have been securely recorded and will contribute to regional service enhancement initiatives.</p>
+      <div class="bg-cream-100 rounded-2xl p-6 text-left border border-cream-200 max-w-lg mx-auto mt-7 space-y-3 shadow-sm">
+        <h4 class="text-[11px] font-extrabold text-maroon-800 uppercase tracking-widest border-b border-cream-300 pb-2.5 flex items-center gap-2"><i class="fa-solid fa-receipt text-gold-600"></i>Submission Summary</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[12px]">
+          <div class="bg-white rounded-xl p-3 border border-cream-200"><p class="text-slate-400 font-bold uppercase text-[10px] tracking-wide">Country</p><p class="font-extrabold text-slate-800 mt-0.5">${flagEmoji(surveyAnswers.country_of_residence)} ${country}</p></div>
+          <div class="bg-white rounded-xl p-3 border border-cream-200"><p class="text-slate-400 font-bold uppercase text-[10px] tracking-wide">Residency</p><p class="font-extrabold text-slate-800 mt-0.5">${res}</p></div>
+          <div class="bg-white rounded-xl p-3 border border-cream-200"><p class="text-slate-400 font-bold uppercase text-[10px] tracking-wide">Satisfaction</p><p class="font-extrabold text-slate-800 mt-0.5">${surveyAnswers.satisfaction_rating?('★'.repeat(surveyAnswers.satisfaction_rating)+' '+surveyAnswers.satisfaction_rating+'/5'):'N/A'}</p></div>
+          <div class="bg-white rounded-xl p-3 border border-cream-200"><p class="text-slate-400 font-bold uppercase text-[10px] tracking-wide">Files</p><p class="font-extrabold text-slate-800 mt-0.5">${files} file(s) attached</p></div>
+        </div>
+      </div>
+      <div class="pt-7 flex flex-col sm:flex-row justify-center gap-3">
+        <button onclick="location.reload()" class="btn-primary px-6 py-3 text-white rounded-xl font-bold text-sm shadow-md transition"><i class="fa-solid fa-plus mr-1.5"></i>New Response</button>
+        <button onclick="toggleDebugModal()" class="px-6 py-3 bg-cream-200 hover:bg-cream-300 text-slate-800 rounded-xl font-bold text-sm transition"><i class="fa-solid fa-code mr-1.5 text-maroon-600"></i>Inspect Payload</button>
+        <button onclick="downloadJSON()" class="px-6 py-3 bg-white border-2 border-slate-200 hover:border-gold-500 text-slate-700 rounded-xl font-bold text-sm transition"><i class="fa-solid fa-download mr-1.5 text-gold-600"></i>Export JSON</button>
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ================= PERSIST / MISC ================= */
+function persist(){
+  try{ localStorage.setItem("gcc_dock_answers",JSON.stringify({a:surveyAnswers,f:attachedFiles,c:currentPageIndex,h:highestReached})); const l=$("autosave-label"); if(l) l.textContent="Draft saved • "+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }catch(e){}
+}
+function restore(){
+  try{ const d=JSON.parse(localStorage.getItem("gcc_dock_answers")||"null"); if(d){ surveyAnswers=d.a||{}; attachedFiles=d.f||{}; currentPageIndex=d.c||0; highestReached=d.h||0; } }catch(e){}
+}
+function saveDraft(manual=false){ persist(); if(manual) toast("Draft saved successfully","success"); }
+function resetSurvey(){ if(confirm("Reset all answers and start over?")){ localStorage.removeItem("gcc_dock_answers"); location.reload(); } }
+function refreshCounts(){ $("answered-count").textContent=`${answeredCount()} of ${totalQuestions()} answered`; renderSidebar(); }
+function updateDebugJSON(){
+  const payload={timestamp:new Date().toISOString(), survey:"GCC Resident Insights Survey", currentStep:currentPageIndex+1, answers:surveyAnswers, attachments:attachedFiles};
+  $("json-output").innerText=JSON.stringify(payload,null,2);
+}
+function toggleDebugModal(){ const m=$("debug-modal"); const hidden=m.classList.contains("hidden"); m.classList.toggle("hidden"); m.classList.toggle("flex",hidden); if(hidden) updateDebugJSON(); }
+function copyJSON(){ navigator.clipboard?.writeText($("json-output").innerText).then(()=>toast("Payload copied to clipboard","success")); }
+function downloadJSON(){
+  const blob=new Blob([$("json-output").innerText],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="gcc-survey-response.json"; a.click();
+}
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ $("debug-modal").classList.add("hidden"); $("debug-modal").classList.remove("flex"); closeMobileSidebar(); }});
+$("debug-modal").addEventListener("click",e=>{ if(e.target.id==="debug-modal") toggleDebugModal(); });
+
+/* timer */
+setInterval(()=>{ const s=Math.floor((Date.now()-startTime)/1000); const m=String(Math.floor(s/60)).padStart(2,'0'); const ss=String(s%60).padStart(2,'0'); const el=$("elapsed-time"); if(el) el.textContent=`${m}:${ss}`; },1000);
+
+/* init */
+document.addEventListener("DOMContentLoaded",()=>{ initSidebar(); restore(); renderCurrentPage(); });
+</script>
+</body>
+</html>
