@@ -32,6 +32,21 @@ describe('SurveyNavigationComponent', () => {
     );
   });
 
+  it('formats the desktop step-counts line as N questions • A/B done (007)', () => {
+    expect(SurveyNavigationComponent.stepCountsLabel(2, 3)).toBe('3 questions • 2/3 done');
+    expect(SurveyNavigationComponent.stepCountsLabel(0, 1)).toBe('1 question • 0/1 done');
+    expect(SurveyNavigationComponent.stepCountsLabel(0, 0)).toBe('0 questions • 0/0 done');
+  });
+
+  it('exposes the desktop chrome contract strings (007 FR-005/FR-007/FR-008)', () => {
+    expect(SurveyNavigationComponent.STEPS_LABEL).toBe('Survey steps');
+    expect(SurveyNavigationComponent.SECURE_PANEL_TITLE).toBe('Private & secure');
+    expect(SurveyNavigationComponent.SECURE_PANEL_BODY).toBe(
+      'Your responses are encrypted & securely stored.',
+    );
+    expect(SurveyNavigationComponent.THEME_CAPTION).toBe('Maroon • Gold • Cream Theme');
+  });
+
   it('keeps completed steps visible but disables navigation', () => {
     expect(SurveyNavigationComponent.canNavigate(false)).toBe(true);
     expect(SurveyNavigationComponent.canNavigate(true)).toBe(false);

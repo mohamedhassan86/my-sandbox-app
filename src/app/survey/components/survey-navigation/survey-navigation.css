@@ -399,3 +399,125 @@
   font-weight: var(--ds-font-weight-extrabold);
   font-variant-numeric: tabular-nums;
 }
+
+/* Desktop chrome variants (007) — hidden below the dock breakpoint; the compact rail
+   never renders them (the template gates them on `!compact()`), and on mobile they
+   stay display:none so the drawer output is byte-identical. */
+
+.survey-steps-label,
+.step-counts-desktop,
+.dock-secure-panel,
+.dock-theme-caption {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .survey-steps-label {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-2xs);
+    margin: 0;
+    padding: 0 var(--ds-space-sm);
+    color: var(--ds-color-accent-on-dark);
+    font-size: var(--ds-font-size-3xs);
+    font-weight: var(--ds-font-weight-extrabold);
+    letter-spacing: var(--ds-letter-spacing-caps);
+    text-transform: uppercase;
+  }
+
+  .steps-glyph {
+    display: block;
+    flex-shrink: 0;
+    width: var(--ds-space-sm);
+    height: var(--ds-space-sm);
+    background-color: var(--ds-color-accent-on-dark);
+    -webkit-mask-image: var(--ds-icon-steps);
+    mask-image: var(--ds-icon-steps);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
+  .step-counts-desktop {
+    display: inline;
+  }
+
+  /* Desktop reads `N questions • A/B done`; the A/B-done span keeps the mobile format. */
+  .page-step .step-counts:not(.step-counts-desktop) {
+    display: none;
+  }
+
+  /* Desktop replaces the one-line note with the bordered panel; mobile keeps the note. */
+  .dock-security {
+    display: none;
+  }
+
+  .dock-secure-panel {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-sm);
+    padding: var(--ds-space-sm);
+    border: 1px solid var(--ds-color-border-on-dock);
+    border-radius: var(--ds-radius-xl);
+    background-color: var(--ds-alpha-white-12);
+  }
+
+  .secure-tile {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: var(--ds-space-2xl);
+    height: var(--ds-space-2xl);
+    border: 1px solid var(--ds-color-accent-border);
+    border-radius: var(--ds-radius-lg);
+    background-color: var(--ds-alpha-gold-22);
+  }
+
+  .secure-glyph {
+    display: block;
+    width: var(--ds-space-md);
+    height: var(--ds-space-md);
+    background-color: var(--ds-color-accent-on-dark);
+    -webkit-mask-image: var(--ds-icon-shield-check);
+    mask-image: var(--ds-icon-shield-check);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
+  .secure-text {
+    display: grid;
+    min-width: 0;
+    gap: var(--ds-space-3xs);
+  }
+
+  .secure-title {
+    color: var(--ds-color-text-on-dock);
+    font-size: var(--ds-font-size-sm);
+    font-weight: var(--ds-font-weight-extrabold);
+    letter-spacing: var(--ds-letter-spacing-tight);
+  }
+
+  .secure-body {
+    color: var(--ds-color-text-muted-on-dock);
+    font-size: var(--ds-font-size-3xs);
+    line-height: var(--ds-line-height-snug);
+  }
+
+  .dock-theme-caption {
+    display: grid;
+    justify-items: center;
+    margin: 0;
+    padding-block-start: var(--ds-space-2xs);
+    color: var(--ds-color-text-muted-on-dock);
+    font-size: var(--ds-font-size-3xs);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+}

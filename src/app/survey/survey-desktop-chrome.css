@@ -1,0 +1,255 @@
+/**
+ * Desktop chrome (007-desktop-design-enhancement).
+ *
+ * Kept in its own component stylesheet for two reasons: the survey-shell.css style
+ * budget (angular.json anyComponentStyle maximumError 16 kB), and auditability —
+ * every 007 rule lives here, on `only-desktop` elements (hidden below the 64 rem
+ * breakpoint by the shared mechanism in survey-shell.css) or inside this file's own
+ * 64 rem media query, so mobile output is byte-identical by construction.
+ * Contract: specs/007-desktop-design-enhancement/contracts/desktop-chrome.md.
+ */
+
+/* --- Dock badge: gold ring + dark disc + monogram (US1, FR-003) ----------------- */
+
+.dock-badge {
+  width: var(--ds-touch-target);
+  height: var(--ds-touch-target);
+  border-radius: var(--ds-radius-pill);
+  padding: var(--ds-space-3xs);
+  background: linear-gradient(
+    135deg,
+    var(--ds-color-accent-border),
+    var(--ds-color-accent-decorative) 55%,
+    var(--ds-color-accent-strong)
+  );
+  box-shadow: var(--ds-shadow-2);
+}
+
+.dock-monogram {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-color-surface-dock);
+  color: var(--ds-color-accent-on-dark);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-extrabold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.dock-monogram-glyph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--ds-color-accent-on-dark);
+  -webkit-mask-image: var(--ds-icon-clipboard);
+  mask-image: var(--ds-icon-clipboard);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 60%;
+  mask-size: 60%;
+}
+
+/* --- Live-card desktop meta line (US1, FR-004) ---------------------------------- */
+
+.live-sub-desktop {
+  margin: var(--ds-space-3xs) 0 0;
+  color: var(--ds-color-text-muted-on-dock);
+  font-size: var(--ds-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.glyph-lock {
+  display: block;
+  flex-shrink: 0;
+  width: var(--ds-space-sm);
+  height: var(--ds-space-sm);
+  background-color: var(--ds-color-accent-on-dark);
+  -webkit-mask-image: var(--ds-icon-lock);
+  mask-image: var(--ds-icon-lock);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* --- Survey card header badges (US4, FR-010/FR-011) ------------------------------ */
+
+/* The global .card-eyebrow already carries the maroon pill; desktop upgrades it to
+   the reference gradient with the N OF M text (element: .card-eyebrow.step-pill). */
+.step-pill {
+  background: linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary-strong));
+}
+
+.card-counts-caps {
+  font-weight: var(--ds-font-weight-bold);
+  letter-spacing: var(--ds-letter-spacing-caps);
+}
+
+.card-icon-tile {
+  position: absolute;
+  inset-block-start: var(--ds-space-lg);
+  inset-inline-end: var(--ds-space-lg);
+  width: var(--ds-touch-target);
+  height: var(--ds-touch-target);
+  border: 1px solid var(--ds-color-primary-border);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-color-surface);
+  box-shadow: var(--ds-shadow-1);
+}
+
+.card-icon-tile::after {
+  content: '';
+  position: absolute;
+  inset: 24%;
+  background-color: var(--ds-color-primary);
+  -webkit-mask-image: var(--ds-icon-clipboard);
+  mask-image: var(--ds-icon-clipboard);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.card-icon-tile[data-icon='star']::after {
+  -webkit-mask-image: var(--ds-icon-star);
+  mask-image: var(--ds-icon-star);
+}
+
+.card-icon-tile[data-icon='id-card']::after {
+  -webkit-mask-image: var(--ds-icon-id-card);
+  mask-image: var(--ds-icon-id-card);
+}
+
+.card-icon-tile[data-icon='file-shield']::after {
+  -webkit-mask-image: var(--ds-icon-file-shield);
+  mask-image: var(--ds-icon-file-shield);
+}
+
+.card-icon-tile[data-icon='check']::after {
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+}
+
+.card-icon-tile[data-icon='shield-check']::after {
+  -webkit-mask-image: var(--ds-icon-shield-check);
+  mask-image: var(--ds-icon-shield-check);
+}
+
+.card-icon-tile[data-icon='laptop-file']::after {
+  -webkit-mask-image: var(--ds-icon-laptop-file);
+  mask-image: var(--ds-icon-laptop-file);
+}
+
+/* --- Shell footer: palette capsule + platform line (US5, FR-012) ----------------- */
+
+.shell-footer {
+  margin-block-start: var(--ds-space-lg);
+  grid-auto-flow: row;
+  justify-items: center;
+  gap: var(--ds-space-xs);
+}
+
+.palette-capsule {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-3xs) var(--ds-space-sm);
+  margin: 0;
+  padding: var(--ds-space-2xs) var(--ds-space-md);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-color-surface);
+  box-shadow: var(--ds-shadow-2);
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-2xs);
+}
+
+.palette-lead {
+  font-weight: var(--ds-font-weight-bold);
+}
+
+.palette-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2xs);
+}
+
+.palette-chip + .palette-chip::before {
+  content: '•';
+  margin-inline-end: var(--ds-space-2xs);
+  color: var(--ds-color-text-subtle);
+}
+
+.palette-swatch {
+  width: var(--ds-space-sm);
+  height: var(--ds-space-sm);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-maroon-700);
+}
+
+.palette-swatch[data-role='secondary'] {
+  background-color: var(--ds-gold-500);
+}
+
+.palette-swatch[data-role='tertiary'] {
+  border: 1px solid var(--ds-cream-400);
+  background-color: var(--ds-cream-300);
+}
+
+.platform-line {
+  margin: 0;
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-3xs);
+  text-align: center;
+}
+
+/* --- Desktop-only application (everything mobile-relevant happens here) ---------- */
+
+@media (min-width: 64rem) {
+  /* FR-002: sparkle tessellation replaces the round dots on the desktop dock only. */
+  .dock::before {
+    background-image: var(--ds-pattern-sparkle-lg), var(--ds-pattern-sparkle-sm);
+    background-size: auto;
+    background-repeat: repeat;
+    background-position:
+      0 0,
+      var(--ds-space-sm) var(--ds-space-sm);
+    opacity: var(--ds-dock-texture-opacity);
+  }
+
+  /* Desktop dock swaps the square mark for the circular badge. */
+  .dock-brand-mark {
+    display: none;
+  }
+
+  /* Desktop live card swaps the answered line for the sections/min/encrypted line. */
+  .live-sub {
+    display: none;
+  }
+
+  .live-sub-desktop {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-3xs);
+  }
+
+  /* Desktop header swaps the inline eyebrow/icon for the pill + caps + corner tile. */
+  .card-eyebrow-row .page-icon,
+  .card-eyebrow-row .card-eyebrow:not(.step-pill),
+  .card-eyebrow-row .card-counts:not(.card-counts-caps) {
+    display: none;
+  }
+
+  .card-counts-caps {
+    margin-inline-start: 0;
+  }
+}

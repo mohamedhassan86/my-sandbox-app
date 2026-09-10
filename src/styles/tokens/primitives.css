@@ -136,4 +136,13 @@
   --ds-alpha-gold-30: rgb(212 175 55 / 30%);
   --ds-alpha-maroon-35: rgb(128 0 32 / 35%);
   --ds-alpha-cream-60: rgb(250 247 242 / 60%);
+
+  /*
+   * Desktop dock texture (007): two-scale sparkle tessellation, gold at solid fill —
+   * the desktop ::before layer applies the decorative opacity itself so the same tiles
+   * can sit on any maroon depth. SVG data URIs keep the texture offline/self-contained.
+   */
+  --ds-pattern-sparkle-lg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='%23d4af37'%3E%3Cpath transform='translate(26 6)' d='M10 0C10.9 7.4 12.6 9.1 20 10C12.6 10.9 10.9 12.6 10 20 9.1 12.6 7.4 10.9 0 10C7.4 9.1 9.1 7.4 10 0Z'/%3E%3Cpath transform='translate(10 44) scale(0.6)' d='M10 0C10.9 7.4 12.6 9.1 20 10C12.6 10.9 10.9 12.6 10 20 9.1 12.6 7.4 10.9 0 10C7.4 9.1 9.1 7.4 10 0Z'/%3E%3C/g%3E%3C/svg%3E");
+  --ds-pattern-sparkle-sm: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpath fill='%23d4af37' transform='translate(13 8) scale(0.55)' d='M10 0C10.9 7.4 12.6 9.1 20 10C12.6 10.9 10.9 12.6 10 20 9.1 12.6 7.4 10.9 0 10C7.4 9.1 9.1 7.4 10 0Z'/%3E%3C/svg%3E");
+  --ds-dock-texture-opacity: 0.28;
 }

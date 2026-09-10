@@ -38,7 +38,13 @@ const SHELL_SIZE_CONTRACT = readFileSync(
   'specs/006-survey-dock-brand/contracts/shell-sizes.md',
   'utf8',
 );
-const MERGED_TOKEN_DOCS = `${TOKEN_CONTRACT}\n${BRAND_DELTA_CONTRACT}`;
+// 007-desktop-design-enhancement documents its desktop-chrome delta; the check merges it
+// the same way so each feature keeps its own acceptance baseline.
+const DESKTOP_CHROME_CONTRACT = readFileSync(
+  'specs/007-desktop-design-enhancement/contracts/desktop-chrome.md',
+  'utf8',
+);
+const MERGED_TOKEN_DOCS = `${TOKEN_CONTRACT}\n${BRAND_DELTA_CONTRACT}\n${DESKTOP_CHROME_CONTRACT}`;
 
 function stylesheetsIn(directory: string): string[] {
   const found: string[] = [];
@@ -539,5 +545,60 @@ describe('design system contract: survey dock shell', () => {
       }
     }
     expect(offenders, 'shell surfaces should be sized by tokens only').toEqual([]);
+  });
+});
+
+/**
+ * Desktop chrome contract (007) — see
+ * `specs/007-desktop-design-enhancement/contracts/desktop-chrome.md`. New chrome composes
+ * existing color roles, so the block protects that the 007 assets exist, that they are
+ * documented in the feature's own contract, and that the contract stays merged into the
+ * token-documentation baseline.
+ */
+const DESKTOP_CHROME_TOKENS = [
+  '--ds-pattern-sparkle-lg',
+  '--ds-pattern-sparkle-sm',
+  '--ds-dock-texture-opacity',
+  '--ds-icon-lock',
+  '--ds-icon-steps',
+] as const;
+
+describe('design system contract: desktop chrome (007)', () => {
+  it('ships the sparkle texture and glyph assets', () => {
+    for (const token of DESKTOP_CHROME_TOKENS) {
+      expect(TOKENS.has(token), `${token} should be defined in the token layer`).toBe(true);
+    }
+  });
+
+  it('documents every desktop-chrome token in the 007 contract', () => {
+    for (const token of DESKTOP_CHROME_TOKENS) {
+      expect(DESKTOP_CHROME_CONTRACT, `${token} should appear in the 007 contract`).toContain(
+        token,
+      );
+    }
+  });
+
+  it('documents the desktop-chrome copy-string slots in the 007 contract', () => {
+    for (const anchor of [
+      'Survey steps',
+      'Private & secure',
+      'Maroon • Gold • Cream Theme',
+      'Dock Navigation Edition',
+      'survey.dock.mode',
+    ]) {
+      expect(DESKTOP_CHROME_CONTRACT, `${anchor} should be documented`).toContain(anchor);
+    }
+  });
+
+  it('reuses already-verified contrast pairs for every new chrome surface', () => {
+    // No CONTRAST_PAIRS entries are added by 007: each surface cites an existing pair in
+    // the contract's §4, which must stay empty of new enforcement rows.
+    expect(
+      DESKTOP_CHROME_CONTRACT,
+      'the 007 contract should state that its pairs reuse the existing matrix',
+    ).toContain('no new pairs were added');
+    expect(MERGED_TOKEN_DOCS).toContain('--ds-color-accent-on-dark');
+    expect(MERGED_TOKEN_DOCS).toContain('--ds-color-text-muted-on-dock');
+    expect(MERGED_TOKEN_DOCS).toContain('--ds-color-text-on-primary');
   });
 });

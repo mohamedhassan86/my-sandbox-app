@@ -14,6 +14,19 @@ import { ResponseSubmissionService } from '../../../core/services/response-submi
 import { CompletionSummaryComponent } from '../../components/completion-summary/completion-summary';
 import { SurveyNavigationComponent } from '../../components/survey-navigation/survey-navigation';
 import { buildCompletionTiles } from '../../presenters/completion-tiles';
+import {
+  liveCardLine as formatLiveCardLine,
+  liveCardMeta,
+  platformYear,
+  surveyInitial,
+  topbarAction,
+} from '../../presenters/desktop-chrome';
+import {
+  browserLocalStorage,
+  readDockMode,
+  writeDockMode,
+  type DockMode,
+} from '../../services/dock-preference';
 import { SurveySessionService } from '../../services/survey-session.service';
 import { SurveyPageComponent } from '../survey-page/survey-page';
 
@@ -48,6 +61,15 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
                 <span class="dock-brand-mark collapse-hide" aria-hidden="true"
                   ><span class="dock-brand-glyph"></span
                 ></span>
+                <span class="dock-badge only-desktop collapse-hide" aria-hidden="true">
+                  @if (monogram(); as monogramResult) {
+                    @if (monogramResult.kind === 'letter') {
+                      <span class="dock-monogram">{{ monogramResult.letter }}</span>
+                    } @else {
+                      <span class="dock-monogram-glyph"></span>
+                    }
+                  }
+                </span>
                 <div class="dock-titles collapse-hide">
                   <p class="dock-title">{{ currentSurvey.title }}</p>
                   <p class="dock-eyebrow">Survey {{ currentSurvey.version }}</p>
@@ -85,6 +107,9 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
                   {{ session.answeredQuestionCount() }} of
                   {{ session.totalQuestionCount() }} answered
                 </p>
+                <p class="live-sub-desktop only-desktop collapse-hide">
+                  <span class="glyph-lock" aria-hidden="true"></span>{{ liveCardLine() }}
+                </p>
               </div>
             </div>
             <div class="gold-divider collapse-hide" aria-hidden="true"></div>
@@ -105,9 +130,10 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
               <div class="topbar-inner">
                 <button
                   type="button"
-                  class="menu-btn only-mobile"
-                  aria-label="Open survey navigation"
-                  (click)="toggleMobileNav()"
+                  class="menu-btn"
+                  [attr.aria-label]="menuLabel()"
+                  [attr.aria-pressed]="menuAriaPressed()"
+                  (click)="activateTopbarMenu()"
                 >
                   <span class="glyph glyph-menu" aria-hidden="true"></span>
                 </button>
@@ -214,11 +240,23 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
                           {{ questionCounts(page).required }} required ·
                           {{ questionCounts(page).optional }} optional
                         </p>
+                        <p class="card-eyebrow step-pill only-desktop">
+                          Step {{ session.pageIndex() + 1 }} of {{ currentSurvey.pages.length }}
+                        </p>
+                        <p class="card-counts card-counts-caps only-desktop">
+                          {{ questionCounts(page).required }} REQUIRED •
+                          {{ questionCounts(page).optional }} OPTIONAL
+                        </p>
                       </div>
                       <h2 class="card-title">{{ page.title }}</h2>
                       @if (page.description) {
                         <p class="card-description">{{ page.description }}</p>
                       }
+                      <span
+                        class="card-icon-tile only-desktop"
+                        [attr.data-icon]="page.icon ?? 'clipboard'"
+                        aria-hidden="true"
+                      ></span>
                     </header>
                     <app-survey-page
                       [page]="page"
@@ -251,6 +289,27 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
                   }
                 </section>
               }
+              <footer class="shell-footer only-desktop">
+                <p class="palette-capsule">
+                  <span class="palette-lead">Palette —</span>
+                  <span class="palette-chip"
+                    ><span class="palette-swatch" data-role="primary" aria-hidden="true"></span
+                    >Maroon primary</span
+                  >
+                  <span class="palette-chip"
+                    ><span class="palette-swatch" data-role="secondary" aria-hidden="true"></span
+                    >Metallic gold secondary</span
+                  >
+                  <span class="palette-chip"
+                    ><span class="palette-swatch" data-role="tertiary" aria-hidden="true"></span
+                    >Warm cream tertiary</span
+                  >
+                </p>
+                <p class="platform-line">
+                  © {{ platformYear() }} Regional Survey Platform • Secured &amp; Encrypted • Dock
+                  Navigation Edition
+                </p>
+              </footer>
             </div>
           </div>
         </div>
@@ -268,7 +327,7 @@ import { SurveyPageComponent } from '../survey-page/survey-page';
       </div>
     </main>
   `,
-  styleUrls: ['../../survey-shell.css', '../../survey.css'],
+  styleUrls: ['../../survey-shell.css', '../../survey.css', '../../survey-desktop-chrome.css'],
 })
 export class SurveyViewComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
@@ -282,10 +341,14 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
   readonly error = signal('This survey is temporarily unavailable.');
   readonly mobileNavOpen = signal(SurveyViewComponent.mobileNavDefaultOpen());
-  readonly dockCollapsed = signal(false);
+  private readonly dockStorage = browserLocalStorage(
+    typeof window === 'undefined' ? undefined : window,
+  );
   private readonly desktopQuery =
     typeof window !== 'undefined' ? window.matchMedia('(min-width: 64rem)') : null;
   readonly isDesktop = signal(this.desktopQuery?.matches ?? true);
+  // FR-009: hydrated pre-paint so a returning collapsed-mode desktop shows no flash.
+  readonly dockCollapsed = signal(readDockMode(this.dockStorage, this.isDesktop()) === 'collapsed');
   readonly isRail = computed(() => this.isDesktop() && this.dockCollapsed());
   readonly completionTiles = computed(() => {
     const current = this.survey();
@@ -297,6 +360,24 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
         )
       : [];
   });
+  // Desktop chrome (007): derived display values come from the pure presenters.
+  readonly monogram = computed(() => surveyInitial(this.survey()?.title));
+  readonly liveCardLine = computed(() => {
+    const current = this.survey();
+    return formatLiveCardLine(
+      liveCardMeta({
+        pages: current?.pages ?? [],
+        estimatedMinutes: current?.estimatedMinutes ?? null,
+      }),
+    );
+  });
+  readonly platformYear = computed(() => platformYear(new Date()));
+  readonly menuLabel = computed(() =>
+    SurveyViewComponent.topbarMenuLabel(this.isDesktop(), this.isRail()),
+  );
+  readonly menuAriaPressed = computed(() =>
+    SurveyViewComponent.topbarAriaPressed(this.isDesktop(), this.isRail()),
+  );
   private readonly handleDesktopChange = (event: MediaQueryListEvent) =>
     this.isDesktop.set(event.matches);
 
@@ -373,8 +454,19 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
     this.mobileNavOpen.update((open) => SurveyViewComponent.mobileNavToggle(open));
   }
 
+  /** Topbar menu button (FR-009): rail control on desktop, drawer toggle on mobile. */
+  activateTopbarMenu(): void {
+    if (topbarAction(this.isDesktop()) === 'rail') {
+      this.toggleRail();
+    } else {
+      this.toggleMobileNav();
+    }
+  }
+
   toggleRail(): void {
-    this.dockCollapsed.update((collapsed) => !collapsed);
+    const collapsed = !this.dockCollapsed();
+    this.dockCollapsed.set(collapsed);
+    writeDockMode(this.dockStorage, this.isDesktop(), SurveyViewComponent.dockModeFor(collapsed));
   }
 
   restart(): void {
@@ -456,6 +548,24 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
 
   static mobileNavToggle(open: boolean): boolean {
     return !open;
+  }
+
+  /** Maps the rail flag to the persisted dock mode (007 FR-009). */
+  static dockModeFor(collapsed: boolean): DockMode {
+    return collapsed ? 'collapsed' : 'expanded';
+  }
+
+  /** Accessible label for the topbar menu in both breakpoint modes. */
+  static topbarMenuLabel(isDesktop: boolean, railCollapsed: boolean): string {
+    if (topbarAction(isDesktop) === 'rail') {
+      return railCollapsed ? 'Expand survey navigation' : 'Collapse survey navigation';
+    }
+    return 'Open survey navigation';
+  }
+
+  /** `aria-pressed` belongs to the rail toggle only; the drawer keeps its own cues. */
+  static topbarAriaPressed(isDesktop: boolean, railCollapsed: boolean): boolean | null {
+    return topbarAction(isDesktop) === 'rail' ? railCollapsed : null;
   }
 
   static shouldCloseDrawerOnEscape(drawerOpen: boolean): boolean {

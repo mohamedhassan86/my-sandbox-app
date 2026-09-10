@@ -12,6 +12,25 @@ describe('survey navigation controls', () => {
   });
 });
 
+describe('desktop topbar menu and dock preference (007)', () => {
+  it('branches the menu action by breakpoint with a rail-only pressed state', () => {
+    expect(SurveyViewComponent.topbarMenuLabel(true, false)).toBe('Collapse survey navigation');
+    expect(SurveyViewComponent.topbarMenuLabel(true, true)).toBe('Expand survey navigation');
+    expect(SurveyViewComponent.topbarMenuLabel(false, false)).toBe('Open survey navigation');
+    expect(SurveyViewComponent.topbarMenuLabel(false, true)).toBe('Open survey navigation');
+
+    expect(SurveyViewComponent.topbarAriaPressed(true, true)).toBe(true);
+    expect(SurveyViewComponent.topbarAriaPressed(true, false)).toBe(false);
+    expect(SurveyViewComponent.topbarAriaPressed(false, true)).toBeNull();
+    expect(SurveyViewComponent.topbarAriaPressed(false, false)).toBeNull();
+  });
+
+  it('maps the rail flag to the persisted dock mode, expanded by default', () => {
+    expect(SurveyViewComponent.dockModeFor(true)).toBe('collapsed');
+    expect(SurveyViewComponent.dockModeFor(false)).toBe('expanded');
+  });
+});
+
 describe('survey submission state', () => {
   it('keeps failures actionable and success explicit', () => {
     expect(SurveyViewComponent.submissionLabel('idle')).toBe('Submit response');

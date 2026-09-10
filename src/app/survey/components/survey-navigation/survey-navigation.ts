@@ -1,6 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import type { PageProgress } from '../../../core/validators/response.validator';
 import { SurveySessionService } from '../../services/survey-session.service';
+import { stepCountsLabel } from '../../presenters/desktop-chrome';
 
 export type PageStatus = 'active' | 'completed' | 'upcoming';
 
@@ -14,6 +15,11 @@ export interface OverallProgress {
   standalone: true,
   template: `
     <nav class="survey-navigation" [class.compact]="compact()" aria-label="Survey pages">
+      @if (!compact()) {
+        <p class="survey-steps-label">
+          <span class="steps-glyph" aria-hidden="true"></span>{{ stepsLabel }}
+        </p>
+      }
       <ol>
         @for (page of pages(); let index = $index; track page.pageId) {
           <li
@@ -42,6 +48,9 @@ export interface OverallProgress {
                   <span class="step-counts"
                     >{{ progressFor(index).answered }}/{{ progressFor(index).total }} done</span
                   >
+                  <span class="step-counts step-counts-desktop">{{
+                    stepCounts(progressFor(index).answered, progressFor(index).total)
+                  }}</span>
                   <span class="step-mini" aria-hidden="true"
                     ><span
                       class="step-mini-fill"
@@ -62,6 +71,13 @@ export interface OverallProgress {
           <span class="security-glyph" aria-hidden="true"></span>
           Your responses are encrypted &amp; securely stored.
         </p>
+        <div class="dock-secure-panel">
+          <span class="secure-tile" aria-hidden="true"><span class="secure-glyph"></span></span>
+          <span class="secure-text">
+            <span class="secure-title">{{ securePanelTitle }}</span>
+            <span class="secure-body">{{ securePanelBody }}</span>
+          </span>
+        </div>
       }
       <div class="dock-progress">
         @if (!compact()) {
@@ -105,11 +121,25 @@ export interface OverallProgress {
           </p>
         }
       </div>
+      @if (!compact()) {
+        <p class="dock-theme-caption">{{ themeCaption }}</p>
+      }
     </nav>
   `,
   styleUrl: './survey-navigation.css',
 })
 export class SurveyNavigationComponent {
+  /** Desktop-chrome contract strings (007, contracts/desktop-chrome.md §5). */
+  static readonly STEPS_LABEL = 'Survey steps';
+  static readonly SECURE_PANEL_TITLE = 'Private & secure';
+  static readonly SECURE_PANEL_BODY = 'Your responses are encrypted & securely stored.';
+  static readonly THEME_CAPTION = 'Maroon • Gold • Cream Theme';
+
+  readonly stepsLabel = SurveyNavigationComponent.STEPS_LABEL;
+  readonly securePanelTitle = SurveyNavigationComponent.SECURE_PANEL_TITLE;
+  readonly securePanelBody = SurveyNavigationComponent.SECURE_PANEL_BODY;
+  readonly themeCaption = SurveyNavigationComponent.THEME_CAPTION;
+
   readonly pages = input.required<ReadonlyArray<{ pageId: string; title: string }>>();
   readonly currentIndex = input.required<number>();
   readonly submitted = input(false);
@@ -141,6 +171,11 @@ export class SurveyNavigationComponent {
     return total <= 0 ? 0 : Math.round((answered / total) * 100);
   }
 
+  /** Desktop step-row counts text (007 FR-006) — delegates to the pure presenter. */
+  static stepCountsLabel(answered: number, total: number): string {
+    return stepCountsLabel(answered, total);
+  }
+
   /** Ring geometry: r=24 → circumference 150.8; the offset reveals the answered arc. */
   static ringOffset(percentage: number): number {
     const circumference = 150.8;
@@ -164,6 +199,10 @@ export class SurveyNavigationComponent {
 
   stepPercentage(answered: number, total: number): number {
     return SurveyNavigationComponent.stepPercentage(answered, total);
+  }
+
+  stepCounts(answered: number, total: number): string {
+    return SurveyNavigationComponent.stepCountsLabel(answered, total);
   }
 
   ringOffset(percentage: number): number {
