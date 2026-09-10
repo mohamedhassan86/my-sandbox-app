@@ -1,0 +1,147 @@
+/**
+ * Design System — buttons.
+ *
+ * Every variant reaches the 44px touch target, keeps an AA-contrast label in all states, and
+ * is fully keyboard operable with a visible focus ring. `--secondary` is the design system's
+ * secondary brand role (selection blue); `--ghost`/`--subtle` are the low-emphasis options.
+ */
+
+.ds-btn {
+  --ds-btn-bg: var(--ds-color-primary);
+  --ds-btn-fg: var(--ds-color-text-on-primary);
+  --ds-btn-border: var(--ds-color-primary);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-xs);
+  min-height: var(--ds-touch-target);
+  padding: var(--ds-space-xs) var(--ds-space-lg);
+  border: 1px solid var(--ds-btn-border);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-btn-bg);
+  color: var(--ds-btn-fg);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-snug);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    border-color var(--ds-duration-fast) var(--ds-ease-standard),
+    color var(--ds-duration-fast) var(--ds-ease-standard),
+    transform var(--ds-duration-instant) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.ds-btn:hover:not([disabled]) {
+  background-color: var(--ds-color-primary-hover);
+  border-color: var(--ds-color-primary-hover);
+}
+
+.ds-btn:active:not([disabled]) {
+  transform: translateY(1px);
+}
+
+.ds-btn:focus-visible {
+  outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
+  outline-offset: var(--ds-focus-ring-offset);
+}
+
+.ds-btn[disabled],
+.ds-btn[aria-disabled='true'] {
+  background-color: var(--ds-color-surface-muted);
+  border-color: var(--ds-color-border);
+  color: var(--ds-color-text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ds-btn[aria-busy='true'] {
+  cursor: progress;
+}
+
+/* Variants ------------------------------------------------------------------- */
+
+.ds-btn--secondary {
+  --ds-btn-bg: var(--ds-color-selection);
+  --ds-btn-fg: var(--ds-color-text-on-selection);
+  --ds-btn-border: var(--ds-color-selection);
+}
+
+.ds-btn--secondary:hover:not([disabled]) {
+  background-color: var(--ds-color-selection-hover);
+  border-color: var(--ds-color-selection-hover);
+}
+
+.ds-btn--outline {
+  --ds-btn-bg: transparent;
+  --ds-btn-fg: var(--ds-color-primary);
+  --ds-btn-border: var(--ds-color-primary);
+}
+
+.ds-btn--outline:hover:not([disabled]) {
+  background-color: var(--ds-color-primary-soft);
+}
+
+.ds-btn--ghost {
+  --ds-btn-bg: transparent;
+  --ds-btn-fg: var(--ds-color-primary);
+  --ds-btn-border: transparent;
+}
+
+.ds-btn--ghost:hover:not([disabled]) {
+  background-color: var(--ds-color-primary-soft);
+  border-color: var(--ds-color-primary-border);
+}
+
+.ds-btn--subtle {
+  --ds-btn-bg: var(--ds-color-surface-muted);
+  --ds-btn-fg: var(--ds-color-text);
+  --ds-btn-border: transparent;
+}
+
+.ds-btn--subtle:hover:not([disabled]) {
+  background-color: var(--ds-color-border);
+}
+
+.ds-btn--danger {
+  --ds-btn-bg: var(--ds-color-danger);
+  --ds-btn-fg: var(--ds-color-text-on-danger);
+  --ds-btn-border: var(--ds-color-danger);
+}
+
+.ds-btn--danger:hover:not([disabled]) {
+  background-color: var(--ds-color-danger-strong);
+  border-color: var(--ds-color-danger-strong);
+}
+
+/* Sizes and shapes ----------------------------------------------------------- */
+
+.ds-btn--sm {
+  min-height: var(--ds-space-xl);
+  padding-inline: var(--ds-space-md);
+  font-size: var(--ds-font-size-sm);
+}
+
+.ds-btn--lg {
+  min-height: var(--ds-space-3xl);
+  padding-inline: var(--ds-space-xl);
+  font-size: var(--ds-font-size-lg);
+}
+
+.ds-btn--pill {
+  border-radius: var(--ds-radius-pill);
+}
+
+.ds-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+.ds-btn--icon {
+  min-width: var(--ds-touch-target);
+  padding-inline: var(--ds-space-xs);
+}

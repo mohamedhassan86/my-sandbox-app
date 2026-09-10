@@ -1,0 +1,97 @@
+/**
+ * Design System — Tier 2 semantic color roles.
+ *
+ * Components reference these roles only. Roles are grouped by the background they are
+ * designed for so a role can never be used against a surface it was not checked against
+ * (see `contracts/design-tokens.md` contrast table and the automated contract check).
+ */
+
+:root {
+  /* Canvas — tertiary brand role, the surface behind the survey panel */
+  --ds-color-canvas: var(--ds-pink-400);
+  --ds-color-canvas-subtle: var(--ds-pink-50);
+  --ds-color-canvas-strong: var(--ds-pink-500);
+
+  /* Surfaces */
+  --ds-color-surface: var(--ds-neutral-0);
+  --ds-color-surface-muted: var(--ds-neutral-100);
+  /* Answer tiles use the reference's own neutral, which is a step darker than a muted
+     surface; keeping it semantic means the reference value lives in one place. */
+  --ds-color-surface-tile: var(--ds-neutral-200);
+  --ds-color-surface-sunken: var(--ds-neutral-50);
+  --ds-color-surface-raised: var(--ds-neutral-0);
+  --ds-color-surface-inverse: var(--ds-neutral-900);
+
+  /* Text on surfaces */
+  --ds-color-text: var(--ds-neutral-900);
+  --ds-color-text-secondary: var(--ds-neutral-700);
+  --ds-color-text-muted: var(--ds-neutral-600);
+  --ds-color-text-subtle: var(--ds-neutral-500);
+  --ds-color-text-inverse: var(--ds-neutral-0);
+
+  /* Text on the pink canvas (muted must stay AA against the canvas, not just white) */
+  --ds-color-text-on-canvas: var(--ds-neutral-900);
+  --ds-color-text-muted-on-canvas: var(--ds-neutral-700);
+
+  /* Text on filled roles */
+  --ds-color-text-on-primary: var(--ds-neutral-0);
+  --ds-color-text-on-selection: var(--ds-neutral-0);
+  --ds-color-text-on-success: var(--ds-neutral-0);
+  --ds-color-text-on-danger: var(--ds-neutral-0);
+
+  /* Borders */
+  --ds-color-border: var(--ds-neutral-200);
+  --ds-color-border-subtle: var(--ds-neutral-100);
+  --ds-color-border-strong: var(--ds-neutral-300);
+  --ds-color-border-interactive: var(--ds-neutral-500);
+
+  /* Primary brand role (maroon) */
+  --ds-color-primary: var(--ds-maroon-700);
+  --ds-color-primary-strong: var(--ds-maroon-800);
+  --ds-color-primary-hover: var(--ds-maroon-600);
+  --ds-color-primary-soft: var(--ds-maroon-50);
+  --ds-color-primary-border: var(--ds-maroon-200);
+  --ds-color-primary-contrast: var(--ds-neutral-0);
+
+  /* Secondary role (selection blue) — selected answers and focus */
+  --ds-color-selection: var(--ds-blue-600);
+  --ds-color-selection-strong: var(--ds-blue-700);
+  --ds-color-selection-hover: var(--ds-blue-700);
+  --ds-color-selection-soft: var(--ds-blue-50);
+  --ds-color-selection-border: var(--ds-blue-200);
+  --ds-color-selection-contrast: var(--ds-neutral-0);
+
+  /* Tertiary role (canvas pink) — usable standalone as an accent */
+  --ds-color-tertiary: var(--ds-pink-400);
+  --ds-color-tertiary-soft: var(--ds-pink-100);
+  --ds-color-tertiary-strong: var(--ds-pink-700);
+  --ds-color-tertiary-border: var(--ds-pink-300);
+
+  /* Status */
+  --ds-color-success: var(--ds-success-700);
+  --ds-color-success-soft: var(--ds-success-100);
+  --ds-color-success-border: var(--ds-success-300);
+  --ds-color-warning: var(--ds-warning-700);
+  --ds-color-warning-soft: var(--ds-warning-100);
+  --ds-color-warning-border: var(--ds-warning-300);
+  --ds-color-danger: var(--ds-danger-600);
+  --ds-color-danger-strong: var(--ds-danger-700);
+  --ds-color-danger-soft: var(--ds-danger-50);
+  --ds-color-danger-border: var(--ds-danger-200);
+  --ds-color-info: var(--ds-info-600);
+  --ds-color-info-soft: var(--ds-info-100);
+  --ds-color-info-border: var(--ds-info-300);
+
+  /* Focus — one treatment for the whole system */
+  --ds-color-focus-ring: var(--ds-alpha-blue-30);
+  --ds-color-focus-ring-core: var(--ds-color-selection);
+  --ds-focus-ring-width: 3px;
+  --ds-focus-ring-offset: 2px;
+  --ds-focus-ring: 0 0 0 var(--ds-focus-ring-width) var(--ds-color-focus-ring);
+
+  /* Overlay */
+  --ds-color-scrim: var(--ds-alpha-ink-45);
+  --ds-color-overlay-shadow: var(--ds-alpha-ink-12);
+
+  color-scheme: light;
+}

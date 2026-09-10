@@ -1,0 +1,188 @@
+/**
+ * Design System — feedback surfaces: alerts, validation messages, badges, status text.
+ *
+ * Severity is carried by icon + border + tint + text, never by colour alone. Error severity
+ * is announced by markup (`role="alert"`); the other severities are polite status.
+ */
+
+.ds-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-sm);
+  padding: var(--ds-space-sm) var(--ds-space-md);
+  border: 1px solid var(--ds-color-info-border);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-color-info-soft);
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-normal);
+}
+
+.ds-alert::before {
+  content: '';
+  flex-shrink: 0;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  margin-block-start: var(--ds-space-3xs);
+  background-color: var(--ds-color-info);
+  -webkit-mask-image: var(--ds-icon-info);
+  mask-image: var(--ds-icon-info);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.ds-alert--error {
+  border-color: var(--ds-color-danger-border);
+  background-color: var(--ds-color-danger-soft);
+}
+
+.ds-alert--error::before {
+  background-color: var(--ds-color-danger);
+  -webkit-mask-image: var(--ds-icon-alert);
+  mask-image: var(--ds-icon-alert);
+}
+
+.ds-alert--warning {
+  border-color: var(--ds-color-warning-border);
+  background-color: var(--ds-color-warning-soft);
+}
+
+.ds-alert--warning::before {
+  background-color: var(--ds-color-warning);
+  -webkit-mask-image: var(--ds-icon-alert);
+  mask-image: var(--ds-icon-alert);
+}
+
+.ds-alert--success {
+  border-color: var(--ds-color-success-border);
+  background-color: var(--ds-color-success-soft);
+}
+
+.ds-alert--success::before {
+  background-color: var(--ds-color-success);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+}
+
+.ds-alert--quiet {
+  border-color: var(--ds-color-border);
+  background-color: var(--ds-color-surface-muted);
+  color: var(--ds-color-text-muted);
+}
+
+.ds-alert--quiet::before {
+  background-color: var(--ds-color-text-muted);
+}
+
+.ds-alert__icon {
+  flex-shrink: 0;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+}
+
+.ds-alert__body {
+  min-width: 0;
+}
+
+.ds-alert__title {
+  display: block;
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-danger);
+}
+
+.ds-alert--error .ds-alert__title {
+  color: var(--ds-color-danger-strong);
+}
+
+.ds-alert--success .ds-alert__title {
+  color: var(--ds-color-success);
+}
+
+/* Badges --------------------------------------------------------------------- */
+
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2xs);
+  padding: var(--ds-space-3xs) var(--ds-space-xs);
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-color-surface-muted);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-2xs);
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: var(--ds-letter-spacing-wide);
+  line-height: var(--ds-line-height-snug);
+  white-space: nowrap;
+}
+
+.ds-badge--primary {
+  background-color: var(--ds-color-primary-soft);
+  border-color: var(--ds-color-primary-border);
+  color: var(--ds-color-primary);
+}
+
+.ds-badge--selection {
+  background-color: var(--ds-color-selection-soft);
+  border-color: var(--ds-color-selection-border);
+  color: var(--ds-color-selection-strong);
+}
+
+.ds-badge--success {
+  background-color: var(--ds-color-success-soft);
+  border-color: var(--ds-color-success-border);
+  color: var(--ds-color-success);
+}
+
+.ds-badge--warning {
+  background-color: var(--ds-color-warning-soft);
+  border-color: var(--ds-color-warning-border);
+  color: var(--ds-color-warning);
+}
+
+.ds-badge--danger {
+  background-color: var(--ds-color-danger-soft);
+  border-color: var(--ds-color-danger-border);
+  color: var(--ds-color-danger);
+}
+
+.ds-badge--outline {
+  background-color: transparent;
+  border-color: var(--ds-color-border-strong);
+  color: var(--ds-color-text-secondary);
+}
+
+/* Inline status text --------------------------------------------------------- */
+
+.ds-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2xs);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--ds-color-text-muted);
+}
+
+.ds-status::before {
+  content: '';
+  width: var(--ds-space-xs);
+  height: var(--ds-space-xs);
+  border-radius: var(--ds-radius-pill);
+  background-color: currentColor;
+}
+
+.ds-status--success {
+  color: var(--ds-color-success);
+}
+
+.ds-status--danger {
+  color: var(--ds-color-danger);
+}
+
+.ds-status--muted {
+  color: var(--ds-color-text-muted);
+}

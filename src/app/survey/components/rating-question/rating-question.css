@@ -1,6 +1,11 @@
+/**
+ * Rating scale — ten answer tiles with endpoint labels beneath them, matching the reference
+ * attachment: neutral tiles, a vivid selection fill, and a lift on hover.
+ */
+
 .rating-question {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--ds-space-md);
   border: 0;
   margin: 0;
   padding: 0;
@@ -8,52 +13,77 @@
 
 .rating-question legend {
   padding: 0;
-  color: var(--ink, #24242a);
-  font-weight: 650;
-}
-
-.rating-labels {
-  display: flex;
-  justify-content: space-between;
-  color: var(--muted-ink, #777780);
-  font-size: 0.8rem;
+  color: var(--ds-color-text-muted);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-xl);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-snug);
+  max-width: var(--ds-measure-wide);
 }
 
 .rating-options {
+  order: 1;
   display: grid;
-  grid-template-columns: repeat(10, minmax(2rem, 1fr));
-  gap: 0.45rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 3.25rem), 1fr));
+  gap: var(--ds-space-xs);
 }
 
 .rating-option {
-  min-height: 2.8rem;
-  border: 1px solid var(--control-border, #d9d9df);
-  border-radius: 0.55rem;
-  background: var(--control-surface, #f7f7f9);
-  color: var(--ink, #24242a);
-  font: inherit;
+  position: relative;
+  min-width: var(--ds-touch-target);
+  min-height: var(--ds-space-4xl);
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-md);
+  background-color: var(--ds-color-surface-tile);
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-medium);
+  font-variant-numeric: tabular-nums;
   cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    color var(--ds-duration-fast) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard),
+    transform var(--ds-duration-fast) var(--ds-ease-standard);
 }
 
-.rating-option:hover,
-.rating-option:focus-visible,
-.rating-option.selected {
-  border-color: var(--selection-blue, #246bfe);
+.rating-option:hover {
+  background-color: var(--ds-color-selection-soft);
+  box-shadow: var(--ds-shadow-2);
+  transform: translateY(calc(-1 * var(--ds-space-3xs)));
 }
 
-.rating-option:hover,
-.rating-option.selected {
-  background: var(--selection-blue, #246bfe);
-  color: #fff;
+.rating-option:active {
+  transform: translateY(0);
 }
 
 .rating-option:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--selection-blue, #246bfe) 32%, transparent);
-  outline-offset: 2px;
+  outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
+  outline-offset: var(--ds-focus-ring-offset);
 }
 
-@media (max-width: 40rem) {
-  .rating-options {
-    grid-template-columns: repeat(5, minmax(2.5rem, 1fr));
+.rating-option.selected {
+  border-color: var(--ds-color-selection-strong);
+  background-color: var(--ds-color-selection);
+  color: var(--ds-color-text-on-selection);
+  box-shadow: var(--ds-shadow-3);
+  animation: ds-anim-select var(--ds-duration-base) var(--ds-ease-spring) both;
+}
+
+/* Endpoint labels sit beneath the scale, as in the reference. */
+.rating-labels {
+  order: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ds-space-md);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+@media (min-width: 48rem) {
+  .rating-labels {
+    font-size: var(--ds-font-size-md);
   }
 }

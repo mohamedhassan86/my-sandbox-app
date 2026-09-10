@@ -1,0 +1,437 @@
+/**
+ * Design System — legacy class bridge.
+ *
+ * The survey components keep their existing markup, so this layer maps the classes those
+ * templates already render onto the design-system primitives. New markup should use the
+ * `ds-` classes directly; see `specs/004-survey-design-system/contracts/css-classes.md`.
+ *
+ * Order matters: this file is imported last so the bridge always resolves against the
+ * primitive definitions above it.
+ */
+
+/* --- Component hosts --------------------------------------------------------- */
+
+/* Custom-element hosts default to `display: inline`, which collapses the block layout the
+   survey components render. Declaring them block keeps spacing predictable for every
+   question type. */
+app-survey-view,
+app-survey-page,
+app-question-renderer,
+app-radio-question,
+app-checkbox-question,
+app-text-question,
+app-rating-question,
+app-satisfaction-question,
+app-toggle-button-question,
+app-dropdown-question,
+app-file-upload,
+app-survey-navigation,
+app-completion-summary,
+app-validation-message {
+  display: block;
+}
+
+/* --- Legacy custom-property aliases ----------------------------------------- */
+
+:root {
+  --maroon: var(--ds-color-primary);
+  --maroon-dark: var(--ds-color-primary-strong);
+  --maroon-light: var(--ds-color-primary-hover);
+  --maroon-contrast: var(--ds-color-primary-contrast);
+  --page-pink: var(--ds-color-canvas);
+  --panel-surface: var(--ds-color-surface);
+  --ink: var(--ds-color-text);
+  --muted-ink: var(--ds-color-text-muted);
+  --control-surface: var(--ds-color-surface-muted);
+  --control-border: var(--ds-color-border-interactive);
+  --selection-blue: var(--ds-color-selection);
+}
+
+/* --- PrimeFlex-style grid classes used by the survey template ---------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--ds-container-max);
+  margin-inline: auto;
+  padding-inline: var(--ds-container-pad);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-12 {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (min-width: 48rem) {
+  .col-md-4,
+  .col-md-8 {
+    min-width: 0;
+  }
+}
+
+/* --- Question cards --------------------------------------------------------- */
+
+.questions {
+  display: grid;
+  gap: var(--ds-space-lg);
+}
+
+.question-block {
+  position: relative;
+  display: block;
+  background-color: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-xl);
+  box-shadow: var(--ds-shadow-1);
+  padding: var(--ds-space-fluid-lg);
+  color: var(--ds-color-text);
+  animation: ds-enter-rise var(--ds-duration-slower) var(--ds-ease-emphasized) both;
+  transition:
+    border-color var(--ds-duration-base) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-base) var(--ds-ease-standard),
+    background-color var(--ds-duration-base) var(--ds-ease-standard);
+}
+
+.question-block:nth-child(2) {
+  animation-delay: calc(var(--ds-duration-instant) * 1);
+}
+
+.question-block:nth-child(3) {
+  animation-delay: calc(var(--ds-duration-instant) * 2);
+}
+
+.question-block:nth-child(4) {
+  animation-delay: calc(var(--ds-duration-instant) * 3);
+}
+
+.question-block:nth-child(n + 5) {
+  animation-delay: calc(var(--ds-duration-instant) * 4);
+}
+
+.question-block:hover {
+  border-color: var(--ds-color-border-strong);
+  box-shadow: var(--ds-shadow-2);
+}
+
+.question-block:focus-within {
+  border-color: var(--ds-color-selection);
+  box-shadow: var(--ds-focus-ring);
+}
+
+/* Answered: success accent bar + a check cue drawn on the card chrome. */
+.question-block.answered {
+  border-inline-start: var(--ds-space-2xs) solid var(--ds-color-success);
+}
+
+.question-block.answered::before {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--ds-space-lg);
+  inset-inline-end: var(--ds-space-lg);
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  background-color: var(--ds-color-success);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Invalid: inferred from the validation message the survey page renders as its child, so
+   the card reflects the error state without any template change. */
+.question-block:has(app-validation-message) {
+  border-color: var(--ds-color-danger-border);
+  background-color: var(--ds-color-danger-soft);
+  box-shadow: var(--ds-shadow-1);
+}
+
+.question-block:has(app-validation-message)::before {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--ds-space-lg);
+  inset-inline-end: var(--ds-space-lg);
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  background-color: var(--ds-color-danger);
+  -webkit-mask-image: var(--ds-icon-alert);
+  mask-image: var(--ds-icon-alert);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.question-block:has(app-validation-message) legend,
+.question-block:has(app-validation-message) .text-question > .form-label {
+  color: var(--ds-color-danger-strong);
+}
+
+.question-block:has(app-validation-message) .form-control,
+.question-block:has(app-validation-message) .p-select,
+.question-block:has(app-validation-message) .p-togglebutton {
+  border-color: var(--ds-color-danger);
+}
+
+/* --- Question prompts and fieldsets ---------------------------------------- */
+
+.form-group,
+.question-fieldset,
+.text-question {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: var(--ds-space-xs);
+  border: 0;
+  border-radius: var(--ds-radius-lg);
+  padding: 0;
+  background: transparent;
+  margin: 0;
+}
+
+.question-fieldset legend,
+.text-question > .form-label {
+  grid-column: 1 / -1;
+  color: var(--ds-color-text-muted);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-xl);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-snug);
+  letter-spacing: var(--ds-letter-spacing-normal);
+  max-width: var(--ds-measure-wide);
+}
+
+.question-fieldset legend span[aria-hidden='true'],
+.text-question > .form-label span[aria-hidden='true'] {
+  color: var(--ds-color-danger);
+  font-weight: var(--ds-font-weight-bold);
+}
+
+.question-fieldset .form-text,
+.text-question {
+  grid-column: 1 / -1;
+}
+
+.question-fieldset .form-text {
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-sm);
+  margin: 0;
+}
+
+.form-label {
+  display: block;
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-snug);
+}
+
+/* Text inputs ---------------------------------------------------------------- */
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: var(--ds-touch-target);
+  padding: var(--ds-space-sm) var(--ds-space-md);
+  border: 1px solid var(--ds-color-border-interactive);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-color-surface);
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-lg);
+  line-height: var(--ds-line-height-normal);
+  transition:
+    border-color var(--ds-duration-fast) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard),
+    background-color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.form-control:hover {
+  border-color: var(--ds-color-text-muted);
+}
+
+.form-control:focus {
+  border-color: var(--ds-color-selection);
+  outline: 0;
+  box-shadow: var(--ds-focus-ring);
+}
+
+textarea.form-control {
+  min-height: calc(var(--ds-touch-target) * 3);
+  resize: vertical;
+}
+
+.text-question .form-control {
+  grid-column: 1 / -1;
+}
+
+/* Choices -------------------------------------------------------------------- */
+
+.form-check,
+.choice {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-sm);
+  min-height: var(--ds-touch-target);
+  padding: var(--ds-space-xs) var(--ds-space-sm);
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    border-color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.form-check:hover,
+.choice:hover {
+  background-color: var(--ds-color-selection-soft);
+}
+
+.form-check:has(.form-check-input:checked) {
+  background-color: var(--ds-color-selection-soft);
+  border-color: var(--ds-color-selection-border);
+}
+
+.form-check:has(.form-check-input:focus-visible) {
+  border-color: var(--ds-color-selection);
+  box-shadow: var(--ds-focus-ring);
+}
+
+.form-check-input {
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid var(--ds-color-border-interactive);
+  border-radius: var(--ds-radius-xs);
+  background-color: var(--ds-color-surface);
+  cursor: pointer;
+  transition:
+    border-color var(--ds-duration-fast) var(--ds-ease-standard),
+    background-color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.form-check-input[type='radio'] {
+  border-radius: var(--ds-radius-pill);
+}
+
+.form-check-input::before {
+  content: '';
+  width: calc(var(--ds-icon-size) * 0.5);
+  height: calc(var(--ds-icon-size) * 0.5);
+  background-color: var(--ds-color-text-on-selection);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transform: scale(0);
+  transition: transform var(--ds-duration-fast) var(--ds-ease-spring);
+}
+
+.form-check-input[type='radio']::before {
+  width: calc(var(--ds-icon-size) * 0.35);
+  height: calc(var(--ds-icon-size) * 0.35);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-color-selection);
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.form-check-input:checked {
+  border-color: var(--ds-color-selection);
+  background-color: var(--ds-color-selection);
+}
+
+.form-check-input[type='radio']:checked {
+  background-color: var(--ds-color-surface);
+  box-shadow: inset 0 0 0 var(--ds-space-3xs) var(--ds-color-selection);
+}
+
+.form-check-input:checked::before {
+  transform: scale(1);
+}
+
+.form-check-input:focus-visible {
+  outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
+  outline-offset: var(--ds-focus-ring-offset);
+}
+
+.form-check-label {
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-lg);
+  line-height: var(--ds-line-height-snug);
+}
+
+/* --- Validation messages ---------------------------------------------------- */
+
+app-validation-message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-xs);
+  margin-block-start: var(--ds-space-sm);
+  padding: var(--ds-space-sm) var(--ds-space-md);
+  border: 1px solid var(--ds-color-danger-border);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-color-danger-soft);
+  color: var(--ds-color-danger-strong);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+  animation: ds-enter-rise var(--ds-duration-base) var(--ds-ease-emphasized) both;
+}
+
+app-validation-message::before {
+  content: '';
+  flex-shrink: 0;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  margin-block-start: var(--ds-space-3xs);
+  background-color: var(--ds-color-danger);
+  -webkit-mask-image: var(--ds-icon-alert);
+  mask-image: var(--ds-icon-alert);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.question-block app-validation-message .validation-message,
+app-validation-message .validation-message.validation-message {
+  margin: 0;
+  color: inherit;
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-normal);
+}
+
+/* --- Misc legacy hooks ------------------------------------------------------ */
+
+.question-block > app-validation-message {
+  display: flex;
+}
+
+.answered-cue {
+  color: var(--ds-color-success);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.required-badge {
+  color: var(--ds-color-danger);
+  font-weight: var(--ds-font-weight-bold);
+}

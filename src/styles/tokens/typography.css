@@ -1,0 +1,51 @@
+/**
+ * Design System — typography tokens.
+ *
+ * Two roles: a serif display role for survey titles and display numerals (matching the
+ * reference attachment) and a UI sans role for prompts, body copy, and controls. Sizes are
+ * fluid so the scale adapts between mobile and desktop without breakpoint overrides, and
+ * the body/prompt steps never drop below 16px on the smallest supported viewport.
+ *
+ * System font stacks only: no web font is downloaded, so the app keeps working offline.
+ */
+
+:root {
+  --ds-font-display: Georgia, 'Iowan Old Style', 'Times New Roman', Times, serif;
+  --ds-font-text:
+    Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif;
+  --ds-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Type scale (fluid from mobile to desktop) */
+  --ds-font-size-3xs: 0.6875rem;
+  --ds-font-size-2xs: 0.75rem;
+  --ds-font-size-xs: 0.8125rem;
+  --ds-font-size-sm: 0.875rem;
+  --ds-font-size-md: 1rem;
+  --ds-font-size-lg: clamp(1.0625rem, 1rem + 0.25vw, 1.125rem);
+  --ds-font-size-xl: clamp(1.125rem, 1.05rem + 0.5vw, 1.375rem);
+  --ds-font-size-2xl: clamp(1.25rem, 1.1rem + 0.9vw, 1.625rem);
+  --ds-font-size-3xl: clamp(1.5rem, 1.3rem + 1.4vw, 2rem);
+  --ds-font-size-4xl: clamp(1.875rem, 1.5rem + 2.2vw, 2.75rem);
+  --ds-font-size-5xl: clamp(2.25rem, 1.6rem + 3.2vw, 3.5rem);
+
+  --ds-line-height-tight: 1.1;
+  --ds-line-height-snug: 1.25;
+  --ds-line-height-normal: 1.5;
+  --ds-line-height-relaxed: 1.65;
+
+  --ds-letter-spacing-tight: -0.02em;
+  --ds-letter-spacing-normal: 0;
+  --ds-letter-spacing-wide: 0.04em;
+  --ds-letter-spacing-caps: 0.08em;
+
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+
+  /* Line-length caps keep long prompts and copy readable */
+  --ds-measure-narrow: 34ch;
+  --ds-measure: 62ch;
+  --ds-measure-wide: 75ch;
+}

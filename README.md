@@ -10,7 +10,6 @@ To start a local development server, run:
 ng serve
 ```
 
-
 # Dynamic Survey Viewer
 
 Angular application for rendering and submitting JSON-configured surveys.
@@ -93,17 +92,62 @@ adapter simulates an accepted response so the completion flow can be reviewed wi
 a backend. For production transport, instantiate the service with simulation disabled
 and connect `/api/survey-responses` to the response service.
 
-## UX reference
+## Design system
 
-The respondent experience follows [`public/theme-preview.png`](public/theme-preview.png):
-a centered white survey panel on a soft pink backdrop, generous question spacing,
-rounded neutral controls, and vivid blue selected states. Rating questions use 1-10
-tiles with endpoint labels. Satisfaction questions use accessible icon choices with
-text labels. Maroon remains the product accent for navigation, validation, and supporting
-states.
+The respondent experience follows [`public/theme-preview.png`](public/theme-preview.png) and
+is built from a token-driven design system layered under `src/styles/`:
+
+```text
+src/styles/
+├── tokens/       primitives, semantic roles, typography, space/radius/elevation/motion, icons
+├── base/         reset, element defaults, typography roles, accessibility baseline
+├── layout/       container, section, stack, cluster, grid, split, rail
+├── components/   card, button, field/choice/tile, progress/steps, feedback, motion
+├── integrations/ PrimeNG `--p-*` token bridge
+└── compat.css    bridge for the classes existing templates already render
+```
+
+`src/styles.css` imports the layers in cascade order. Only
+`tokens/primitives.css` may contain literal colour values; components consume semantic roles,
+so re-tinting the product is a one-file change.
+
+**Brand roles.** Maroon (`--ds-color-primary`, `#800000`) is the primary brand role used for
+chrome, primary actions, the active step, and error tones. The selection blue
+(`--ds-color-selection`, `#1524d9`) is the secondary role used for selected answers and
+focus, and the canvas pink (`--ds-color-tertiary`, `#fbafbc`) is the tertiary role used for
+the page backdrop. Each role is usable independently.
+
+**Reference match.** Soft pink canvas, white elevated panels, a serif display title, muted
+sans question prompts, large neutral answer tiles with a vivid blue selected state, endpoint
+labels beneath the rating scale, five icon tiles for satisfaction, and multi-column option
+flows that collapse to one column on mobile.
+
+**Accessibility.** WCAG 2.1 AA contrast for every shipped text/background pair, 3:1 for
+interactive borders, focus rings, and selection fills; 44px minimum targets; state never
+conveyed by colour alone (check marks, icons, and `aria-*` carry it too); all entrance,
+selection, and progress motion collapses under `prefers-reduced-motion: reduce`.
+
+**Motion.** Panels and cards enter with a short rise, tiles confirm selection with a spring,
+and the progress fill tweens — all through motion tokens and only on `opacity`/`transform`.
+
+### Verifying the design system
+
+```powershell
+pnpm exec vitest run src/app/shared/design-system
+```
+
+The contract check parses the shipped stylesheets and fails when a `var(--ds-*)` reference
+does not resolve, a literal colour appears outside the primitive layer, a spacing declaration
+uses a raw length, a token or `ds-` class is undocumented (or documented but no longer
+shipped), the spacing/type/radius/duration scales stop being ordered, a documented contrast
+pair drops below its minimum, the reduced-motion block stops collapsing motion, an animation
+touches a non-compositor property, or a PrimeNG variable stops mapping to a token. The full
+contracts live in
+[`specs/004-survey-design-system/contracts/`](specs/004-survey-design-system/contracts/).
 
 When reviewing the UI, check desktop and mobile widths, keyboard focus, selected and
-unselected states, readable labels, and preservation of answers during navigation.
+unselected states, reduced motion, readable labels, and preservation of answers during
+navigation.
 
 After a successful submission, the editable survey is replaced by a completion summary
 showing `100% complete` and a clear success message. Failed submissions keep the survey
@@ -115,8 +159,13 @@ editable and preserve the respondent's answers.
 - Configuration and submission services live under `src/app/core/services`.
 - Validation rules live under `src/app/core/validators`.
 - Survey pages, question renderers, navigation, and session state live under
-	`src/app/survey`.
-- Spec Kit planning artifacts live under `specs/001-survey-management`.
+  `src/app/survey`.
+- Design tokens, base styles, composition utilities, and component classes live under
+  `src/styles`; the contract check that guards them lives under
+  `src/app/shared/design-system`.
+- Spec Kit planning artifacts live under `specs/001-survey-management`,
+  `specs/002-toggle-button-question`, `specs/003-dropdown-question`, and
+  `specs/004-survey-design-system`.
 
 ## Deployment
 

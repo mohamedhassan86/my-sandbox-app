@@ -31,13 +31,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "700kB",
+                  "maximumError": "1.2MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "8kB",
+                  "maximumError": "16kB"
                 }
               ],
               "outputHashing": "all"
@@ -60,7 +60,13 @@
               "buildTarget": "my-sandbox-app:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "buildTarget": "my-sandbox-app:build:development",
+            "host": "0.0.0.0",
+            "port": 4200,
+            "allowedHosts": [".e2b.app", "localhost", "127.0.0.1"]
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

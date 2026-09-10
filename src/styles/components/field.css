@@ -1,0 +1,357 @@
+/**
+ * Design System — fields, choices, tiles, and file inputs.
+ *
+ * Every interactive control reaches `--ds-touch-target` (44px), draws its own visible focus
+ * ring, and moves through the same state set: resting, hover, focus, selected, invalid,
+ * disabled. Selected and invalid states always add a non-colour cue.
+ */
+
+.ds-field {
+  display: grid;
+  gap: var(--ds-space-sm);
+  border-radius: var(--ds-radius-lg);
+}
+
+.ds-field__label {
+  display: block;
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-snug);
+  color: var(--ds-color-text-muted);
+}
+
+.ds-field__label--required::after {
+  content: ' *';
+  color: var(--ds-color-danger);
+  font-weight: var(--ds-font-weight-bold);
+}
+
+.ds-field__hint {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+}
+
+.ds-field__message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-2xs);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.ds-field__message--error {
+  color: var(--ds-color-danger);
+}
+
+.ds-field__message--success {
+  color: var(--ds-color-success);
+}
+
+/* Shared control shell ------------------------------------------------------- */
+
+.ds-input,
+.ds-textarea,
+.ds-select {
+  display: block;
+  width: 100%;
+  min-height: var(--ds-touch-target);
+  padding: var(--ds-space-sm) var(--ds-space-md);
+  border: 1px solid var(--ds-color-border-interactive);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-color-surface);
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-lg);
+  line-height: var(--ds-line-height-normal);
+  transition:
+    border-color var(--ds-duration-fast) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard),
+    background-color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.ds-input:hover,
+.ds-textarea:hover,
+.ds-select:hover {
+  border-color: var(--ds-color-text-muted);
+}
+
+.ds-input:focus-visible,
+.ds-textarea:focus-visible,
+.ds-select:focus-visible {
+  border-color: var(--ds-color-selection);
+  box-shadow: var(--ds-focus-ring);
+  outline: none;
+}
+
+.ds-input[aria-invalid='true'],
+.ds-textarea[aria-invalid='true'],
+.ds-select[aria-invalid='true'] {
+  border-color: var(--ds-color-danger);
+  background-color: var(--ds-color-danger-soft);
+}
+
+.ds-input[disabled],
+.ds-textarea[disabled],
+.ds-select[disabled] {
+  background-color: var(--ds-color-surface-muted);
+  color: var(--ds-color-text-muted);
+  border-color: var(--ds-color-border);
+  cursor: not-allowed;
+}
+
+.ds-textarea {
+  min-height: calc(var(--ds-touch-target) * 3);
+  resize: vertical;
+}
+
+/* Choice rows ---------------------------------------------------------------- */
+
+.ds-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-sm);
+  min-height: var(--ds-touch-target);
+  padding: var(--ds-space-xs) var(--ds-space-sm);
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    border-color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.ds-choice:hover {
+  background-color: var(--ds-color-selection-soft);
+}
+
+.ds-choice:has(.ds-choice__control:checked) {
+  background-color: var(--ds-color-selection-soft);
+  border-color: var(--ds-color-selection-border);
+}
+
+.ds-choice:has(.ds-choice__control:focus-visible) {
+  border-color: var(--ds-color-selection);
+  box-shadow: var(--ds-focus-ring);
+}
+
+.ds-choice__control {
+  flex-shrink: 0;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid var(--ds-color-border-interactive);
+  border-radius: var(--ds-radius-xs);
+  background-color: var(--ds-color-surface);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition:
+    border-color var(--ds-duration-fast) var(--ds-ease-standard),
+    background-color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.ds-choice__control[type='radio'] {
+  border-radius: var(--ds-radius-pill);
+}
+
+.ds-choice__control::before {
+  content: '';
+  width: calc(var(--ds-icon-size) * 0.5);
+  height: calc(var(--ds-icon-size) * 0.5);
+  transform: scale(0);
+  transition: transform var(--ds-duration-fast) var(--ds-ease-spring);
+  background-color: var(--ds-color-text-on-selection);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.ds-choice__control[type='radio']::before {
+  border-radius: var(--ds-radius-pill);
+  -webkit-mask-image: none;
+  mask-image: none;
+  background-color: var(--ds-color-selection);
+  width: calc(var(--ds-icon-size) * 0.35);
+  height: calc(var(--ds-icon-size) * 0.35);
+}
+
+.ds-choice__control:checked {
+  border-color: var(--ds-color-selection);
+  background-color: var(--ds-color-selection);
+}
+
+.ds-choice__control:checked::before {
+  transform: scale(1);
+}
+
+.ds-choice__control[type='radio']:checked {
+  background-color: var(--ds-color-surface);
+  box-shadow: inset 0 0 0 var(--ds-space-3xs) var(--ds-color-selection);
+}
+
+.ds-choice__control:focus-visible {
+  outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
+  outline-offset: var(--ds-focus-ring-offset);
+}
+
+.ds-choice__control[disabled] {
+  border-color: var(--ds-color-border);
+  background-color: var(--ds-color-surface-muted);
+  cursor: not-allowed;
+}
+
+.ds-choice__label {
+  font-size: var(--ds-font-size-lg);
+  color: var(--ds-color-text);
+  line-height: var(--ds-line-height-snug);
+}
+
+.ds-choice__hint {
+  display: block;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+}
+
+/* Tiles ---------------------------------------------------------------------- */
+
+.ds-tile-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 3rem), 1fr));
+  gap: var(--ds-space-xs);
+}
+
+.ds-tile-group--icons {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 5.5rem), 1fr));
+  gap: var(--ds-space-sm);
+}
+
+.ds-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--ds-space-2xs);
+  min-width: var(--ds-touch-target);
+  min-height: var(--ds-touch-target);
+  padding: var(--ds-space-sm) var(--ds-space-xs);
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-md);
+  background-color: var(--ds-color-surface-tile);
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-text);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    color var(--ds-duration-fast) var(--ds-ease-standard),
+    transform var(--ds-duration-fast) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.ds-tile:hover:not(.is-disabled) {
+  background-color: var(--ds-color-selection-soft);
+  transform: translateY(calc(-1 * var(--ds-space-3xs)));
+  box-shadow: var(--ds-shadow-2);
+}
+
+.ds-tile:active:not(.is-disabled) {
+  transform: translateY(0);
+  box-shadow: var(--ds-shadow-1);
+}
+
+.ds-tile.is-selected {
+  background-color: var(--ds-color-selection);
+  color: var(--ds-color-text-on-selection);
+  border-color: var(--ds-color-selection-strong);
+  box-shadow: var(--ds-shadow-3);
+}
+
+/* Non-colour confirmation of the selected state. */
+.ds-tile.is-selected::after {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--ds-space-3xs);
+  inset-inline-end: var(--ds-space-3xs);
+  width: var(--ds-space-sm);
+  height: var(--ds-space-sm);
+  background-color: var(--ds-color-text-on-selection);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.ds-tile.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ds-tile__value {
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-tight);
+}
+
+.ds-tile__icon {
+  font-size: var(--ds-font-size-3xl);
+  line-height: var(--ds-line-height-tight);
+}
+
+.ds-tile__caption {
+  font-size: var(--ds-font-size-2xs);
+  line-height: var(--ds-line-height-snug);
+  text-align: center;
+  max-width: var(--ds-measure-narrow);
+}
+
+/* File input ----------------------------------------------------------------- */
+
+.ds-file {
+  display: grid;
+  gap: var(--ds-space-sm);
+}
+
+.ds-file__input {
+  width: 100%;
+  min-height: var(--ds-touch-target);
+  padding: var(--ds-space-sm) var(--ds-space-md);
+  border: 1px dashed var(--ds-color-border-interactive);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-color-surface-sunken);
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--ds-duration-fast) var(--ds-ease-standard),
+    background-color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.ds-file__input:hover,
+.ds-file.is-dragging .ds-file__input {
+  border-color: var(--ds-color-selection);
+  background-color: var(--ds-color-selection-soft);
+}
+
+.ds-file__list {
+  display: grid;
+  gap: var(--ds-space-2xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+}
+
+.ds-file__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-xs);
+}

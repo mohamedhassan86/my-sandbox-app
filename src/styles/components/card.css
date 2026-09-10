@@ -1,0 +1,194 @@
+/**
+ * Design System — card primitive.
+ *
+ * One surface primitive builds the survey panel, the navigation panel, and every question
+ * card. States are additive classes so a card can be answered, invalid, or complete without
+ * changing its structure. Every state pairs colour with a non-colour cue (accent bar,
+ * check mark, or icon) so state never relies on colour alone.
+ */
+
+.ds-card {
+  position: relative;
+  display: block;
+  background-color: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-xl);
+  box-shadow: var(--ds-shadow-2);
+  color: var(--ds-color-text);
+  padding: var(--ds-space-lg);
+  transition:
+    border-color var(--ds-duration-base) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-base) var(--ds-ease-standard),
+    transform var(--ds-duration-base) var(--ds-ease-standard),
+    background-color var(--ds-duration-base) var(--ds-ease-standard);
+}
+
+.ds-card--panel {
+  border-radius: var(--ds-radius-2xl);
+  box-shadow: var(--ds-shadow-panel);
+  padding: var(--ds-space-fluid-lg);
+}
+
+.ds-card--question {
+  padding: var(--ds-space-fluid-lg);
+  border-color: var(--ds-color-border-subtle);
+}
+
+.ds-card--raised {
+  box-shadow: var(--ds-shadow-3);
+}
+
+.ds-card--flat {
+  box-shadow: none;
+  border-color: var(--ds-color-border-subtle);
+}
+
+.ds-card--quiet {
+  background-color: var(--ds-color-surface-muted);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.ds-card--pad-sm {
+  padding: var(--ds-space-md);
+}
+
+.ds-card--pad-md {
+  padding: var(--ds-space-lg);
+}
+
+.ds-card--pad-lg {
+  padding: var(--ds-space-fluid-lg);
+}
+
+.ds-card--pad-flush {
+  padding: 0;
+}
+
+/* Interactive: pointer users get a lift, keyboard users get the shared focus ring. */
+.ds-card.is-interactive {
+  cursor: pointer;
+}
+
+.ds-card.is-interactive:hover {
+  border-color: var(--ds-color-border-strong);
+  box-shadow: var(--ds-shadow-3);
+  transform: translateY(calc(-1 * var(--ds-space-3xs)));
+}
+
+.ds-card.is-interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--ds-shadow-1);
+}
+
+/* Answered: success accent bar plus a check cue in the card corner. */
+.ds-card.is-answered {
+  border-inline-start: var(--ds-space-2xs) solid var(--ds-color-success);
+}
+
+.ds-card.is-answered::before {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--ds-space-sm);
+  inset-inline-end: var(--ds-space-sm);
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  background-color: var(--ds-color-success);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Invalid: danger border, soft tint, and a warning cue in the card corner. */
+.ds-card.is-invalid {
+  border-color: var(--ds-color-danger-border);
+  box-shadow: var(--ds-shadow-1);
+  background-color: var(--ds-color-danger-soft);
+}
+
+.ds-card.is-invalid::before {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--ds-space-sm);
+  inset-inline-end: var(--ds-space-sm);
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  background-color: var(--ds-color-danger);
+  -webkit-mask-image: var(--ds-icon-alert);
+  mask-image: var(--ds-icon-alert);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.ds-card.is-complete {
+  border-color: var(--ds-color-success-border);
+  background-color: var(--ds-color-success-soft);
+  text-align: center;
+}
+
+.ds-card.is-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.ds-card:focus-within {
+  border-color: var(--ds-color-selection);
+  box-shadow: var(--ds-focus-ring);
+}
+
+/* Parts ---------------------------------------------------------------------- */
+
+.ds-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ds-space-xs);
+  margin-block-end: var(--ds-space-sm);
+}
+
+.ds-card__title {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-font-size-3xl);
+  font-weight: var(--ds-font-weight-bold);
+  line-height: var(--ds-line-height-tight);
+  letter-spacing: var(--ds-letter-spacing-tight);
+  margin: 0;
+}
+
+.ds-card__eyebrow {
+  margin: 0;
+}
+
+.ds-card__body {
+  min-width: 0;
+}
+
+.ds-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-sm);
+  justify-content: space-between;
+  margin-block-start: var(--ds-space-lg);
+}
+
+.ds-card__aside {
+  position: relative;
+  margin-inline-start: auto;
+  flex-shrink: 0;
+}
+
+.ds-card__media {
+  display: grid;
+  place-items: center;
+}

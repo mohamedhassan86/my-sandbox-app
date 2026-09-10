@@ -1,3 +1,8 @@
+/**
+ * Completion summary — the complete-state card: success surface, display message, and the
+ * completion figure shown as the page's focal number.
+ */
+
 :host {
   display: block;
 }
@@ -6,32 +11,57 @@
   display: grid;
   min-height: 22rem;
   align-content: center;
-  padding: 2rem;
-  border: 1px solid color-mix(in srgb, var(--maroon) 18%, white);
-  border-radius: 1rem;
-  background: var(--panel-surface);
-  box-shadow: 0 1rem 2.5rem rgba(90, 38, 48, 0.08);
-  color: var(--ink);
+  justify-items: center;
+  gap: var(--ds-space-sm);
+  padding: var(--ds-space-fluid-lg);
+  border: 1px solid var(--ds-color-success-border);
+  border-radius: var(--ds-radius-2xl);
+  background-color: var(--ds-color-success-soft);
+  box-shadow: var(--ds-shadow-2);
+  color: var(--ds-color-text);
   text-align: center;
+  animation: ds-enter-pop var(--ds-duration-slower) var(--ds-ease-spring) both;
+}
+
+.completion-summary::before {
+  content: '';
+  width: var(--ds-space-3xl);
+  height: var(--ds-space-3xl);
+  background-color: var(--ds-color-success);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 .completion-eyebrow {
-  margin: 0 0 0.5rem;
-  color: var(--maroon);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  margin: 0;
+  color: var(--ds-color-primary);
+  font-size: var(--ds-font-size-3xs);
+  font-weight: var(--ds-font-weight-bold);
+  letter-spacing: var(--ds-letter-spacing-caps);
   text-transform: uppercase;
 }
 
-h4 {
+.completion-summary h4 {
   margin: 0;
-  font-size: 1.5rem;
+  max-width: var(--ds-measure);
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-font-size-2xl);
+  line-height: var(--ds-line-height-snug);
+  color: var(--ds-color-text);
 }
 
 .completion-percentage {
-  margin: 0.75rem 0 0;
-  color: var(--selection-blue);
-  font-size: 1.15rem;
-  font-weight: 700;
+  margin: 0;
+  color: var(--ds-color-success);
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-font-size-3xl);
+  font-weight: var(--ds-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ds-line-height-tight);
 }

@@ -1,0 +1,157 @@
+/**
+ * Design System — element defaults and typography roles.
+ *
+ * Headings use the serif display role; prompts and body copy use the UI sans role. The
+ * role classes (`.ds-*`) are the contract other layers and components build on.
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ds-font-display);
+  font-weight: var(--ds-font-weight-bold);
+  letter-spacing: var(--ds-letter-spacing-tight);
+  line-height: var(--ds-line-height-tight);
+  color: var(--ds-color-text);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--ds-font-size-4xl);
+}
+
+h2 {
+  font-size: var(--ds-font-size-3xl);
+}
+
+h3 {
+  font-size: var(--ds-font-size-2xl);
+}
+
+h4 {
+  font-size: var(--ds-font-size-xl);
+}
+
+h5,
+h6 {
+  font-size: var(--ds-font-size-lg);
+  font-family: var(--ds-font-text);
+  letter-spacing: var(--ds-letter-spacing-normal);
+}
+
+p {
+  line-height: var(--ds-line-height-relaxed);
+  max-width: var(--ds-measure);
+}
+
+small {
+  font-size: var(--ds-font-size-xs);
+}
+
+strong,
+b {
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+a {
+  color: var(--ds-color-primary);
+  text-decoration-thickness: from-font;
+  text-underline-offset: var(--ds-space-3xs);
+}
+
+a:hover {
+  color: var(--ds-color-primary-strong);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--ds-color-border);
+  margin-block: var(--ds-space-lg);
+}
+
+code,
+kbd,
+samp {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-font-size-sm);
+}
+
+::selection {
+  background-color: var(--ds-color-selection);
+  color: var(--ds-color-text-on-selection);
+}
+
+/* --- Typography roles ------------------------------------------------------- */
+
+.ds-display {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-font-size-4xl);
+  font-weight: var(--ds-font-weight-bold);
+  line-height: var(--ds-line-height-tight);
+  letter-spacing: var(--ds-letter-spacing-tight);
+  color: var(--ds-color-text);
+}
+
+.ds-title {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-font-size-3xl);
+  font-weight: var(--ds-font-weight-bold);
+  line-height: var(--ds-line-height-snug);
+  letter-spacing: var(--ds-letter-spacing-tight);
+  color: var(--ds-color-text);
+}
+
+.ds-heading {
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-lg);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-snug);
+  color: var(--ds-color-text);
+}
+
+/* Question prompts: large enough to read as the page's primary content, muted so the
+   answer control carries the emphasis (as in the reference attachment). */
+.ds-prompt {
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-xl);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-snug);
+  letter-spacing: var(--ds-letter-spacing-normal);
+  color: var(--ds-color-text-muted);
+  max-width: var(--ds-measure-wide);
+}
+
+.ds-body {
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-relaxed);
+  color: var(--ds-color-text);
+  max-width: var(--ds-measure);
+}
+
+.ds-support {
+  font-size: var(--ds-font-size-sm);
+  line-height: var(--ds-line-height-normal);
+  color: var(--ds-color-text-muted);
+}
+
+.ds-eyebrow {
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-3xs);
+  font-weight: var(--ds-font-weight-bold);
+  letter-spacing: var(--ds-letter-spacing-caps);
+  text-transform: uppercase;
+  color: var(--ds-color-primary);
+}
+
+.ds-numeric {
+  font-family: var(--ds-font-text);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ds-prose > * + * {
+  margin-block-start: var(--ds-space-md);
+}

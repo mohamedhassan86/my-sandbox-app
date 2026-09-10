@@ -1,0 +1,129 @@
+/**
+ * Design System — motion utilities.
+ *
+ * Every animation here uses only `opacity` and `transform` so it stays off the layout path,
+ * runs on the compositor, and finishes quickly. Durations come from motion tokens, so the
+ * global `prefers-reduced-motion` block in `base/a11y.css` neutralises all of them at once.
+ */
+
+.ds-enter {
+  animation: ds-enter-fade var(--ds-duration-slower) var(--ds-ease-emphasized) both;
+  animation-delay: var(--ds-enter-delay, 0ms);
+}
+
+.ds-enter--rise {
+  animation-name: ds-enter-rise;
+}
+
+.ds-enter--pop {
+  animation-name: ds-enter-pop;
+}
+
+.ds-enter--slide {
+  animation-name: ds-enter-slide;
+}
+
+@keyframes ds-enter-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ds-enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ds-enter-distance));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ds-enter-slide {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--ds-enter-distance)));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ds-enter-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Selected-state confirmation for tiles and choices. */
+.ds-anim-select {
+  animation: ds-anim-select var(--ds-duration-base) var(--ds-ease-spring) both;
+}
+
+@keyframes ds-anim-select {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.06);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Progress fills tween through a tokenised transition instead of a keyframe. */
+.ds-anim-progress {
+  transition: width var(--ds-duration-slow) var(--ds-ease-emphasized);
+}
+
+.ds-anim-hover-lift {
+  transition:
+    transform var(--ds-duration-fast) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+@media (hover: hover) {
+  .ds-anim-hover-lift:hover {
+    transform: translateY(calc(-1 * var(--ds-space-3xs)));
+    box-shadow: var(--ds-shadow-3);
+  }
+}
+
+/* Loading shimmer for the survey loading state. */
+.ds-anim-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--ds-color-surface-muted);
+}
+
+.ds-anim-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(90deg, transparent, var(--ds-alpha-white-60), transparent);
+  animation: ds-shimmer var(--ds-duration-slower) infinite var(--ds-ease-standard);
+}
+
+@keyframes ds-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
