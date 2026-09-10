@@ -61,6 +61,74 @@ describe('validateSurveyConfig', () => {
     expect(issues.some((issue) => issue.path.endsWith('.defaultValue'))).toBe(true);
   });
 
+  it('accepts a valid dropdown question', () => {
+    const survey = {
+      ...validSurvey,
+      pages: [{
+        ...validSurvey.pages[0],
+        questions: [{
+          questionId: 'D1',
+          type: 'dropdown',
+          label: 'Country of residence',
+          required: true,
+          options: [{ label: 'United Arab Emirates', value: 'ae' }, { label: 'Qatar', value: 'qa' }],
+          attachmentsRequired: 0,
+        }],
+      }],
+    };
+    expect(validateSurveyConfig(survey)).toEqual([]);
+  });
+
+  it('rejects a dropdown question with missing or empty options', () => {
+    const missing = {
+      ...validSurvey,
+      pages: [{ ...validSurvey.pages[0], questions: [{ questionId: 'D1', type: 'dropdown', label: 'Country', attachmentsRequired: 0 }] }],
+    };
+    expect(validateSurveyConfig(missing).some((issue) => issue.path.endsWith('.options'))).toBe(true);
+
+    const empty = {
+      ...validSurvey,
+      pages: [{ ...validSurvey.pages[0], questions: [{ questionId: 'D1', type: 'dropdown', label: 'Country', options: [], attachmentsRequired: 0 }] }],
+    };
+    expect(validateSurveyConfig(empty).some((issue) => issue.path.endsWith('.options'))).toBe(true);
+  });
+
+  it('rejects a dropdown question with duplicate option values', () => {
+    const survey = {
+      ...validSurvey,
+      pages: [{
+        ...validSurvey.pages[0],
+        questions: [{
+          questionId: 'D1',
+          type: 'dropdown',
+          label: 'Country',
+          options: [{ label: 'UAE', value: 'ae' }, { label: 'UAE duplicate', value: 'ae' }],
+          attachmentsRequired: 0,
+        }],
+      }],
+    };
+    const issues = validateSurveyConfig(survey);
+    expect(issues.some((issue) => issue.message.includes('unique'))).toBe(true);
+  });
+
+  it('rejects a dropdown question with options missing label or value', () => {
+    const survey = {
+      ...validSurvey,
+      pages: [{
+        ...validSurvey.pages[0],
+        questions: [{
+          questionId: 'D1',
+          type: 'dropdown',
+          label: 'Country',
+          options: [{ label: '', value: 'ae' }, { label: 'Qatar', value: '' }],
+          attachmentsRequired: 0,
+        }],
+      }],
+    };
+    const issues = validateSurveyConfig(survey);
+    expect(issues.some((issue) => issue.message.includes('Option label and value are required'))).toBe(true);
+  });
+
   it('rejects missing pages and unsupported questions', () => {
     const issues = validateSurveyConfig({ ...validSurvey, pages: [] });
     expect(issues.some((issue) => issue.path === '$.pages')).toBe(true);

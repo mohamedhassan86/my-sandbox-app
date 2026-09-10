@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import type { Answer } from '../../../core/models/response.models';
 import type { Question, QuestionType } from '../../../core/models/survey.models';
 import { CheckboxQuestionComponent } from '../checkbox-question/checkbox-question';
+import { DropdownQuestionComponent } from '../dropdown-question/dropdown-question';
 import { RadioQuestionComponent } from '../radio-question/radio-question';
 import { TextQuestionComponent } from '../text-question/text-question';
 import { FileUploadComponent } from '../file-upload/file-upload';
@@ -12,7 +13,7 @@ import { ToggleButtonQuestionComponent } from '../toggle-button-question/toggle-
 @Component({
   selector: 'app-question-renderer',
   standalone: true,
-  imports: [CheckboxQuestionComponent, RadioQuestionComponent, TextQuestionComponent, RatingQuestionComponent, SatisfactionQuestionComponent, ToggleButtonQuestionComponent, FileUploadComponent],
+  imports: [CheckboxQuestionComponent, DropdownQuestionComponent, RadioQuestionComponent, TextQuestionComponent, RatingQuestionComponent, SatisfactionQuestionComponent, ToggleButtonQuestionComponent, FileUploadComponent],
   template: `
     @switch (question().type) {
       @case ('radio') { <app-radio-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
@@ -22,6 +23,7 @@ import { ToggleButtonQuestionComponent } from '../toggle-button-question/toggle-
       @case ('rating') { <app-rating-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
       @case ('satisfaction') { <app-satisfaction-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
       @case ('toggle_button') { <app-toggle-button-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
+      @case ('dropdown') { <app-dropdown-question [question]="$any(question())" [value]="$any(value())" (answerChange)="answerChange.emit($event)" /> }
     }
     @if (question().attachmentsRequired > 0) {
       <app-file-upload [question]="question()" [files]="attachments()" (filesChange)="filesChange.emit($event)" />
@@ -35,7 +37,7 @@ export class QuestionRendererComponent {
   readonly answerChange = output<Answer>();
   readonly filesChange = output<{ questionId: string; files: import('../../../core/models/response.models').ResponseAttachment[] }>();
 
-  static componentFor(type: QuestionType): 'radio' | 'checkbox' | 'text' | 'rating' | 'satisfaction' | 'toggle_button' {
-    return type === 'radio' ? 'radio' : type === 'checkbox' ? 'checkbox' : type === 'rating' ? 'rating' : type === 'satisfaction' ? 'satisfaction' : type === 'toggle_button' ? 'toggle_button' : 'text';
+  static componentFor(type: QuestionType): 'radio' | 'checkbox' | 'text' | 'rating' | 'satisfaction' | 'toggle_button' | 'dropdown' {
+    return type === 'radio' ? 'radio' : type === 'checkbox' ? 'checkbox' : type === 'rating' ? 'rating' : type === 'satisfaction' ? 'satisfaction' : type === 'toggle_button' ? 'toggle_button' : type === 'dropdown' ? 'dropdown' : 'text';
   }
 }

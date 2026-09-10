@@ -70,15 +70,22 @@ The full `pnpm exec vitest run` command also includes the Angular-generated app 
 
 The JSON contract is documented in
 `specs/001-survey-management/contracts/survey-json.md`. Supported question types are
-`radio`, `checkbox`, `textbox`, `textarea`, `rating`, `satisfaction`, and
-`toggle_button`. Questions may require zero through three attachments and may define
-selection, text length, file type, and file size rules.
+`radio`, `checkbox`, `textbox`, `textarea`, `rating`, `satisfaction`,
+`toggle_button`, and `dropdown`. Questions may require zero through three attachments
+and may define selection, text length, file type, and file size rules.
 
 The `toggle_button` type (documented in
 `specs/002-toggle-button-question/contracts/survey-json.md`) renders a boolean
 on/off switch. It supports `defaultValue` (boolean), `required`, and
 `options.onLabel`/`options.offLabel` (defaulting to "On"/"Off"). Submitted answers use
 a native boolean, e.g. `{ "enable_notifications": true }`.
+
+The `dropdown` type (documented in
+`specs/003-dropdown-question/contracts/survey-json.md`) renders a single-select
+searchable list from a static `options` array of `{ label, value }` pairs (values must
+be unique). Every dropdown starts blank — no placeholder, no preselection — supports
+`required`, allows clearing on optional questions, and submits the selected option
+value as a string, e.g. `{ "country_of_residence": "ae" }`.
 
 The response submission boundary is documented in
 `specs/001-survey-management/contracts/response-submission.md`. The default local
