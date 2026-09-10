@@ -1,3 +1,4 @@
+import '@angular/compiler';
 import { describe, expect, it } from 'vitest';
 import { CheckboxQuestionComponent } from '../checkbox-question/checkbox-question';
 import { DropdownQuestionComponent } from '../dropdown-question/dropdown-question';

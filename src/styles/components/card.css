@@ -192,3 +192,283 @@
   display: grid;
   place-items: center;
 }
+
+/* Survey card (006 dock chrome, R-08) ---------------------------------------------
+ *
+ * The per-page panel: cream-gradient header with the JSON-driven page icon, question
+ * content, and a divided footer with Back / Continue (maroon, transform-only sheen) /
+ * Submit (gold). Lives in the global layer so it reaches inside the view template.
+ */
+
+.survey-card {
+  overflow: clip;
+  border: 1px solid var(--ds-color-canvas-strong);
+  border-radius: var(--ds-radius-2xl);
+  background-color: var(--ds-color-surface);
+  box-shadow: var(--ds-shadow-panel);
+  color: var(--ds-color-text);
+  padding: var(--ds-space-fluid-lg);
+  animation: ds-enter-rise var(--ds-duration-slow) var(--ds-ease-emphasized) both;
+}
+
+.card-header {
+  position: relative;
+  overflow: hidden;
+  margin: calc(var(--ds-space-fluid-lg) * -1) calc(var(--ds-space-fluid-lg) * -1) var(--ds-space-lg);
+  padding: var(--ds-space-lg) var(--ds-space-fluid-lg);
+  border-block-end: 1px solid var(--ds-color-canvas-strong);
+  background: linear-gradient(180deg, var(--ds-cream-100), var(--ds-color-surface));
+}
+
+.card-header::before {
+  content: '';
+  position: absolute;
+  top: -2.5rem;
+  right: -2.5rem;
+  width: 11rem;
+  height: 11rem;
+  border-radius: var(--ds-radius-pill);
+  background: radial-gradient(
+    circle,
+    var(--ds-alpha-gold-30),
+    var(--ds-alpha-maroon-16) 60%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.card-header > * {
+  position: relative;
+}
+
+.card-eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-sm);
+  margin-block-end: var(--ds-space-sm);
+}
+
+.page-icon {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: var(--ds-space-2xl);
+  height: var(--ds-space-2xl);
+  border-radius: var(--ds-radius-lg);
+  background: linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary-strong));
+  box-shadow: var(--ds-shadow-1);
+}
+
+.page-icon::after {
+  content: '';
+  position: absolute;
+  inset: 22%;
+  background-color: var(--ds-color-accent-border);
+  -webkit-mask-image: var(--ds-icon-clipboard);
+  mask-image: var(--ds-icon-clipboard);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.page-icon[data-icon='star']::after {
+  -webkit-mask-image: var(--ds-icon-star);
+  mask-image: var(--ds-icon-star);
+}
+
+.page-icon[data-icon='id-card']::after {
+  -webkit-mask-image: var(--ds-icon-id-card);
+  mask-image: var(--ds-icon-id-card);
+}
+
+.page-icon[data-icon='file-shield']::after {
+  -webkit-mask-image: var(--ds-icon-file-shield);
+  mask-image: var(--ds-icon-file-shield);
+}
+
+.page-icon[data-icon='check']::after {
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+}
+
+.page-icon[data-icon='shield-check']::after {
+  -webkit-mask-image: var(--ds-icon-shield-check);
+  mask-image: var(--ds-icon-shield-check);
+}
+
+.page-icon[data-icon='laptop-file']::after {
+  -webkit-mask-image: var(--ds-icon-laptop-file);
+  mask-image: var(--ds-icon-laptop-file);
+}
+
+.card-eyebrow {
+  margin: 0;
+  padding: var(--ds-space-3xs) var(--ds-space-xs);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-color-primary);
+  color: var(--ds-color-text-on-primary);
+  font-size: var(--ds-font-size-3xs);
+  font-weight: var(--ds-font-weight-extrabold);
+  letter-spacing: var(--ds-letter-spacing-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: var(--ds-shadow-1);
+}
+
+.card-counts {
+  margin: 0 0 0 auto;
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-3xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.card-title {
+  margin: 0;
+  color: var(--ds-color-primary-strong);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-2xl);
+  font-weight: var(--ds-font-weight-extrabold);
+  letter-spacing: var(--ds-letter-spacing-tight);
+  line-height: var(--ds-line-height-tight);
+}
+
+.card-description {
+  max-width: var(--ds-measure);
+  margin: var(--ds-space-xs) 0 0;
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-md);
+  line-height: var(--ds-line-height-relaxed);
+}
+
+/* Card footer: Back / Continue / Submit --------------------------------------- */
+
+.survey-card .survey-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-sm);
+  margin: var(--ds-space-xl) calc(var(--ds-space-fluid-lg) * -1) calc(var(--ds-space-fluid-lg) * -1);
+  padding: var(--ds-space-lg) var(--ds-space-fluid-lg) var(--ds-space-fluid-lg);
+  border-top: 1px solid var(--ds-color-canvas-strong);
+  background-color: var(--ds-color-canvas-subtle);
+}
+
+.survey-card .survey-actions button {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-2xs);
+  min-height: var(--ds-touch-target);
+  padding: var(--ds-space-sm) var(--ds-space-xl);
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-xl);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-semibold);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    border-color var(--ds-duration-fast) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard),
+    transform var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.survey-card .survey-actions button:focus-visible {
+  outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
+  outline-offset: var(--ds-focus-ring-offset);
+}
+
+.survey-card .survey-actions button:disabled {
+  border-color: var(--ds-color-border);
+  background: var(--ds-color-surface-muted);
+  color: var(--ds-color-text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.survey-card .btn-back {
+  border-color: var(--ds-color-border-interactive);
+  background-color: transparent;
+  color: var(--ds-color-primary);
+}
+
+.survey-card .btn-back:hover:not(:disabled) {
+  border-color: var(--ds-color-primary);
+  background-color: var(--ds-color-primary-soft);
+}
+
+.survey-card .btn-next {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ds-color-primary), var(--ds-color-primary-strong));
+  color: var(--ds-color-text-on-primary);
+  box-shadow: var(--ds-shadow-2);
+}
+
+/* Sheen sweep: transform-only so it stays compositor-cheap and collapses with
+   reduced motion. The streak starts parked off the inline-start edge. */
+.survey-card .btn-next::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, var(--ds-alpha-white-60), transparent);
+  opacity: 0.55;
+  transform: translateX(-160%) skewX(-20deg);
+  transition: transform var(--ds-duration-slow) var(--ds-ease-standard);
+  pointer-events: none;
+}
+
+.survey-card .btn-next:hover:not(:disabled)::after {
+  transform: translateX(360%) skewX(-20deg);
+}
+
+.survey-card .btn-next:hover:not(:disabled),
+.survey-card .btn-submit:hover:not(:disabled) {
+  box-shadow: var(--ds-shadow-3);
+  transform: translateY(-1px);
+}
+
+.survey-card .btn-next:active:not(:disabled),
+.survey-card .btn-submit:active:not(:disabled) {
+  box-shadow: var(--ds-shadow-1);
+  transform: translateY(0);
+}
+
+.survey-card .btn-submit {
+  background: linear-gradient(
+    135deg,
+    var(--ds-color-accent-border),
+    var(--ds-color-accent-decorative) 55%,
+    var(--ds-color-accent-strong)
+  );
+  color: var(--ds-color-text-on-accent);
+  box-shadow: var(--ds-shadow-2);
+}
+
+.survey-card .survey-actions .glyph {
+  display: block;
+  width: var(--ds-space-md);
+  height: var(--ds-space-md);
+  background-color: currentColor;
+  -webkit-mask-image: var(--ds-icon-chevron);
+  mask-image: var(--ds-icon-chevron);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.survey-card .glyph-back {
+  transform: rotate(180deg);
+}

@@ -1,5 +1,5 @@
 /**
- * Supporting-files control — dashed drop-zone treatment with the selected file list.
+ * Supporting-files control — dashed drop-zone treatment with a success file list.
  */
 
 .file-upload {
@@ -9,9 +9,28 @@
 }
 
 .file-upload .form-label {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2xs);
   font-size: var(--ds-font-size-sm);
   font-weight: var(--ds-font-weight-semibold);
   color: var(--ds-color-text-secondary);
+}
+
+.file-upload .form-label::before {
+  content: '';
+  flex-shrink: 0;
+  width: var(--ds-space-xl);
+  height: var(--ds-space-xl);
+  background-color: var(--ds-color-primary);
+  -webkit-mask-image: var(--ds-icon-upload);
+  mask-image: var(--ds-icon-upload);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 input[type='file'] {
@@ -20,19 +39,26 @@ input[type='file'] {
   padding: var(--ds-space-sm) var(--ds-space-md);
   border: 1px dashed var(--ds-color-border-interactive);
   border-radius: var(--ds-radius-lg);
-  background-color: var(--ds-color-surface-sunken);
+  background-color: var(--ds-color-surface);
   color: var(--ds-color-text-muted);
   font-family: var(--ds-font-text);
   font-size: var(--ds-font-size-sm);
   cursor: pointer;
   transition:
     border-color var(--ds-duration-fast) var(--ds-ease-standard),
-    background-color var(--ds-duration-fast) var(--ds-ease-standard);
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard);
 }
 
 input[type='file']:hover {
-  border-color: var(--ds-color-selection);
-  background-color: var(--ds-color-selection-soft);
+  border-color: var(--ds-color-primary);
+  background-color: var(--ds-color-primary-soft);
+}
+
+input[type='file']:active {
+  border-color: var(--ds-color-primary);
+  background-color: var(--ds-color-primary-soft);
+  box-shadow: var(--ds-focus-ring);
 }
 
 input[type='file']:focus-visible {
@@ -63,25 +89,108 @@ input[type='file']::file-selector-button:hover {
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: var(--ds-font-size-sm);
-  color: var(--ds-color-text-secondary);
 }
 
 .file-upload li {
   display: flex;
   align-items: center;
   gap: var(--ds-space-xs);
-  padding: var(--ds-space-2xs) 0;
+  padding: var(--ds-space-2xs) var(--ds-space-2xs) var(--ds-space-2xs) var(--ds-space-sm);
+  border: 1px solid var(--ds-color-success-border);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-color-surface);
+  box-shadow: var(--ds-shadow-1);
+  animation: ds-anim-select var(--ds-duration-base) var(--ds-ease-spring) both;
 }
 
-.file-upload li::before {
-  content: '';
+.file-tile {
+  display: grid;
   flex-shrink: 0;
+  place-items: center;
+  width: var(--ds-space-2xl);
+  height: var(--ds-space-2xl);
+  border-radius: var(--ds-radius-md);
+  background-color: var(--ds-color-canvas-subtle);
+}
+
+.file-tile::after {
+  content: '';
   width: var(--ds-icon-size);
   height: var(--ds-icon-size);
   background-color: var(--ds-color-primary);
   -webkit-mask-image: var(--ds-icon-file);
   mask-image: var(--ds-icon-file);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.file-tile[data-kind='pdf']::after {
+  background-color: var(--ds-color-danger);
+}
+
+.file-tile[data-kind='image']::after {
+  background-color: var(--ds-color-info);
+}
+
+.file-meta {
+  display: grid;
+  gap: var(--ds-space-3xs);
+  min-width: 0;
+  flex: 1;
+}
+
+.file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-bold);
+}
+
+.file-sub {
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.file-remove {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  min-width: var(--ds-touch-target);
+  min-height: var(--ds-touch-target);
+  border: 0;
+  border-radius: var(--ds-radius-md);
+  background-color: var(--ds-color-danger-soft);
+  color: var(--ds-color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.file-remove:hover {
+  background-color: var(--ds-color-danger-border);
+  color: var(--ds-color-danger-strong);
+}
+
+.file-remove:focus-visible {
+  outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
+  outline-offset: var(--ds-focus-ring-offset);
+}
+
+.remove-glyph {
+  display: block;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  background-color: currentColor;
+  -webkit-mask-image: var(--ds-icon-close);
+  mask-image: var(--ds-icon-close);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center;

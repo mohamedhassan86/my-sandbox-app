@@ -93,6 +93,36 @@ describe('mobile burger menu navigation', () => {
     expect(SurveyViewComponent.mobileMenuSummary(0, 4, 0)).toBe('Page 1 of 4 · 0% complete');
     expect(SurveyViewComponent.mobileMenuSummary(2, 4, 50)).toBe('Page 3 of 4 · 50% complete');
   });
+
+  it('closes the drawer on Escape only when it is open', () => {
+    expect(SurveyViewComponent.shouldCloseDrawerOnEscape(true)).toBe(true);
+    expect(SurveyViewComponent.shouldCloseDrawerOnEscape(false)).toBe(false);
+  });
+
+  it('maps blocked forward navigation to an actionable toast', () => {
+    expect(SurveyViewComponent.toastForNavigation(true)).toBeNull();
+    expect(SurveyViewComponent.toastForNavigation(false)).toContain('required');
+  });
+
+  it('maps submission outcomes to toast copy', () => {
+    expect(SurveyViewComponent.toastForSubmission('blocked', '')).toContain('required');
+    expect(SurveyViewComponent.toastForSubmission('submitted', 'Response submitted (R-1).')).toBe(
+      'Response submitted (R-1).',
+    );
+    expect(SurveyViewComponent.toastForSubmission('failed', 'Server is busy.')).toBe(
+      'Server is busy.',
+    );
+  });
+
+  it('splits the card header counts into required and optional', () => {
+    expect(
+      SurveyViewComponent.requiredOptionalCounts([{ required: true }, { required: false }]),
+    ).toEqual({ required: 1, optional: 1 });
+    expect(SurveyViewComponent.requiredOptionalCounts([])).toEqual({
+      required: 0,
+      optional: 0,
+    });
+  });
 });
 
 describe('completion summary', () => {
@@ -102,4 +132,3 @@ describe('completion summary', () => {
     expect(SurveyViewComponent.completionPercentage(1, 4, false)).toBe(25);
   });
 });
-

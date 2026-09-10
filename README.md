@@ -36,9 +36,12 @@ The default fixture (`public/survey.json`) contains a four-page demo survey:
 3. **Supporting Files** — file upload with PNG/JPEG/PDF support (up to 3 files, 5 MB each)
 4. **Final Thoughts** — improvement suggestions and follow-up consent
 
-Navigation appears above the page content with a progress bar, clickable page steps,
-and Previous/Next buttons. Completed pages show a green left border and a checkmark
-cue on answered questions.
+Navigation lives in a fixed maroon dock: live step buttons with answered counts and
+mini-bars, a gold progress ring with status text, and a collapsible icon rail on
+desktop; on mobile the dock becomes a slide-in drawer. A sticky topbar carries the
+breadcrumb, survey title, and estimate/answered pills, with a step-pill strip on
+mobile. Answered questions show a green bar and checkmark cue; validation failures
+surface as rose error cards plus an auto-dismissing toast.
 
 An independent six-step fixture is available at
 `http://localhost:4200/surveys/extended-feedback`. It contains exactly six steps
@@ -86,6 +89,14 @@ be unique). Every dropdown starts blank — no placeholder, no preselection — 
 `required`, allows clearing on optional questions, and submits the selected option
 value as a string, e.g. `{ "country_of_residence": "ae" }`.
 
+Three optional fields feed the dock chrome (validated in
+`specs/006-survey-dock-brand/contracts/brand-delta.md` §6, consumed with fallbacks so
+older JSON renders unchanged): survey-level `estimatedMinutes` (1–120, shown in the
+live card and topbar), and per-page `description` (1–280 chars, shown under the card
+title) and `icon` (a 1–32 char glyph key such as `id-card`, `star`, `file-shield`,
+`check`, `clipboard`, `shield-check`, or `laptop-file`; unknown keys fall back to the
+clipboard glyph).
+
 The response submission boundary is documented in
 `specs/001-survey-management/contracts/response-submission.md`. The default local
 adapter simulates an accepted response so the completion flow can be reviewed without
@@ -111,16 +122,20 @@ src/styles/
 `tokens/primitives.css` may contain literal colour values; components consume semantic roles,
 so re-tinting the product is a one-file change.
 
-**Brand roles.** Maroon (`--ds-color-primary`, `#800000`) is the primary brand role used for
-chrome, primary actions, the active step, and error tones. The selection blue
-(`--ds-color-selection`, `#1524d9`) is the secondary role used for selected answers and
-focus, and the canvas pink (`--ds-color-tertiary`, `#fbafbc`) is the tertiary role used for
-the page backdrop. Each role is usable independently.
+**Brand roles.** GCC maroon (`--ds-color-primary`, `#800020`) is the primary role used
+for the dock, chrome, primary actions, and the active step. Metallic gold
+(`--ds-color-accent-*`, `#d4af37`) is the secondary role used for the active tile, the
+progress ring, badges, and the Submit action. Warm cream (`--ds-color-tertiary`,
+`#faf7f2`) is the tertiary role used for the page canvas. Rose (`--ds-color-danger-*`)
+carries errors, emerald (`--ds-color-success-*`) carries completion. Each role is
+usable independently.
 
-**Reference match.** Soft pink canvas, white elevated panels, a serif display title, muted
-sans question prompts, large neutral answer tiles with a vivid blue selected state, endpoint
-labels beneath the rating scale, five icon tiles for satisfaction, and multi-column option
-flows that collapse to one column on mobile.
+**Reference match.** Cream canvas with a fading dot pattern and maroon/gold ambient
+washes, white elevated panels, extrabold sans headings, a maroon dock with gold active
+steps and green completed checks, numbered question badges with optional pills, maroon
+selected rows with check badges, gold rating tiles with a star and readout pill, maroon
+satisfaction tiles, and a medallion completion summary with survey-derived tiles — all
+matching `public/index.html`, which is the read-only visual reference.
 
 **Accessibility.** WCAG 2.1 AA contrast for every shipped text/background pair, 3:1 for
 interactive borders, focus rings, and selection fills; 44px minimum targets; state never
@@ -141,9 +156,11 @@ does not resolve, a literal colour appears outside the primitive layer, a spacin
 uses a raw length, a token or `ds-` class is undocumented (or documented but no longer
 shipped), the spacing/type/radius/duration scales stop being ordered, a documented contrast
 pair drops below its minimum, the reduced-motion block stops collapsing motion, an animation
-touches a non-compositor property, or a PrimeNG variable stops mapping to a token. The full
-contracts live in
-[`specs/004-survey-design-system/contracts/`](specs/004-survey-design-system/contracts/).
+touches a non-compositor property, or a PrimeNG variable stops mapping to a token. The
+check merges the 004 and 006 token contracts, so documented-but-unshipped (or
+shipped-but-undocumented) tokens fail in either file. The full contracts live in
+[`specs/004-survey-design-system/contracts/`](specs/004-survey-design-system/contracts/)
+and [`specs/006-survey-dock-brand/contracts/`](specs/006-survey-dock-brand/contracts/).
 
 The same check also guards the survey answer geometry: the dropdown field and the text box
 resolve to one shared control height, the option panel is anchored to its field and layered
@@ -152,27 +169,36 @@ sizing tokens. The documented heights and widths for every question surface — 
 320 px, 375 px, 768 px, 1280 px, and 1440 px — live in
 [`specs/005-dropdown-menu-sizing/contracts/ui-sizes.md`](specs/005-dropdown-menu-sizing/contracts/ui-sizes.md).
 
+The dock shell has its own geometry contract: dock/rail/drawer widths, ring size, and
+topbar height must be driven by the shell tokens (never literals) on the shell
+selectors, and the drawer width must keep its `min(20.625rem, 88vw)` cap formula. The
+rules and the measured values at all five viewports live in
+[`specs/006-survey-dock-brand/contracts/shell-sizes.md`](specs/006-survey-dock-brand/contracts/shell-sizes.md).
+
 When reviewing the UI, check desktop and mobile widths, keyboard focus, selected and
 unselected states, reduced motion, readable labels, and preservation of answers during
 navigation.
 
-After a successful submission, the editable survey is replaced by a completion summary
-showing `100% complete` and a clear success message. Failed submissions keep the survey
-editable and preserve the respondent's answers.
+After a successful submission, the editable survey is replaced by a completion summary:
+a maroon-to-gold medallion with a celebration ring, `100% complete`, per-page
+`n/m answered` tiles plus a files tile (capped with an overflow tile on long surveys),
+and a Start-new-response action. Failed submissions keep the survey editable and
+preserve the respondent's answers.
 
 ## Project design
 
 - Typed domain models live under `src/app/core/models`.
 - Configuration and submission services live under `src/app/core/services`.
 - Validation rules live under `src/app/core/validators`.
-- Survey pages, question renderers, navigation, and session state live under
-  `src/app/survey`.
+- Survey pages, question renderers, navigation, session state, and pure presenters
+  (e.g. completion tiles) live under `src/app/survey`.
 - Design tokens, base styles, composition utilities, and component classes live under
   `src/styles`; the contract check that guards them lives under
   `src/app/shared/design-system`.
 - Spec Kit planning artifacts live under `specs/001-survey-management`,
   `specs/002-toggle-button-question`, `specs/003-dropdown-question`,
-  `specs/004-survey-design-system`, and `specs/005-dropdown-menu-sizing`.
+  `specs/004-survey-design-system`, `specs/005-dropdown-menu-sizing`, and
+  `specs/006-survey-dock-brand`.
 
 ## Deployment
 

@@ -28,6 +28,17 @@ const UI_SIZE_CONTRACT = readFileSync(
   'specs/005-dropdown-menu-sizing/contracts/ui-sizes.md',
   'utf8',
 );
+// 006-survey-dock-brand documents its token delta alongside the 004 contract; the check
+// merges both files so each feature keeps its own acceptance baseline.
+const BRAND_DELTA_CONTRACT = readFileSync(
+  'specs/006-survey-dock-brand/contracts/brand-delta.md',
+  'utf8',
+);
+const SHELL_SIZE_CONTRACT = readFileSync(
+  'specs/006-survey-dock-brand/contracts/shell-sizes.md',
+  'utf8',
+);
+const MERGED_TOKEN_DOCS = `${TOKEN_CONTRACT}\n${BRAND_DELTA_CONTRACT}`;
 
 function stylesheetsIn(directory: string): string[] {
   const found: string[] = [];
@@ -113,7 +124,7 @@ describe('design system contract: token layer', () => {
   });
 
   it('documents every shipped token and removes stale documentation', () => {
-    const documented = documentedTokens(TOKEN_CONTRACT);
+    const documented = documentedTokens(MERGED_TOKEN_DOCS);
     const undocumented = [...TOKENS.keys()].filter(
       (token) => !documentedTokenCoverage(token, documented),
     );
@@ -216,7 +227,9 @@ describe('design system contract: token layer', () => {
 
   it('documents the contrast pairs that the check enforces', () => {
     for (const pair of CONTRAST_PAIRS) {
-      expect(TOKEN_CONTRACT, `${pair.foreground} should be documented`).toContain(pair.foreground);
+      expect(MERGED_TOKEN_DOCS, `${pair.foreground} should be documented`).toContain(
+        pair.foreground,
+      );
     }
   });
 
@@ -434,5 +447,97 @@ describe('design system contract: survey answer geometry', () => {
       rule.declarations.includes('max-height:'),
     );
     expect(overlayCeiling?.declarations).toContain('var(--ds-select-available-height');
+  });
+});
+
+/**
+ * Survey dock shell geometry contract — see
+ * `specs/006-survey-dock-brand/contracts/shell-sizes.md` for the rules (R-01…R-12) and
+ * `specs/006-survey-dock-brand/contracts/brand-delta.md` for the tokens that drive them.
+ * Like the 005 geometry block, the check protects token discipline (tokens exist, are
+ * documented, and drive the shell surfaces); the ruler values in the contract are verified
+ * by the quickstart review pass.
+ */
+const SHELL_TOKENS = [
+  '--ds-dock-width',
+  '--ds-dock-rail-width',
+  '--ds-drawer-width',
+  '--ds-ring-size',
+  '--ds-topbar-height',
+  '--ds-toast-duration',
+] as const;
+
+const SHELL_CSS_PATH = 'src/app/survey/survey-shell.css';
+// The ring and step rules live in the navigation component's scoped stylesheet (view
+// encapsulation keeps view styles out of child templates), so both files are shell.
+const SHELL_SCAN_PATHS = [
+  SHELL_CSS_PATH,
+  'src/app/survey/components/survey-navigation/survey-navigation.css',
+] as const;
+
+function readShellCss(): string {
+  return SHELL_SCAN_PATHS.map((path) => readFileSync(path, 'utf8')).join('\n');
+}
+
+describe('design system contract: survey dock shell', () => {
+  it('ships the shell tokens that drive the dock, drawer, topbar, ring, and toast', () => {
+    for (const token of SHELL_TOKENS) {
+      expect(TOKENS.has(token), `${token} should be defined in the token layer`).toBe(true);
+    }
+  });
+
+  it('documents every shell token in the shell-size and merged token contracts', () => {
+    const documented = documentedTokens(MERGED_TOKEN_DOCS);
+    for (const token of SHELL_TOKENS) {
+      expect(SHELL_SIZE_CONTRACT, `${token} should appear in the shell-size contract`).toContain(
+        token,
+      );
+      expect(
+        documentedTokenCoverage(token, documented),
+        `${token} should appear in the merged token contract`,
+      ).toBe(true);
+    }
+  });
+
+  it('caps the mobile drawer at 88% of the viewport', () => {
+    const drawer = TOKENS.get('--ds-drawer-width') ?? '';
+    expect(drawer, '--ds-drawer-width should carry the 88vw ceiling').toContain('88vw');
+  });
+
+  it('drives the shell surfaces from the shell tokens, never literals', () => {
+    const css = readShellCss();
+    const referenced = referencedTokens(css);
+    for (const token of [
+      '--ds-dock-width',
+      '--ds-dock-rail-width',
+      '--ds-drawer-width',
+      '--ds-ring-size',
+      '--ds-topbar-height',
+    ] as const) {
+      expect(referenced, `shell stylesheets should reference ${token}`).toContain(token);
+    }
+    // No literal length may decide the width/height of a dock, drawer, topbar, ring, or
+    // toast surface: every such declaration is a token, or a neutral 0/auto/100%.
+    const offenders: string[] = [];
+    for (const rule of flatRules(css)) {
+      if (
+        !/dock|drawer|topbar|ring|toast|mobile-pills|progress-card|survey-card|page-step|step-/i.test(
+          rule.selectors,
+        )
+      ) {
+        continue;
+      }
+      for (const declaration of rule.declarations.match(
+        // The lookbehind keeps `stroke-width` / `border-width` out of the sizing rule.
+        /(?<![\w-])(?:min-|max-)?(?:width|height)\s*:\s*[^;{]+/g,
+      ) ?? []) {
+        const value = declaration.replace(/^[^:]+:\s*/, '').trim();
+        const neutral = /^(0|auto|100%|none)$/.test(value);
+        if (!neutral && !value.includes('var(')) {
+          offenders.push(`${rule.selectors} { ${declaration.trim()} }`);
+        }
+      }
+    }
+    expect(offenders, 'shell surfaces should be sized by tokens only').toEqual([]);
   });
 });

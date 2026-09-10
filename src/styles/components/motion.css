@@ -88,6 +88,32 @@
   }
 }
 
+/* Celebration: completion medallion ping ring + pulse. Opacity/transform only, so the
+   global reduced-motion block neutralises both while the static success state stays. */
+
+@keyframes ds-celebrate-ping {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes ds-celebrate-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+}
+
 /* Progress fills tween through a tokenised transition instead of a keyframe. */
 .ds-anim-progress {
   transition: width var(--ds-duration-slow) var(--ds-ease-emphasized);

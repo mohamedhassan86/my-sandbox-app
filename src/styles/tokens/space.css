@@ -88,6 +88,19 @@
   --ds-bp-lg: 64rem;
   --ds-bp-xl: 80rem;
 
+  /* Dock shell layout (006) — see `specs/006-survey-dock-brand/contracts/shell-sizes.md`.
+     Values are the reference widths at a 16px root; the drawer never exceeds 88vw. */
+  --ds-dock-width: 20.125rem;
+  --ds-dock-rail-width: 6rem;
+  --ds-drawer-width: min(20.625rem, 88vw);
+  --ds-dock-breakpoint: 64rem;
+  --ds-ring-size: 3.625rem;
+  --ds-topbar-height: 4.25rem;
+  --ds-toast-duration: 2600ms;
+  --ds-content-max: 48rem;
+  --ds-topbar-max: 56rem;
+  --ds-toast-max: min(92vw, 32rem);
+
   /* Layering contract */
   --ds-z-sticky: 10;
   /* A question card that owns an open option panel paints above its sibling cards, so an

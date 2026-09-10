@@ -8,7 +8,8 @@
  */
 
 :root {
-  /* Maroon — primary brand ramp (▣ maroon-700 is the approved brand maroon) */
+  /* Maroon — primary brand ramp (▣ maroon-700 is the approved brand maroon).
+     Deep steps match the 006 dock reference (`public/index.html`). */
   --ds-maroon-50: #fff5f6;
   --ds-maroon-100: #fde8ea;
   --ds-maroon-200: #f8ccd1;
@@ -16,9 +17,33 @@
   --ds-maroon-400: #dd707c;
   --ds-maroon-500: #c14554;
   --ds-maroon-600: #a3202c;
-  --ds-maroon-700: #800000;
-  --ds-maroon-800: #5c0000;
-  --ds-maroon-900: #3d0000;
+  --ds-maroon-700: #800020;
+  --ds-maroon-800: #540015;
+  --ds-maroon-900: #3d000f;
+  --ds-maroon-950: #25000a;
+
+  /* Gold — secondary role: highlights, symbols, submit (006 dock reference) */
+  --ds-gold-100: #fbf3d9;
+  --ds-gold-200: #f7e8b5;
+  --ds-gold-300: #f3e5ab;
+  --ds-gold-400: #e6ca65;
+  --ds-gold-500: #d4af37;
+  --ds-gold-600: #b89320;
+  --ds-gold-700: #8f6f16;
+
+  /* Cream — tertiary role: the page canvas (006 dock reference) */
+  --ds-cream-50: #fcfcf9;
+  --ds-cream-100: #faf7f2;
+  --ds-cream-200: #f2eae0;
+  --ds-cream-300: #e5d7c5;
+  --ds-cream-400: #d3c1a4;
+
+  /* Red — errors read rose in the 006 dock reference */
+  --ds-red-50: #fef2f2;
+  --ds-red-100: #fee2e2;
+  --ds-red-200: #fecaca;
+  --ds-red-600: #e11d48;
+  --ds-red-700: #be123c;
 
   /* Blue — secondary role: selected answers and focus (▣ blue-600 is the reference blue) */
   --ds-blue-50: #eef1ff;
@@ -101,8 +126,14 @@
   --ds-alpha-ink-60: rgb(32 32 32 / 60%);
   --ds-alpha-white-60: rgb(255 255 255 / 60%);
   --ds-alpha-white-80: rgb(255 255 255 / 80%);
+  --ds-alpha-maroon-7: rgb(128 0 32 / 7%);
   --ds-alpha-maroon-10: rgb(128 0 0 / 10%);
   --ds-alpha-maroon-16: rgb(128 0 0 / 16%);
   --ds-alpha-blue-14: rgb(21 36 217 / 14%);
   --ds-alpha-blue-30: rgb(21 36 217 / 30%);
+  --ds-alpha-white-12: rgb(255 255 255 / 12%);
+  --ds-alpha-gold-22: rgb(212 175 55 / 22%);
+  --ds-alpha-gold-30: rgb(212 175 55 / 30%);
+  --ds-alpha-maroon-35: rgb(128 0 32 / 35%);
+  --ds-alpha-cream-60: rgb(250 247 242 / 60%);
 }

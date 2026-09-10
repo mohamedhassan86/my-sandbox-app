@@ -2,16 +2,34 @@ import { describe, expect, it } from 'vitest';
 import { SurveyNavigationComponent } from './survey-navigation';
 
 describe('SurveyNavigationComponent', () => {
-  it('reports completed-page progress for a four-page survey', () => {
-    expect(SurveyNavigationComponent.progressFor(0, 4)).toBe(0);
-    expect(SurveyNavigationComponent.progressFor(1, 4)).toBe(25);
-    expect(SurveyNavigationComponent.progressFor(2, 4)).toBe(50);
-    expect(SurveyNavigationComponent.progressFor(3, 4)).toBe(75);
-    expect(SurveyNavigationComponent.progressFor(3, 4, true)).toBe(100);
+  it('reports answered-over-total progress for the dock ring', () => {
+    expect(SurveyNavigationComponent.overallPercentage(0, 8)).toBe(0);
+    expect(SurveyNavigationComponent.overallPercentage(4, 8)).toBe(50);
+    expect(SurveyNavigationComponent.overallPercentage(8, 8)).toBe(100);
+    expect(SurveyNavigationComponent.overallPercentage(0, 8, true)).toBe(100);
   });
 
   it('returns zero progress for an empty survey', () => {
-    expect(SurveyNavigationComponent.progressFor(0, 0)).toBe(0);
+    expect(SurveyNavigationComponent.overallPercentage(0, 0)).toBe(0);
+  });
+
+  it('reports per-step answered percentages', () => {
+    expect(SurveyNavigationComponent.stepPercentage(0, 3)).toBe(0);
+    expect(SurveyNavigationComponent.stepPercentage(1, 3)).toBe(33);
+    expect(SurveyNavigationComponent.stepPercentage(3, 3)).toBe(100);
+    expect(SurveyNavigationComponent.stepPercentage(0, 0)).toBe(0);
+  });
+
+  it('maps percentages to ring arc offsets', () => {
+    expect(SurveyNavigationComponent.ringOffset(0)).toBe(150.8);
+    expect(SurveyNavigationComponent.ringOffset(50)).toBe(75.4);
+    expect(SurveyNavigationComponent.ringOffset(100)).toBe(0);
+  });
+
+  it('labels steps with position, counts, and state', () => {
+    expect(SurveyNavigationComponent.stepAriaLabel('About You', 0, 3, 1, 2, 'active')).toBe(
+      'About You, step 1 of 3, 1 of 2 answered, active',
+    );
   });
 
   it('keeps completed steps visible but disables navigation', () => {
