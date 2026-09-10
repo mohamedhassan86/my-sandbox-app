@@ -80,7 +80,7 @@
   --p-select-list-padding: var(--ds-space-2xs);
   --p-select-list-gap: var(--ds-space-3xs);
   --p-select-list-header-padding: var(--ds-space-sm) var(--ds-space-sm) 0;
-  --p-select-option-padding: var(--ds-space-sm);
+  --p-select-option-padding: var(--ds-space-sm) var(--ds-space-md);
   --p-select-option-color: var(--ds-color-text);
   --p-select-option-font-size: var(--ds-font-size-lg);
   --p-select-option-font-weight: var(--ds-font-weight-regular);
@@ -150,15 +150,24 @@
 
 /* --- Structural adjustments -------------------------------------------------- */
 
+/*
+ * Shapes the library cannot express through its own variables: the field height, the option
+ * panel's placement, and the panel's size ceiling. Sizes are the documented contract in
+ * `specs/005-dropdown-menu-sizing/contracts/ui-sizes.md`.
+ */
+
 .p-select {
   width: 100%;
-  min-height: var(--ds-touch-target);
+  min-height: var(--ds-control-height);
   align-items: center;
   font-family: var(--ds-font-text);
 }
 
+/* The library's default label line-height is smaller than a text box line, which made a
+   dropdown field ~1 line shorter than the text box above it. Sharing the control line
+   height makes every single-line answer control the same height. */
 .p-select .p-select-label {
-  line-height: var(--ds-line-height-snug);
+  line-height: var(--ds-line-height-normal);
   font-family: var(--ds-font-text);
 }
 
@@ -176,6 +185,50 @@
   border-radius: var(--ds-radius-lg);
   overflow: hidden;
   font-family: var(--ds-font-text);
+  /* Sizing contract: the panel is exactly as wide as the dropdown field and never taller
+     than `--ds-select-panel-max-height`; the option list scrolls inside it. When a viewport
+     is shorter than the panel ceiling, the component supplies the room actually available on
+     the chosen side (`--ds-select-available-height`), which only lowers the ceiling. */
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  max-height: min(
+    var(--ds-select-panel-max-height),
+    var(--ds-select-available-height, var(--ds-select-panel-max-height))
+  );
+}
+
+/*
+ * Placement fix.
+ *
+ * The library's shared overlay stylesheet sets `position: relative` on
+ * `.p-component-overlay.p-component`, which also matches this option panel. The panel is
+ * anchored to the field, so it must stay out of the question card's flow and paint order:
+ * while it was `relative`, the next question card (each card owns a stacking context from
+ * its entrance animation) painted over the open list, hiding most options behind the
+ * following card. Restoring the documented absolute placement keeps the list above the
+ * card content; `.question-block` carries the matching `z-index` for the card itself.
+ */
+.p-select-overlay.p-component-overlay.p-component {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+}
+
+/*
+ * Opening direction. `panel-above` is set by the dropdown component when the space below
+ * the field is smaller than the panel (a short viewport, or a question near the bottom
+ * edge), so the list is drawn above the field and stays on screen. The panel keeps its
+ * width, radius, and ceiling in either direction.
+ */
+.p-select.panel-above .p-select-overlay {
+  top: auto;
+  bottom: 100%;
+}
+
+.p-select-overlay .p-select-list-container {
+  min-height: 0;
+  overscroll-behavior: contain;
 }
 
 .p-select-overlay .p-select-filter {
@@ -199,11 +252,21 @@
 .p-select-overlay .p-select-option {
   display: flex;
   align-items: center;
+  min-height: var(--ds-select-option-min-height);
   border-radius: var(--ds-radius-sm);
   cursor: pointer;
   transition:
     background-color var(--ds-duration-fast) var(--ds-ease-standard),
     color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+/* Long option labels ellipsize inside the panel instead of forcing it wider than the field
+   (which pushed the panel past the viewport on narrow screens). */
+.p-select-overlay .p-select-option > [data-pc-section='optionlabel'] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .p-select-overlay .p-select-option.p-focus,

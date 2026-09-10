@@ -145,6 +145,13 @@ touches a non-compositor property, or a PrimeNG variable stops mapping to a toke
 contracts live in
 [`specs/004-survey-design-system/contracts/`](specs/004-survey-design-system/contracts/).
 
+The same check also guards the survey answer geometry: the dropdown field and the text box
+resolve to one shared control height, the option panel is anchored to its field and layered
+above the following question cards, and the panel and option list are bounded by their
+sizing tokens. The documented heights and widths for every question surface — measured at
+320 px, 375 px, 768 px, 1280 px, and 1440 px — live in
+[`specs/005-dropdown-menu-sizing/contracts/ui-sizes.md`](specs/005-dropdown-menu-sizing/contracts/ui-sizes.md).
+
 When reviewing the UI, check desktop and mobile widths, keyboard focus, selected and
 unselected states, reduced motion, readable labels, and preservation of answers during
 navigation.
@@ -164,8 +171,8 @@ editable and preserve the respondent's answers.
   `src/styles`; the contract check that guards them lives under
   `src/app/shared/design-system`.
 - Spec Kit planning artifacts live under `specs/001-survey-management`,
-  `specs/002-toggle-button-question`, `specs/003-dropdown-question`, and
-  `specs/004-survey-design-system`.
+  `specs/002-toggle-button-question`, `specs/003-dropdown-question`,
+  `specs/004-survey-design-system`, and `specs/005-dropdown-menu-sizing`.
 
 ## Deployment
 
