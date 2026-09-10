@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CheckboxQuestionComponent } from '../checkbox-question/checkbox-question';
+import { DropdownQuestionComponent } from '../dropdown-question/dropdown-question';
 import { RadioQuestionComponent } from '../radio-question/radio-question';
 import { RatingQuestionComponent } from '../rating-question/rating-question';
 import { SatisfactionQuestionComponent } from '../satisfaction-question/satisfaction-question';
@@ -23,6 +24,7 @@ describe('QuestionRendererComponent', () => {
     expect(QuestionRendererComponent.componentFor('rating')).toBe('rating');
     expect(QuestionRendererComponent.componentFor('satisfaction')).toBe('satisfaction');
     expect(QuestionRendererComponent.componentFor('toggle_button')).toBe('toggle_button');
+    expect(QuestionRendererComponent.componentFor('dropdown')).toBe('dropdown');
   });
 
   it('keeps selected-state rules consistent across all choice controls', () => {
@@ -34,5 +36,7 @@ describe('QuestionRendererComponent', () => {
     expect(RatingQuestionComponent.isSelected('8', 9)).toBe(false);
     expect(SatisfactionQuestionComponent.isSelected('satisfied', 'satisfied')).toBe(true);
     expect(SatisfactionQuestionComponent.isSelected('satisfied', 'neutral')).toBe(false);
+    expect(DropdownQuestionComponent.isSelected('ae', 'ae')).toBe(true);
+    expect(DropdownQuestionComponent.isSelected('ae', 'qa')).toBe(false);
   });
 });

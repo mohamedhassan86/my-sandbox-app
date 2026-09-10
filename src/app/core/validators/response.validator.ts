@@ -18,6 +18,13 @@ const validateQuestion = (question: Question, answer: Answer | undefined, attach
     issues.push({ questionId: question.questionId, message: 'This question requires a true/false answer.' });
   }
 
+  if (question.type === 'dropdown' && !valueIsEmpty(value)) {
+    const allowedValues = new Set(question.options.map((option) => option.value));
+    if (typeof value !== 'string' || !allowedValues.has(value)) {
+      issues.push({ questionId: question.questionId, message: 'Select a valid option from the list.' });
+    }
+  }
+
   if (question.type === 'checkbox' && Array.isArray(value)) {
     if (question.minSelections !== undefined && value.length < question.minSelections) issues.push({ questionId: question.questionId, message: `Select at least ${question.minSelections} option(s).` });
     if (question.maxSelections !== undefined && value.length > question.maxSelections) issues.push({ questionId: question.questionId, message: `Select no more than ${question.maxSelections} option(s).` });

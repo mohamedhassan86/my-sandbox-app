@@ -42,6 +42,18 @@ describe('SurveyPageComponent', () => {
     expect(SurveyPageComponent.findAnswerValue(answers, 'T1')).toBe(false);
   });
 
+  it('returns a dropdown answer value for a dropdown question', () => {
+    const answers = [{ questionId: 'D1', value: 'ae' }];
+    expect(SurveyPageComponent.findAnswerValue(answers, 'D1')).toBe('ae');
+    expect(SurveyPageComponent.isAnsweredValue(SurveyPageComponent.findAnswerValue(answers, 'D1'))).toBe(true);
+  });
+
+  it('treats a cleared (null) dropdown answer as unanswered', () => {
+    const answers = [{ questionId: 'D1', value: null }];
+    expect(SurveyPageComponent.findAnswerValue(answers, 'D1')).toBeNull();
+    expect(SurveyPageComponent.isAnsweredValue(SurveyPageComponent.findAnswerValue(answers, 'D1'))).toBe(false);
+  });
+
   it('filters attachments by question ID', () => {
     const attachments = [
       { questionId: 'Q1', fileName: 'a.pdf', mediaType: 'application/pdf', sizeBytes: 100 },

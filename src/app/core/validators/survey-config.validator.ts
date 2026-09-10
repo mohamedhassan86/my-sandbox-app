@@ -10,7 +10,7 @@ export interface ConfigIssue {
   message: string;
 }
 
-const questionTypes = new Set(['radio', 'checkbox', 'textbox', 'textarea', 'rating', 'satisfaction', 'toggle_button']);
+const questionTypes = new Set(['radio', 'checkbox', 'textbox', 'textarea', 'rating', 'satisfaction', 'toggle_button', 'dropdown']);
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
@@ -50,7 +50,7 @@ const validateQuestion = (value: unknown, path: string, issues: ConfigIssue[]): 
     if (isInteger(minValue) && isInteger(maxValue) && isInteger(step) && (maxValue - minValue) % step !== 0) issues.push({ path, message: 'Rating range must be divisible by its step.' });
   }
 
-  if (value['type'] === 'radio' || value['type'] === 'checkbox' || value['type'] === 'satisfaction') {
+  if (value['type'] === 'radio' || value['type'] === 'checkbox' || value['type'] === 'satisfaction' || value['type'] === 'dropdown') {
     if (!Array.isArray(value['options']) || value['options'].length === 0) {
       issues.push({ path: `${path}.options`, message: 'Selectable questions require options.' });
     } else {

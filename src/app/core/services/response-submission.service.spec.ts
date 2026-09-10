@@ -40,4 +40,18 @@ describe('ResponseSubmissionService', () => {
     const parsed = JSON.parse(capturedBody?.get('response') as string);
     expect(parsed.answers).toEqual([{ questionId: 'enable_notifications', value: true }]);
   });
+
+  it('submits a dropdown answer as the selected option value string', async () => {
+    let capturedBody: FormData | undefined;
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(async (_url: string, init: RequestInit) => {
+      capturedBody = init.body as FormData;
+      return new Response(JSON.stringify({ submissionId: 'SUB003' }), { status: 201 });
+    }));
+    const service = new ResponseSubmissionService();
+    service.simulateApi = false;
+    const dropdownResponse = { ...response, answers: [{ questionId: 'country_of_residence', value: 'ae' }] };
+    await service.submit(dropdownResponse);
+    const parsed = JSON.parse(capturedBody?.get('response') as string);
+    expect(parsed.answers).toEqual([{ questionId: 'country_of_residence', value: 'ae' }]);
+  });
 });

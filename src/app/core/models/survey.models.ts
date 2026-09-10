@@ -1,4 +1,4 @@
-export type QuestionType = 'radio' | 'checkbox' | 'textbox' | 'textarea' | 'rating' | 'satisfaction' | 'toggle_button';
+export type QuestionType = 'radio' | 'checkbox' | 'textbox' | 'textarea' | 'rating' | 'satisfaction' | 'toggle_button' | 'dropdown';
 
 export interface Survey {
   surveyId: string;
@@ -77,4 +77,9 @@ export interface ToggleButtonQuestion extends QuestionBase {
   options?: ToggleButtonOptions;
 }
 
-export type Question = RadioQuestion | CheckboxQuestion | TextboxQuestion | TextareaQuestion | RatingQuestion | SatisfactionQuestion | ToggleButtonQuestion;
+export interface DropdownQuestion extends QuestionBase {
+  type: 'dropdown';
+  options: Option[];
+}
+
+export type Question = RadioQuestion | CheckboxQuestion | TextboxQuestion | TextareaQuestion | RatingQuestion | SatisfactionQuestion | ToggleButtonQuestion | DropdownQuestion;

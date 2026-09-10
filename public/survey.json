@@ -49,6 +49,32 @@
           "required": false,
           "attachmentsRequired": 0,
           "options": { "onLabel": "Enabled", "offLabel": "Disabled" }
+        },
+        {
+          "questionId": "Q3c",
+          "type": "dropdown",
+          "label": "Country of residence",
+          "required": true,
+          "options": [
+            { "label": "United Arab Emirates", "value": "ae" },
+            { "label": "Saudi Arabia", "value": "sa" },
+            { "label": "Qatar", "value": "qa" },
+            { "label": "Kuwait", "value": "kw" },
+            { "label": "Bahrain", "value": "bh" },
+            { "label": "Oman", "value": "om" }
+          ],
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "Q3d",
+          "type": "dropdown",
+          "label": "Preferred contact language",
+          "required": false,
+          "options": [
+            { "label": "English", "value": "en" },
+            { "label": "Arabic", "value": "ar" }
+          ],
+          "attachmentsRequired": 0
         }
       ]
     },

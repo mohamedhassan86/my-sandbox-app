@@ -74,3 +74,45 @@ describe('toggle_button response validation', () => {
     expect(issues.some((issue) => issue.questionId === 'T3' && issue.message.includes('required'))).toBe(true);
   });
 });
+
+describe('dropdown response validation', () => {
+  const dropdownPage = {
+    pageId: 'P3',
+    title: 'Residence',
+    questions: [
+      { questionId: 'D1', type: 'dropdown' as const, label: 'Country of residence', required: true, options: [{ label: 'United Arab Emirates', value: 'ae' }, { label: 'Qatar', value: 'qa' }], attachmentsRequired: 0 as const },
+      { questionId: 'D2', type: 'dropdown' as const, label: 'Preferred contact language', required: false, options: [{ label: 'English', value: 'en' }, { label: 'Arabic', value: 'ar' }], attachmentsRequired: 0 as const },
+    ],
+  };
+
+  it('accepts a string matching a predefined option value', () => {
+    const issues = validatePageResponse(dropdownPage, [{ questionId: 'D1', value: 'ae' }], []);
+    expect(issues.some((issue) => issue.questionId === 'D1')).toBe(false);
+  });
+
+  it('rejects an unknown string that matches no option value', () => {
+    const issues = validatePageResponse(dropdownPage, [{ questionId: 'D1', value: 'xx' }], []);
+    expect(issues.some((issue) => issue.questionId === 'D1' && issue.message.includes('valid option'))).toBe(true);
+  });
+
+  it('rejects number, boolean, and array values as invalid types', () => {
+    const numberIssues = validatePageResponse(dropdownPage, [{ questionId: 'D1', value: 1 as unknown as string }], []);
+    expect(numberIssues.some((issue) => issue.questionId === 'D1' && issue.message.includes('valid option'))).toBe(true);
+
+    const booleanIssues = validatePageResponse(dropdownPage, [{ questionId: 'D1', value: true as unknown as string }], []);
+    expect(booleanIssues.some((issue) => issue.questionId === 'D1' && issue.message.includes('valid option'))).toBe(true);
+
+    const arrayIssues = validatePageResponse(dropdownPage, [{ questionId: 'D1', value: ['ae'] as unknown as string }], []);
+    expect(arrayIssues.some((issue) => issue.questionId === 'D1' && issue.message.includes('valid option'))).toBe(true);
+  });
+
+  it('fails a required dropdown with no selection', () => {
+    const issues = validatePageResponse(dropdownPage, [], []);
+    expect(issues.some((issue) => issue.questionId === 'D1' && issue.message.includes('required'))).toBe(true);
+  });
+
+  it('passes an optional dropdown left unselected', () => {
+    const issues = validatePageResponse(dropdownPage, [], []);
+    expect(issues.some((issue) => issue.questionId === 'D2')).toBe(false);
+  });
+});
