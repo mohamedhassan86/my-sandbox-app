@@ -1,53 +1,48 @@
 /**
- * Survey progress and step navigation — design-system progress/step contract.
+ * Dock step navigation (006).
  *
- * States are carried by marker fill, a check cue, and text, so current/complete/upcoming
- * remain distinguishable without colour. The compact variant is the mobile rail, where the
- * progress bar and the step markers stay visible at all times.
+ * States are carried by tile fill, a check/chevron cue, counts, and text, so
+ * current/complete/upcoming remain distinguishable without colour. The compact
+ * variant is the desktop icon rail: tiles only plus a percentage readout.
  */
 
 .survey-navigation {
-  display: grid;
-  gap: var(--ds-space-sm);
-  margin-block-start: var(--ds-space-md);
-}
-
-.progress-bar {
-  position: relative;
-  width: 100%;
-  height: var(--ds-space-xs);
-  border-radius: var(--ds-radius-pill);
-  background-color: var(--ds-color-border-subtle);
-  overflow: hidden;
-}
-
-.progress-fill {
-  display: block;
-  height: 100%;
-  border-radius: var(--ds-radius-pill);
-  background-color: var(--ds-color-primary);
-  transition: width var(--ds-duration-slow) var(--ds-ease-emphasized);
-}
-
-.progress-text {
-  margin: 0;
-  color: var(--ds-color-text-muted);
-  font-size: var(--ds-font-size-sm);
-  font-weight: var(--ds-font-weight-semibold);
-  font-variant-numeric: tabular-nums;
-  text-align: end;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: var(--ds-space-xs);
+  padding: var(--ds-space-sm) var(--ds-space-md) var(--ds-space-md);
 }
 
 .survey-navigation ol {
   display: grid;
+  flex: 1;
+  min-height: 0;
   gap: var(--ds-space-2xs);
+  align-content: start;
   margin: 0;
   padding: 0;
+  overflow-y: auto;
   list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ds-color-accent-decorative) transparent;
 }
 
 .survey-navigation li {
+  position: relative;
   width: 100%;
+}
+
+.survey-navigation li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--ds-space-xs) + var(--ds-space-2xl));
+  bottom: calc(-1 * var(--ds-space-2xs));
+  inset-inline-start: calc(var(--ds-space-xs) + var(--ds-space-2xl) / 2 - 1px);
+  width: 2px;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-color-border-on-dock);
 }
 
 .page-step {
@@ -57,10 +52,10 @@
   width: 100%;
   min-height: var(--ds-touch-target);
   padding: var(--ds-space-xs) var(--ds-space-sm);
-  border: 1px solid transparent;
-  border-radius: var(--ds-radius-md);
-  background-color: transparent;
-  color: var(--ds-color-text-secondary);
+  border: 1px solid var(--ds-color-border-on-dock);
+  border-radius: var(--ds-radius-xl);
+  background-color: var(--ds-alpha-white-12);
+  color: var(--ds-color-text-muted-on-dock);
   font-family: var(--ds-font-text);
   font-size: var(--ds-font-size-sm);
   text-align: start;
@@ -73,17 +68,18 @@
 }
 
 .page-step:hover:not(:disabled) {
-  background-color: var(--ds-color-surface-muted);
+  border-color: var(--ds-color-accent-decorative);
+  background-color: var(--ds-alpha-white-12);
   transform: translateX(var(--ds-space-3xs));
 }
 
 .page-step:focus-visible {
-  outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
+  outline: var(--ds-focus-ring-width) solid var(--ds-color-accent-on-dark);
   outline-offset: var(--ds-focus-ring-offset);
 }
 
 .page-step:disabled {
-  opacity: 0.55;
+  opacity: 0.65;
   cursor: not-allowed;
 }
 
@@ -91,13 +87,14 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: var(--ds-space-xl);
-  height: var(--ds-space-xl);
-  border: 1px solid var(--ds-color-border-strong);
-  border-radius: var(--ds-radius-pill);
+  width: var(--ds-space-2xl);
+  height: var(--ds-space-2xl);
+  border: 1px solid var(--ds-color-border-on-dock);
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-alpha-white-12);
   color: inherit;
-  font-size: var(--ds-font-size-xs);
-  font-weight: var(--ds-font-weight-semibold);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-bold);
   font-variant-numeric: tabular-nums;
   transition:
     background-color var(--ds-duration-fast) var(--ds-ease-standard),
@@ -105,47 +102,11 @@
     color var(--ds-duration-fast) var(--ds-ease-standard);
 }
 
-.step-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Current step ----------------------------------------------------------------- */
-
-.survey-navigation li.active .page-step {
-  background-color: var(--ds-color-primary-soft);
-  border-color: var(--ds-color-primary-border);
-  color: var(--ds-color-primary);
-  font-weight: var(--ds-font-weight-semibold);
-}
-
-.survey-navigation li.active .step-number {
-  border-color: var(--ds-color-primary);
-  background-color: var(--ds-color-primary);
-  color: var(--ds-color-text-on-primary);
-}
-
-/* Completed step: brand outline plus a check cue that is not colour-only --------- */
-
-.survey-navigation li.completed .page-step {
-  color: var(--ds-color-primary);
-}
-
-.survey-navigation li.completed .step-number {
-  border-color: var(--ds-color-primary);
-  background-color: var(--ds-color-surface);
-  color: var(--ds-color-primary);
-}
-
-.survey-navigation li.completed .step-title::after {
-  content: '';
-  display: inline-block;
-  width: var(--ds-space-sm);
-  height: var(--ds-space-sm);
-  margin-inline-start: var(--ds-space-2xs);
-  vertical-align: -0.1em;
-  background-color: var(--ds-color-success);
+.step-number .step-check {
+  display: block;
+  width: var(--ds-space-md);
+  height: var(--ds-space-md);
+  background-color: var(--ds-color-text-on-primary);
   -webkit-mask-image: var(--ds-icon-check);
   mask-image: var(--ds-icon-check);
   -webkit-mask-repeat: no-repeat;
@@ -156,19 +117,285 @@
   mask-size: contain;
 }
 
-/* Compact mobile rail ---------------------------------------------------------- */
+.step-body {
+  display: grid;
+  flex: 1;
+  gap: var(--ds-space-3xs);
+  min-width: 0;
+}
+
+.step-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ds-color-text-on-dock);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.step-counts {
+  color: var(--ds-color-text-muted-on-dock);
+  font-size: var(--ds-font-size-3xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.step-mini {
+  display: block;
+  height: var(--ds-space-3xs);
+  overflow: hidden;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-alpha-white-12);
+}
+
+.step-mini-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-color-accent-decorative);
+  transition: width var(--ds-duration-slow) var(--ds-ease-emphasized);
+}
+
+.step-state {
+  display: block;
+  flex-shrink: 0;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  background-color: var(--ds-color-text-muted-on-dock);
+  -webkit-mask-image: var(--ds-icon-chevron);
+  mask-image: var(--ds-icon-chevron);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Current step: gold row, maroon tile numeral, chevron cue ---------------------- */
+
+.survey-navigation li.active .page-step {
+  border-color: var(--ds-color-accent-decorative);
+  background: linear-gradient(
+    135deg,
+    var(--ds-alpha-gold-30),
+    var(--ds-alpha-gold-22) 60%,
+    transparent
+  );
+}
+
+.survey-navigation li.active .step-number {
+  border-color: transparent;
+  background: linear-gradient(
+    135deg,
+    var(--ds-color-accent-border),
+    var(--ds-color-accent-decorative) 55%,
+    var(--ds-color-accent-strong)
+  );
+  color: var(--ds-color-text-on-accent);
+  font-weight: var(--ds-font-weight-extrabold);
+}
+
+.survey-navigation li.active .step-title {
+  font-weight: var(--ds-font-weight-bold);
+}
+
+.survey-navigation li.active .step-state {
+  background-color: var(--ds-color-accent-on-dark);
+}
+
+/* Completed step: green tile with a check cue that is not colour-only --------- */
+
+.survey-navigation li.completed .page-step {
+  border-color: var(--ds-color-accent-strong);
+  background-color: var(--ds-alpha-gold-22);
+}
+
+.survey-navigation li.completed .step-number {
+  border-color: var(--ds-color-success);
+  background-color: var(--ds-color-success);
+}
+
+.survey-navigation li.completed .step-mini-fill {
+  background-color: var(--ds-color-success);
+}
+
+.survey-navigation li.completed .step-state {
+  background-color: var(--ds-color-success);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+}
+
+/* Security note ---------------------------------------------------------------- */
+
+.dock-security {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-2xs);
+  margin: 0;
+  padding: var(--ds-space-xs) var(--ds-space-sm) 0;
+  border-top: 1px solid var(--ds-color-border-on-dock);
+  color: var(--ds-color-text-muted-on-dock);
+  font-size: var(--ds-font-size-3xs);
+  text-align: center;
+}
+
+.security-glyph {
+  display: block;
+  flex-shrink: 0;
+  width: var(--ds-space-sm);
+  height: var(--ds-space-sm);
+  background-color: var(--ds-color-accent-on-dark);
+  -webkit-mask-image: var(--ds-icon-shield-check);
+  mask-image: var(--ds-icon-shield-check);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Dock progress footer ---------------------------------------------------------- */
+
+.dock-progress {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ds-space-sm);
+  padding: var(--ds-space-sm) var(--ds-space-sm) 0;
+  border-top: 1px solid var(--ds-color-border-on-dock);
+}
+
+.ring-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--ds-ring-size);
+  height: var(--ds-ring-size);
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-track,
+.ring-fill {
+  fill: none;
+  stroke-width: 6;
+}
+
+.ring-track {
+  stroke: var(--ds-alpha-white-12);
+}
+
+.ring-fill {
+  stroke: var(--ds-color-accent-decorative);
+  stroke-linecap: round;
+  stroke-dasharray: 150.8;
+  transition: stroke-dashoffset var(--ds-duration-slow) var(--ds-ease-emphasized);
+}
+
+.ring-pct {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ds-color-text-on-dock);
+  font-size: var(--ds-font-size-2xs);
+  font-weight: var(--ds-font-weight-extrabold);
+  font-variant-numeric: tabular-nums;
+}
+
+.dock-progress-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.dock-status {
+  margin: 0;
+  color: var(--ds-color-text-on-dock);
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-bold);
+}
+
+.dock-sub {
+  margin: var(--ds-space-3xs) 0 0;
+  color: var(--ds-color-text-muted-on-dock);
+  font-size: var(--ds-font-size-3xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.dock-bar {
+  height: var(--ds-space-2xs);
+  margin-top: var(--ds-space-2xs);
+  overflow: hidden;
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-alpha-white-12);
+}
+
+.dock-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--ds-radius-pill);
+  background: linear-gradient(
+    90deg,
+    var(--ds-color-accent-strong),
+    var(--ds-color-accent-decorative)
+  );
+  transition: width var(--ds-duration-slow) var(--ds-ease-emphasized);
+}
+
+/* Compact icon rail ------------------------------------------------------------- */
+
+.survey-navigation.compact {
+  align-items: center;
+  padding: var(--ds-space-sm) var(--ds-space-xs);
+}
 
 .survey-navigation.compact ol {
   justify-items: center;
-  gap: var(--ds-space-2xs);
+  width: 100%;
+  overflow-y: auto;
+}
+
+.survey-navigation.compact li:not(:last-child)::after {
+  content: none;
 }
 
 .survey-navigation.compact .page-step {
   justify-content: center;
   width: var(--ds-touch-target);
-  padding-inline: var(--ds-space-2xs);
+  min-height: 0;
+  height: var(--ds-touch-target);
+  padding: 0;
+  border-color: transparent;
+  border-radius: var(--ds-radius-lg);
+  background-color: transparent;
+}
+
+.survey-navigation.compact li.completed .page-step,
+.survey-navigation.compact li.active .page-step {
+  border-color: transparent;
+  background: transparent;
 }
 
 .survey-navigation.compact .step-number {
-  border-radius: var(--ds-radius-lg);
+  width: var(--ds-space-xl);
+  height: var(--ds-space-xl);
+  border-radius: var(--ds-radius-md);
+}
+
+.survey-navigation.compact .dock-progress {
+  justify-content: center;
+  width: 100%;
+  padding: var(--ds-space-xs) 0 0;
+}
+
+.dock-pct-mini {
+  margin: 0;
+  color: var(--ds-color-accent-on-dark);
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-extrabold);
+  font-variant-numeric: tabular-nums;
 }

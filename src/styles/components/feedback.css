@@ -156,6 +156,19 @@
   color: var(--ds-color-text-secondary);
 }
 
+/* Survey validation message ----------------------------------------------------
+ *
+ * The host panel is skinned in `compat.css`; this resets the inner paragraph so it
+ * inherits the panel type. Announcement (`role="alert"`) and after-validation timing
+ * (`validationAttempted` gate) come from the component and session, not CSS.
+ */
+
+.validation-message {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
 /* Inline status text --------------------------------------------------------- */
 
 .ds-status {

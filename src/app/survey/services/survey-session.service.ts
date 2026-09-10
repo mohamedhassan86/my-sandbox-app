@@ -1,8 +1,14 @@
 import { Injectable, computed, signal } from '@angular/core';
 import type { Answer, ResponseAttachment, SurveyResponse } from '../../core/models/response.models';
 import type { Survey } from '../../core/models/survey.models';
-import { validatePageResponse, validateSurveyResponse } from '../../core/validators/response.validator';
-import type { ResponseIssue } from '../../core/validators/response.validator';
+import {
+  pageProgress,
+  validatePageResponse,
+  validateSurveyResponse,
+} from '../../core/validators/response.validator';
+import type { PageProgress, ResponseIssue } from '../../core/validators/response.validator';
+
+export type ProgressBand = 'starting' | 'progress' | 'almost' | 'complete';
 
 @Injectable({ providedIn: 'root' })
 export class SurveySessionService {
@@ -20,9 +26,52 @@ export class SurveySessionService {
   readonly pageIndex = this.currentPageIndex.asReadonly();
   readonly pageCount = computed(() => this.survey()?.pages.length ?? 0);
   readonly isFirstPage = computed(() => this.currentPageIndex() === 0);
-  readonly isLastPage = computed(() => this.pageCount() === 0 || this.currentPageIndex() === this.pageCount() - 1);
+  readonly isLastPage = computed(
+    () => this.pageCount() === 0 || this.currentPageIndex() === this.pageCount() - 1,
+  );
   readonly isSubmitted = this.submitted.asReadonly();
-  readonly completionPercentage = computed(() => this.submitted() ? 100 : this.pageCount() === 0 ? 0 : Math.round((this.currentPageIndex() / this.pageCount()) * 100));
+  readonly completionPercentage = computed(() =>
+    this.submitted()
+      ? 100
+      : this.pageCount() === 0
+        ? 0
+        : Math.round((this.currentPageIndex() / this.pageCount()) * 100),
+  );
+  /** 1-based page position: page 1 of 3 reads 33% (dock progress card). */
+  readonly pagePositionPercentage = computed(() =>
+    this.submitted()
+      ? 100
+      : this.pageCount() === 0
+        ? 0
+        : Math.round(((this.currentPageIndex() + 1) / this.pageCount()) * 100),
+  );
+  readonly totalQuestionCount = computed(
+    () => this.survey()?.pages.reduce((count, page) => count + page.questions.length, 0) ?? 0,
+  );
+  readonly answeredQuestionCount = computed(() => {
+    const current = this.survey();
+    if (!current) return 0;
+    return current.pages.reduce(
+      (count, page) => count + pageProgress(page, this.answers(), this.attachments()).answered,
+      0,
+    );
+  });
+  /** Answered-over-total percentage driving the dock ring (100 once submitted). */
+  readonly answeredPercentage = computed(() => {
+    if (this.submitted()) return 100;
+    const total = this.totalQuestionCount();
+    return total === 0 ? 0 : Math.round((this.answeredQuestionCount() / total) * 100);
+  });
+  readonly pageProgressList = computed<PageProgress[]>(() => {
+    const current = this.survey();
+    return current
+      ? current.pages.map((page) => pageProgress(page, this.answers(), this.attachments()))
+      : [];
+  });
+  readonly overallProgress = computed(() => ({
+    answered: this.answeredQuestionCount(),
+    total: this.totalQuestionCount(),
+  }));
   readonly currentPageIssues = computed<ResponseIssue[]>(() => {
     if (!this.validationAttempted()) return [];
     const page = this.currentPage();
@@ -43,11 +92,17 @@ export class SurveySessionService {
   }
 
   setAnswer(answer: Answer): void {
-    this.answers.update((answers) => [...answers.filter((item) => item.questionId !== answer.questionId), answer]);
+    this.answers.update((answers) => [
+      ...answers.filter((item) => item.questionId !== answer.questionId),
+      answer,
+    ]);
   }
 
   setAttachments(questionId: string, files: ResponseAttachment[]): void {
-    this.attachments.update((attachments) => [...attachments.filter((file) => file.questionId !== questionId), ...files]);
+    this.attachments.update((attachments) => [
+      ...attachments.filter((file) => file.questionId !== questionId),
+      ...files,
+    ]);
   }
 
   validateCurrentPage() {
@@ -101,6 +156,27 @@ export class SurveySessionService {
   validateAll() {
     const survey = this.survey();
     return survey ? validateSurveyResponse(survey, this.answers(), this.attachments()) : [];
+  }
+
+  static progressBand(percentage: number): ProgressBand {
+    if (percentage >= 100) return 'complete';
+    if (percentage >= 50) return 'almost';
+    if (percentage > 0) return 'progress';
+    return 'starting';
+  }
+
+  static progressBandLabel(band: ProgressBand, submitted: boolean): string {
+    if (submitted) return 'Response submitted';
+    switch (band) {
+      case 'complete':
+        return 'Review & submit';
+      case 'almost':
+        return 'Almost there';
+      case 'progress':
+        return 'In progress';
+      default:
+        return 'Getting started';
+    }
   }
 
   buildResponse(): SurveyResponse | null {

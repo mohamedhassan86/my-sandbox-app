@@ -1,3 +1,4 @@
+import '@angular/compiler';
 import { describe, expect, it } from 'vitest';
 import { ToggleButtonQuestionComponent } from './toggle-button-question';
 
@@ -14,8 +15,12 @@ describe('ToggleButtonQuestionComponent', () => {
   });
 
   it('shows the configured on/off label based on the current state', () => {
-    expect(ToggleButtonQuestionComponent.labelFor(true, { onLabel: 'Enabled', offLabel: 'Disabled' })).toBe('Enabled');
-    expect(ToggleButtonQuestionComponent.labelFor(false, { onLabel: 'Enabled', offLabel: 'Disabled' })).toBe('Disabled');
+    expect(
+      ToggleButtonQuestionComponent.labelFor(true, { onLabel: 'Enabled', offLabel: 'Disabled' }),
+    ).toBe('Enabled');
+    expect(
+      ToggleButtonQuestionComponent.labelFor(false, { onLabel: 'Enabled', offLabel: 'Disabled' }),
+    ).toBe('Disabled');
   });
 
   it('falls back to On/Off when labels are not configured', () => {
@@ -24,7 +29,10 @@ describe('ToggleButtonQuestionComponent', () => {
   });
 
   it('always resolves to a non-empty accessible label (schema validation rejects blank labels)', () => {
-    expect(ToggleButtonQuestionComponent.labelFor(true, { onLabel: 'Enabled', offLabel: 'Disabled' }).length).toBeGreaterThan(0);
+    expect(
+      ToggleButtonQuestionComponent.labelFor(true, { onLabel: 'Enabled', offLabel: 'Disabled' })
+        .length,
+    ).toBeGreaterThan(0);
     expect(ToggleButtonQuestionComponent.labelFor(false, undefined).length).toBeGreaterThan(0);
   });
 });

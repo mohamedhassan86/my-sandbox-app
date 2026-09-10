@@ -3,10 +3,13 @@
   "title": "Customer Feedback Survey",
   "description": "We value your opinion. Please share your experience with us.",
   "version": "1.0",
+  "estimatedMinutes": 4,
   "pages": [
     {
       "pageId": "P1",
       "title": "About You",
+      "description": "Tell us who you are and how you reached us.",
+      "icon": "id-card",
       "questions": [
         {
           "questionId": "Q1",
@@ -81,6 +84,8 @@
     {
       "pageId": "P2",
       "title": "Your Experience",
+      "description": "Rate your experience and tell us what matters to you.",
+      "icon": "star",
       "questions": [
         {
           "questionId": "Q4",
@@ -134,6 +139,8 @@
     {
       "pageId": "P3",
       "title": "Supporting Files",
+      "description": "Attach any files that support your feedback.",
+      "icon": "file-shield",
       "questions": [
         {
           "questionId": "Q7",
@@ -161,6 +168,8 @@
     {
       "pageId": "P4",
       "title": "Final Thoughts",
+      "description": "Any last suggestions before you submit.",
+      "icon": "check",
       "questions": [
         {
           "questionId": "Q9",

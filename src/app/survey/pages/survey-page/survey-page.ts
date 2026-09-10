@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import type { Answer, ResponseAttachment } from '../../../core/models/response.models';
 import type { SurveyPage } from '../../../core/models/survey.models';
 import type { ResponseIssue } from '../../../core/validators/response.validator';
+import { isAnswerValuePresent } from '../../../core/validators/response.validator';
 import { ValidationMessageComponent } from '../../../shared/components/validation-message/validation-message';
 import { QuestionRendererComponent } from '../../components/question-renderer/question-renderer';
 
@@ -47,28 +48,33 @@ export class SurveyPageComponent {
   }
 
   isAnswered(questionId: string): boolean {
-    return SurveyPageComponent.isAnsweredValue(SurveyPageComponent.findAnswerValue(this.answers(), questionId));
+    return SurveyPageComponent.isAnsweredValue(
+      SurveyPageComponent.findAnswerValue(this.answers(), questionId),
+    );
   }
 
   issuesFor(questionId: string): ResponseIssue[] {
     return this.issues().filter((issue) => issue.questionId === questionId);
   }
 
-  /** Pure function: checks if a value counts as answered */
+  /** Pure function: checks if a value counts as answered (single definition lives in the response validator) */
   static isAnsweredValue(value: string | string[] | boolean | null): boolean {
-    if (typeof value === 'boolean') return true;
-    if (!value) return false;
-    if (Array.isArray(value)) return value.length > 0;
-    return value.trim().length > 0;
+    return isAnswerValuePresent(value);
   }
 
   /** Pure function: finds answer value by questionId */
-  static findAnswerValue(answers: Answer[], questionId: string): string | string[] | boolean | null {
+  static findAnswerValue(
+    answers: Answer[],
+    questionId: string,
+  ): string | string[] | boolean | null {
     return answers.find((a) => a.questionId === questionId)?.value ?? null;
   }
 
   /** Pure function: filters attachments by questionId */
-  static filterAttachments(attachments: ResponseAttachment[], questionId: string): ResponseAttachment[] {
+  static filterAttachments(
+    attachments: ResponseAttachment[],
+    questionId: string,
+  ): ResponseAttachment[] {
     return attachments.filter((a) => a.questionId === questionId);
   }
 }

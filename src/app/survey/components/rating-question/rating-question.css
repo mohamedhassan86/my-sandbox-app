@@ -13,10 +13,10 @@
 
 .rating-question legend {
   padding: 0;
-  color: var(--ds-color-text-muted);
+  color: var(--ds-color-text);
   font-family: var(--ds-font-text);
   font-size: var(--ds-font-size-xl);
-  font-weight: var(--ds-font-weight-medium);
+  font-weight: var(--ds-font-weight-semibold);
   line-height: var(--ds-line-height-snug);
   max-width: var(--ds-measure-wide);
 }
@@ -49,7 +49,8 @@
 }
 
 .rating-option:hover {
-  background-color: var(--ds-color-selection-soft);
+  border-color: var(--ds-color-accent-decorative);
+  background-color: var(--ds-color-surface);
   box-shadow: var(--ds-shadow-2);
   transform: translateY(calc(-1 * var(--ds-space-3xs)));
 }
@@ -64,11 +65,50 @@
 }
 
 .rating-option.selected {
-  border-color: var(--ds-color-selection-strong);
-  background-color: var(--ds-color-selection);
-  color: var(--ds-color-text-on-selection);
+  border-color: transparent;
+  background: linear-gradient(
+    135deg,
+    var(--ds-color-accent-border),
+    var(--ds-color-accent-decorative) 55%,
+    var(--ds-color-accent-strong)
+  );
+  color: var(--ds-color-text-on-accent);
+  font-weight: var(--ds-font-weight-extrabold);
   box-shadow: var(--ds-shadow-3);
   animation: ds-anim-select var(--ds-duration-base) var(--ds-ease-spring) both;
+}
+
+/* Non-colour confirmation of the selected state. */
+.rating-option.selected::after {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--ds-space-3xs);
+  inset-inline-end: var(--ds-space-3xs);
+  width: var(--ds-space-sm);
+  height: var(--ds-space-sm);
+  background-color: var(--ds-color-text-on-accent);
+  -webkit-mask-image: var(--ds-icon-star);
+  mask-image: var(--ds-icon-star);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.rating-readout {
+  order: 3;
+  width: fit-content;
+  margin: 0 auto;
+  padding: var(--ds-space-3xs) var(--ds-space-sm);
+  border: 1px solid var(--ds-color-primary-border);
+  border-radius: var(--ds-radius-pill);
+  background-color: var(--ds-color-primary-soft);
+  color: var(--ds-color-primary);
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-extrabold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ds-letter-spacing-wide);
+  text-align: center;
 }
 
 /* Endpoint labels sit beneath the scale, as in the reference. */

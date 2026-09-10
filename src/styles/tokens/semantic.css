@@ -8,9 +8,9 @@
 
 :root {
   /* Canvas — tertiary brand role, the surface behind the survey panel */
-  --ds-color-canvas: var(--ds-pink-400);
-  --ds-color-canvas-subtle: var(--ds-pink-50);
-  --ds-color-canvas-strong: var(--ds-pink-500);
+  --ds-color-canvas: var(--ds-cream-100);
+  --ds-color-canvas-subtle: var(--ds-cream-50);
+  --ds-color-canvas-strong: var(--ds-cream-200);
 
   /* Surfaces */
   --ds-color-surface: var(--ds-neutral-0);
@@ -53,19 +53,36 @@
   --ds-color-primary-border: var(--ds-maroon-200);
   --ds-color-primary-contrast: var(--ds-neutral-0);
 
-  /* Secondary role (selection blue) — selected answers and focus */
-  --ds-color-selection: var(--ds-blue-600);
-  --ds-color-selection-strong: var(--ds-blue-700);
-  --ds-color-selection-hover: var(--ds-blue-700);
-  --ds-color-selection-soft: var(--ds-blue-50);
-  --ds-color-selection-border: var(--ds-blue-200);
+  /* Secondary role (selection maroon) — selected answers and focus */
+  --ds-color-selection: var(--ds-maroon-700);
+  --ds-color-selection-strong: var(--ds-maroon-800);
+  --ds-color-selection-hover: var(--ds-maroon-800);
+  --ds-color-selection-soft: var(--ds-maroon-50);
+  --ds-color-selection-border: var(--ds-maroon-200);
   --ds-color-selection-contrast: var(--ds-neutral-0);
 
-  /* Tertiary role (canvas pink) — usable standalone as an accent */
-  --ds-color-tertiary: var(--ds-pink-400);
-  --ds-color-tertiary-soft: var(--ds-pink-100);
-  --ds-color-tertiary-strong: var(--ds-pink-700);
-  --ds-color-tertiary-border: var(--ds-pink-300);
+  /* Tertiary role (canvas cream) — usable standalone as an accent */
+  --ds-color-tertiary: var(--ds-cream-200);
+  --ds-color-tertiary-soft: var(--ds-cream-100);
+  --ds-color-tertiary-strong: var(--ds-maroon-700);
+  --ds-color-tertiary-border: var(--ds-cream-300);
+
+  /* Accent role (metallic gold) — highlights, symbols, submit. Only the -700 step and
+     the on-dark/on-accent pairs carry text or meaning; the bright step is decorative. */
+  --ds-color-accent: var(--ds-gold-700);
+  --ds-color-accent-strong: var(--ds-gold-700);
+  --ds-color-accent-soft: var(--ds-gold-100);
+  --ds-color-accent-border: var(--ds-gold-300);
+  --ds-color-accent-decorative: var(--ds-gold-500);
+  --ds-color-accent-on-dark: var(--ds-gold-300);
+  --ds-color-text-on-accent: var(--ds-maroon-900);
+
+  /* Dock chrome — deep maroon gradient shell with light text */
+  --ds-color-surface-dock: var(--ds-maroon-950);
+  --ds-color-surface-dock-end: var(--ds-maroon-700);
+  --ds-color-text-on-dock: var(--ds-neutral-0);
+  --ds-color-text-muted-on-dock: var(--ds-gold-200);
+  --ds-color-border-on-dock: var(--ds-alpha-white-12);
 
   /* Status */
   --ds-color-success: var(--ds-success-700);
@@ -74,16 +91,16 @@
   --ds-color-warning: var(--ds-warning-700);
   --ds-color-warning-soft: var(--ds-warning-100);
   --ds-color-warning-border: var(--ds-warning-300);
-  --ds-color-danger: var(--ds-danger-600);
-  --ds-color-danger-strong: var(--ds-danger-700);
-  --ds-color-danger-soft: var(--ds-danger-50);
-  --ds-color-danger-border: var(--ds-danger-200);
+  --ds-color-danger: var(--ds-red-600);
+  --ds-color-danger-strong: var(--ds-red-700);
+  --ds-color-danger-soft: var(--ds-red-50);
+  --ds-color-danger-border: var(--ds-red-200);
   --ds-color-info: var(--ds-info-600);
   --ds-color-info-soft: var(--ds-info-100);
   --ds-color-info-border: var(--ds-info-300);
 
-  /* Focus — one treatment for the whole system */
-  --ds-color-focus-ring: var(--ds-alpha-blue-30);
+  /* Focus — one maroon treatment for the whole system */
+  --ds-color-focus-ring: var(--ds-alpha-maroon-16);
   --ds-color-focus-ring-core: var(--ds-color-selection);
   --ds-focus-ring-width: 3px;
   --ds-focus-ring-offset: 2px;

@@ -1,8 +1,10 @@
 /**
  * Design System — element defaults and typography roles.
  *
- * Headings use the serif display role; prompts and body copy use the UI sans role. The
- * role classes (`.ds-*`) are the contract other layers and components build on.
+ * Headings use the UI sans role at extrabold weight (006 dock brand); the serif display
+ * role stays available through `.ds-display`/`.ds-title` for later use. Prompts and body
+ * copy use the UI sans role. The role classes (`.ds-*`) are the contract other layers
+ * and components build on.
  */
 
 h1,
@@ -11,8 +13,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--ds-font-display);
-  font-weight: var(--ds-font-weight-bold);
+  font-family: var(--ds-font-text);
+  font-weight: var(--ds-font-weight-extrabold);
   letter-spacing: var(--ds-letter-spacing-tight);
   line-height: var(--ds-line-height-tight);
   color: var(--ds-color-text);
@@ -154,4 +156,31 @@ samp {
 
 .ds-prose > * + * {
   margin-block-start: var(--ds-space-md);
+}
+
+/* --- Brand backdrop (006 dock reference) ------------------------------------ */
+
+/* Fading dot pattern above the cream canvas, below all content. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(var(--ds-alpha-maroon-7) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 55%);
+}
+
+/* Two soft ambient washes (maroon upper right, gold mid left) in one layer. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 21rem at 88% 6%, var(--ds-alpha-maroon-35) 0%, transparent 62%),
+    radial-gradient(circle 16rem at 6% 62%, var(--ds-alpha-gold-22) 0%, transparent 58%);
+  filter: blur(60px);
 }

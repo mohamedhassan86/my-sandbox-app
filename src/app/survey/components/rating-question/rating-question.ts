@@ -7,7 +7,12 @@ import type { RatingQuestion } from '../../../core/models/survey.models';
   standalone: true,
   template: `
     <fieldset class="rating-question">
-      <legend class="form-label">{{ question().label }} @if (question().required) { <span aria-hidden="true">*</span> }</legend>
+      <legend class="form-label">
+        {{ question().label }}
+        @if (question().required) {
+          <span aria-hidden="true">*</span>
+        }
+      </legend>
       <div class="rating-labels" aria-hidden="true">
         <span>{{ question().leftLabel ?? 'Not at all' }}</span>
         <span>{{ question().rightLabel ?? 'Extremely' }}</span>
@@ -22,9 +27,14 @@ import type { RatingQuestion } from '../../../core/models/survey.models';
             role="radio"
             (click)="select(rating)"
             (keydown)="handleKeydown($event, rating)"
-          >{{ rating }}</button>
+          >
+            {{ rating }}
+          </button>
         }
       </div>
+      @if (readout(); as readoutText) {
+        <p class="rating-readout" aria-live="polite">{{ readoutText }}</p>
+      }
     </fieldset>
   `,
   styleUrl: './rating-question.css',
@@ -39,12 +49,31 @@ export class RatingQuestionComponent {
   }
 
   readonly ratings = computed(() => RatingQuestionComponent.ratingsFor(this.question()));
+  readonly readout = computed(() =>
+    RatingQuestionComponent.ratingReadout(this.value(), this.ratings()),
+  );
 
   static ratingsFor(question: RatingQuestion): number[] {
     const min = question.minValue ?? 1;
     const max = question.maxValue ?? 10;
     const step = question.step ?? 1;
-    return Array.from({ length: Math.floor((max - min) / step) + 1 }, (_, index) => min + index * step);
+    return Array.from(
+      { length: Math.floor((max - min) / step) + 1 },
+      (_, index) => min + index * step,
+    );
+  }
+
+  static ratingReadout(value: string | null, ratings: number[]): string | null {
+    if (value === null || value === '') return null;
+    const score = Number(value);
+    if (!Number.isFinite(score)) return null;
+    const max = ratings.length > 0 ? Math.max(...ratings) : score;
+    const base = `${score} / ${max}`;
+    const descriptors = ['', 'Poor', 'Fair', 'Satisfactory', 'Good', 'Excellent'];
+    const isFiveStep =
+      ratings.length === 5 && ratings.every((rating, index) => rating === index + 1);
+    if (isFiveStep && score >= 1 && score <= 5) return `${base} — ${descriptors[score]}`;
+    return base;
   }
 
   select(value: number): void {
@@ -53,7 +82,12 @@ export class RatingQuestionComponent {
 
   handleKeydown(event: KeyboardEvent, current: number): void {
     const index = this.ratings().indexOf(current);
-    const nextIndex = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? index + 1 : event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? index - 1 : -1;
+    const nextIndex =
+      event.key === 'ArrowRight' || event.key === 'ArrowDown'
+        ? index + 1
+        : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+          ? index - 1
+          : -1;
     if (nextIndex >= 0 && nextIndex < this.ratings().length) {
       event.preventDefault();
       this.select(this.ratings()[nextIndex]);

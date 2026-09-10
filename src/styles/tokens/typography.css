@@ -43,6 +43,7 @@
   --ds-font-weight-medium: 500;
   --ds-font-weight-semibold: 600;
   --ds-font-weight-bold: 700;
+  --ds-font-weight-extrabold: 800;
 
   /* Line-length caps keep long prompts and copy readable */
   --ds-measure-narrow: 34ch;

@@ -6,8 +6,32 @@ const survey = {
   title: 'Survey',
   version: '1.0',
   pages: [
-    { pageId: 'P1', title: 'One', questions: [{ questionId: 'Q1', type: 'textbox' as const, label: 'Name', required: true, attachmentsRequired: 0 as const }] },
-    { pageId: 'P2', title: 'Two', questions: [{ questionId: 'Q2', type: 'textarea' as const, label: 'Notes', required: false, attachmentsRequired: 0 as const }] },
+    {
+      pageId: 'P1',
+      title: 'One',
+      questions: [
+        {
+          questionId: 'Q1',
+          type: 'textbox' as const,
+          label: 'Name',
+          required: true,
+          attachmentsRequired: 0 as const,
+        },
+      ],
+    },
+    {
+      pageId: 'P2',
+      title: 'Two',
+      questions: [
+        {
+          questionId: 'Q2',
+          type: 'textarea' as const,
+          label: 'Notes',
+          required: false,
+          attachmentsRequired: 0 as const,
+        },
+      ],
+    },
   ],
 };
 
@@ -108,5 +132,48 @@ describe('SurveySessionService', () => {
     const session = new SurveySessionService();
     session.start(survey);
     expect(session.goToPage(0)).toBe(false);
+  });
+
+  it('counts answered and total questions across pages', () => {
+    const session = new SurveySessionService();
+    session.start(survey);
+    expect(session.totalQuestionCount()).toBe(2);
+    expect(session.answeredQuestionCount()).toBe(0);
+    expect(session.answeredPercentage()).toBe(0);
+    session.setAnswer({ questionId: 'Q1', value: 'Ada' });
+    expect(session.answeredQuestionCount()).toBe(1);
+    expect(session.answeredPercentage()).toBe(50);
+    expect(session.pageProgressList()).toEqual([
+      { pageId: 'P1', answered: 1, total: 1 },
+      { pageId: 'P2', answered: 0, total: 1 },
+    ]);
+    expect(session.overallProgress()).toEqual({ answered: 1, total: 2 });
+  });
+
+  it('reports the 1-based page position percentage', () => {
+    const session = new SurveySessionService();
+    session.start(survey);
+    expect(session.pagePositionPercentage()).toBe(50);
+    session.setAnswer({ questionId: 'Q1', value: 'Ada' });
+    session.next();
+    expect(session.pagePositionPercentage()).toBe(100);
+    session.markSubmitted();
+    expect(session.pagePositionPercentage()).toBe(100);
+    expect(session.answeredPercentage()).toBe(100);
+  });
+
+  it('maps percentages to progress bands and labels', () => {
+    expect(SurveySessionService.progressBand(0)).toBe('starting');
+    expect(SurveySessionService.progressBand(1)).toBe('progress');
+    expect(SurveySessionService.progressBand(49)).toBe('progress');
+    expect(SurveySessionService.progressBand(50)).toBe('almost');
+    expect(SurveySessionService.progressBand(99)).toBe('almost');
+    expect(SurveySessionService.progressBand(100)).toBe('complete');
+    expect(SurveySessionService.progressBandLabel('starting', false)).toBe('Getting started');
+    expect(SurveySessionService.progressBandLabel('progress', false)).toBe('In progress');
+    expect(SurveySessionService.progressBandLabel('almost', false)).toBe('Almost there');
+    expect(SurveySessionService.progressBandLabel('complete', false)).toBe('Review & submit');
+    expect(SurveySessionService.progressBandLabel('complete', true)).toBe('Response submitted');
+    expect(SurveySessionService.progressBandLabel('starting', true)).toBe('Response submitted');
   });
 });

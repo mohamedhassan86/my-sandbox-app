@@ -198,6 +198,73 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
     background: '--ds-color-canvas',
     minimum: 3,
   },
+  // --- 006-survey-dock-brand delta (see specs/006-survey-dock-brand/contracts/brand-delta.md §5) ---
+  {
+    name: 'dock primary text',
+    foreground: '--ds-color-text-on-dock',
+    background: '--ds-color-surface-dock',
+    minimum: 4.5,
+  },
+  {
+    name: 'dock gold labels',
+    foreground: '--ds-color-accent-on-dark',
+    background: '--ds-color-surface-dock',
+    minimum: 4.5,
+  },
+  {
+    name: 'dock muted text',
+    foreground: '--ds-color-text-muted-on-dock',
+    background: '--ds-color-surface-dock',
+    minimum: 4.5,
+  },
+  {
+    name: 'submit label',
+    foreground: '--ds-color-text-on-accent',
+    background: '--ds-color-accent-decorative',
+    minimum: 4.5,
+  },
+  {
+    name: 'gold symbols',
+    foreground: '--ds-color-accent',
+    background: '--ds-color-surface',
+    minimum: 3,
+  },
+  {
+    name: 'maroon selection on cream',
+    foreground: '--ds-color-selection',
+    background: '--ds-color-canvas',
+    minimum: 3,
+  },
+  {
+    name: 'maroon focus on cream',
+    foreground: '--ds-color-focus-ring-core',
+    background: '--ds-color-canvas',
+    minimum: 3,
+  },
+  {
+    name: 'rose error text',
+    foreground: '--ds-color-danger',
+    background: '--ds-color-surface',
+    minimum: 4.5,
+  },
+  {
+    name: 'rose error on tint',
+    foreground: '--ds-color-danger-strong',
+    background: '--ds-color-danger-soft',
+    minimum: 4.5,
+  },
+  {
+    name: 'completed step tile',
+    foreground: '--ds-color-text-on-success',
+    background: '--ds-color-success',
+    minimum: 4.5,
+  },
+  {
+    name: 'muted text on cream',
+    foreground: '--ds-color-text-muted',
+    background: '--ds-color-canvas',
+    minimum: 4.5,
+  },
 ];
 
 /** Parses `--name: value;` pairs, supporting multi-line values. */
