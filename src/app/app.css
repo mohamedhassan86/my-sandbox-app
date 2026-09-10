@@ -1,6 +1,4 @@
-:host {
-  --maroon: #800000;
-  --maroon-dark: #600000;
-  --maroon-light: #a00000;
-  --maroon-contrast: #ffffff;
-}
+/**
+ * The application shell renders styles through the design-system layers imported by
+ * `src/styles.css`; this file intentionally contains no rules of its own.
+ */

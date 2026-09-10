@@ -1,6 +1,12 @@
+/**
+ * Satisfaction scale — five icon tiles with readable captions, matching the reference
+ * attachment: neutral tiles, a vivid selection fill, and captions that stay legible in both
+ * states.
+ */
+
 .satisfaction-question {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--ds-space-md);
   border: 0;
   margin: 0;
   padding: 0;
@@ -8,52 +14,105 @@
 
 .satisfaction-question legend {
   padding: 0;
-  color: var(--ink, #24242a);
-  font-weight: 650;
+  color: var(--ds-color-text-muted);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-xl);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-snug);
+  max-width: var(--ds-measure-wide);
 }
 
 .satisfaction-options {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 5.5rem), 1fr));
+  gap: var(--ds-space-sm);
 }
 
 .satisfaction-option {
+  position: relative;
   display: grid;
-  min-height: 7rem;
   place-items: center;
   align-content: center;
-  gap: 0.35rem;
-  border: 1px solid var(--control-border, #d9d9df);
-  border-radius: 0.75rem;
-  background: var(--control-surface, #f7f7f9);
-  color: var(--ink, #24242a);
+  gap: var(--ds-space-2xs);
+  min-height: calc(var(--ds-touch-target) * 1.75);
+  padding: var(--ds-space-sm) var(--ds-space-xs);
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-lg);
+  background-color: var(--ds-color-surface-tile);
+  color: var(--ds-color-text);
   text-align: center;
   cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    color var(--ds-duration-fast) var(--ds-ease-standard),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-standard),
+    transform var(--ds-duration-fast) var(--ds-ease-standard);
 }
 
 .satisfaction-option input {
   position: absolute;
+  width: var(--ds-space-3xs);
+  height: var(--ds-space-3xs);
   opacity: 0;
 }
 
-.satisfaction-option:hover,
-.satisfaction-option:focus-within,
-.satisfaction-option.selected {
-  border-color: var(--selection-blue, #246bfe);
+.satisfaction-option:hover {
+  background-color: var(--ds-color-selection-soft);
+  box-shadow: var(--ds-shadow-2);
+  transform: translateY(calc(-1 * var(--ds-space-3xs)));
+}
+
+.satisfaction-option:active {
+  transform: translateY(0);
+}
+
+.satisfaction-option:focus-within {
+  outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
+  outline-offset: var(--ds-focus-ring-offset);
 }
 
 .satisfaction-option.selected {
-  background: color-mix(in srgb, var(--selection-blue, #246bfe) 10%, white);
-  color: var(--selection-blue, #246bfe);
+  border-color: var(--ds-color-selection-strong);
+  background-color: var(--ds-color-selection);
+  color: var(--ds-color-text-on-selection);
+  box-shadow: var(--ds-shadow-3);
+  animation: ds-anim-select var(--ds-duration-base) var(--ds-ease-spring) both;
+}
+
+/* Non-colour confirmation of the selected state. */
+.satisfaction-option.selected::after {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--ds-space-3xs);
+  inset-inline-end: var(--ds-space-3xs);
+  width: var(--ds-space-sm);
+  height: var(--ds-space-sm);
+  background-color: var(--ds-color-text-on-selection);
+  -webkit-mask-image: var(--ds-icon-check);
+  mask-image: var(--ds-icon-check);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 .satisfaction-icon {
-  font-size: 2rem;
+  font-size: var(--ds-font-size-3xl);
+  line-height: var(--ds-line-height-tight);
+  filter: saturate(0.85);
 }
 
-@media (max-width: 40rem) {
-  .satisfaction-options {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.satisfaction-option.selected .satisfaction-icon {
+  filter: none;
+}
+
+.satisfaction-option span:last-child {
+  font-size: var(--ds-font-size-xs);
+  line-height: var(--ds-line-height-snug);
+}
+
+@media (min-width: 48rem) {
+  .satisfaction-option span:last-child {
+    font-size: var(--ds-font-size-sm);
   }
 }

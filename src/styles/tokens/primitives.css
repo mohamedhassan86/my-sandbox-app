@@ -1,0 +1,108 @@
+/**
+ * Design System — Tier 1 primitives.
+ *
+ * This is the only stylesheet in the project that may contain literal colour values.
+ * Everything else references these through the semantic roles in `semantic.css`.
+ *
+ * Reference anchors sampled from `public/theme-preview.png` are marked ▣.
+ */
+
+:root {
+  /* Maroon — primary brand ramp (▣ maroon-700 is the approved brand maroon) */
+  --ds-maroon-50: #fff5f6;
+  --ds-maroon-100: #fde8ea;
+  --ds-maroon-200: #f8ccd1;
+  --ds-maroon-300: #efa5ad;
+  --ds-maroon-400: #dd707c;
+  --ds-maroon-500: #c14554;
+  --ds-maroon-600: #a3202c;
+  --ds-maroon-700: #800000;
+  --ds-maroon-800: #5c0000;
+  --ds-maroon-900: #3d0000;
+
+  /* Blue — secondary role: selected answers and focus (▣ blue-600 is the reference blue) */
+  --ds-blue-50: #eef1ff;
+  --ds-blue-100: #dfe4ff;
+  --ds-blue-200: #c3cbff;
+  --ds-blue-300: #9aa6fb;
+  --ds-blue-400: #6776f2;
+  --ds-blue-500: #3a48e8;
+  --ds-blue-600: #1524d9;
+  --ds-blue-700: #101bab;
+  --ds-blue-800: #0d1583;
+  --ds-blue-900: #0a105e;
+
+  /* Pink — tertiary role: the page canvas (▣ pink-400 is the reference canvas) */
+  --ds-pink-50: #fff5f7;
+  --ds-pink-100: #ffe9ee;
+  --ds-pink-200: #fdd3db;
+  --ds-pink-300: #fcc1cd;
+  --ds-pink-400: #fbafbc;
+  --ds-pink-500: #f58fa2;
+  --ds-pink-600: #e46a83;
+  --ds-pink-700: #c4465f;
+  --ds-pink-800: #992e45;
+  --ds-pink-900: #6f1e30;
+
+  /* Neutral — ink, surfaces, borders, tiles (▣ neutral-200 tile, neutral-900 ink) */
+  --ds-neutral-0: #ffffff;
+  --ds-neutral-25: #fbfbfc;
+  --ds-neutral-50: #f7f7f8;
+  --ds-neutral-100: #f2f2f3;
+  --ds-neutral-200: #e5e5e5;
+  --ds-neutral-300: #c7c7c7;
+  --ds-neutral-400: #a4a4a4;
+  --ds-neutral-500: #8f8f8f;
+  --ds-neutral-600: #6e6e6e;
+  --ds-neutral-700: #4a4a4a;
+  --ds-neutral-800: #2f2f2f;
+  --ds-neutral-900: #202020;
+  --ds-neutral-950: #111111;
+
+  /* Success */
+  --ds-success-50: #f1faf4;
+  --ds-success-100: #e0f3e7;
+  --ds-success-200: #c2e6d0;
+  --ds-success-300: #9ed5b6;
+  --ds-success-600: #1e7a45;
+  --ds-success-700: #15633a;
+  --ds-success-800: #0f4d2c;
+
+  /* Warning */
+  --ds-warning-50: #fffaf0;
+  --ds-warning-100: #fff3dc;
+  --ds-warning-200: #fbe6bd;
+  --ds-warning-300: #f0d9a8;
+  --ds-warning-600: #b07900;
+  --ds-warning-700: #8a5a00;
+  --ds-warning-800: #6b4500;
+
+  /* Danger — brand-consistent errors built on the maroon ramp */
+  --ds-danger-50: var(--ds-maroon-50);
+  --ds-danger-100: var(--ds-maroon-100);
+  --ds-danger-200: var(--ds-maroon-200);
+  --ds-danger-300: var(--ds-maroon-300);
+  --ds-danger-600: var(--ds-maroon-600);
+  --ds-danger-700: var(--ds-maroon-700);
+  --ds-danger-800: var(--ds-maroon-800);
+
+  /* Info — reuses the secondary ramp so information never introduces a fourth hue family */
+  --ds-info-100: var(--ds-blue-50);
+  --ds-info-300: var(--ds-blue-200);
+  --ds-info-600: var(--ds-blue-600);
+  --ds-info-700: var(--ds-blue-700);
+
+  /* Alpha tints for shadows, scrims, and hairlines */
+  --ds-alpha-ink-4: rgb(32 32 32 / 4%);
+  --ds-alpha-ink-6: rgb(32 32 32 / 6%);
+  --ds-alpha-ink-8: rgb(32 32 32 / 8%);
+  --ds-alpha-ink-12: rgb(32 32 32 / 12%);
+  --ds-alpha-ink-45: rgb(32 32 32 / 45%);
+  --ds-alpha-ink-60: rgb(32 32 32 / 60%);
+  --ds-alpha-white-60: rgb(255 255 255 / 60%);
+  --ds-alpha-white-80: rgb(255 255 255 / 80%);
+  --ds-alpha-maroon-10: rgb(128 0 0 / 10%);
+  --ds-alpha-maroon-16: rgb(128 0 0 / 16%);
+  --ds-alpha-blue-14: rgb(21 36 217 / 14%);
+  --ds-alpha-blue-30: rgb(21 36 217 / 30%);
+}

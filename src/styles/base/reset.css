@@ -1,0 +1,83 @@
+/**
+ * Design System — base reset.
+ *
+ * A light, modern reset: predictable box model, no default margins that fight layout
+ * utilities, and form controls that inherit typography so the design system can style them.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  height: 100%;
+  color-scheme: light;
+}
+
+body {
+  min-height: 100%;
+  background-color: var(--ds-color-canvas);
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-md);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+[hidden] {
+  display: none;
+}

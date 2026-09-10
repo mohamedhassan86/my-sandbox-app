@@ -1,0 +1,142 @@
+/**
+ * Design System — layout composition utilities.
+ *
+ * Mobile-first by default: every utility describes the single-column experience and only
+ * enhances above the `--ds-bp-md` breakpoint. Intrinsic sizing keeps grids reflowing
+ * without per-breakpoint overrides.
+ */
+
+.ds-container {
+  width: 100%;
+  max-width: var(--ds-container-max);
+  margin-inline: auto;
+  padding-inline: var(--ds-container-pad);
+}
+
+.ds-container--narrow {
+  max-width: var(--ds-panel-max);
+}
+
+.ds-section + .ds-section {
+  margin-block-start: var(--ds-space-fluid-lg);
+}
+
+.ds-section--tight {
+  margin-block-start: var(--ds-space-lg);
+}
+
+.ds-section--loose {
+  margin-block-start: var(--ds-space-fluid-xl);
+}
+
+.ds-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-md);
+}
+
+.ds-stack--2xs {
+  gap: var(--ds-space-2xs);
+}
+
+.ds-stack--xs {
+  gap: var(--ds-space-xs);
+}
+
+.ds-stack--sm {
+  gap: var(--ds-space-sm);
+}
+
+.ds-stack--lg {
+  gap: var(--ds-space-lg);
+}
+
+.ds-stack--xl {
+  gap: var(--ds-space-xl);
+}
+
+.ds-stack--2xl {
+  gap: var(--ds-space-2xl);
+}
+
+.ds-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-sm);
+}
+
+.ds-cluster--start {
+  justify-content: flex-start;
+}
+
+.ds-cluster--between {
+  justify-content: space-between;
+}
+
+/* Intrinsic grids: one column on mobile, as many columns as fit afterwards. */
+.ds-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ds-space-md);
+}
+
+.ds-grid--min-sm,
+.ds-grid--min-md,
+.ds-grid--min-lg {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+
+.ds-grid--min-md {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.ds-grid--min-lg {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+/* Sidebar + content: stacked on mobile, two columns from md upwards. */
+.ds-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'content' 'rail';
+  gap: var(--ds-space-lg);
+  align-items: start;
+}
+
+.ds-rail {
+  min-width: 0;
+}
+
+@media (min-width: 48rem) {
+  .ds-split {
+    grid-template-columns: minmax(0, var(--ds-sidebar-width)) minmax(0, 1fr);
+    grid-template-areas: 'rail content';
+    gap: var(--ds-space-xl);
+  }
+
+  .ds-rail {
+    position: sticky;
+    top: var(--ds-space-md);
+  }
+}
+
+/* Visibility helpers ---------------------------------------------------------- */
+
+.ds-mobile-only {
+  display: initial;
+}
+
+.ds-desktop-only {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .ds-mobile-only {
+    display: none;
+  }
+
+  .ds-desktop-only {
+    display: initial;
+  }
+}

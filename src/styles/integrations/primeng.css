@@ -1,0 +1,243 @@
+/**
+ * Design System — PrimeNG integration.
+ *
+ * PrimeNG components ship their own stylesheet whose values are resolved from `--p-*`
+ * variables. No theme preset is installed, so this file is the bridge: it maps the library's
+ * variables onto design tokens, which keeps library controls on exactly the same palette,
+ * radii, typography, focus treatment, and motion as the rest of the system without adding a
+ * second source of design values.
+ *
+ * The small structural section below only adjusts shapes the library cannot express through
+ * variables (overlay radius, option list rhythm, filter field, empty state).
+ */
+
+:root {
+  /* Shared library tokens */
+  --p-typography-font-family: var(--ds-font-text);
+  --p-typography-line-height: var(--ds-line-height-normal);
+  --p-icon-size: var(--ds-icon-size);
+  --p-disabled-opacity: 0.55;
+  --p-mask-background: var(--ds-color-scrim);
+  --p-mask-color: var(--ds-color-text-on-primary);
+  --p-mask-transition-duration: var(--ds-duration-base);
+  --p-list-option-transition-duration: var(--ds-duration-fast);
+
+  /* Text input shell (used by the select's filter field) */
+  --p-inputtext-font-family: var(--ds-font-text);
+  --p-inputtext-font-size: var(--ds-font-size-md);
+  --p-inputtext-font-weight: var(--ds-font-weight-regular);
+  --p-inputtext-background: var(--ds-color-surface);
+  --p-inputtext-color: var(--ds-color-text);
+  --p-inputtext-padding-x: var(--ds-space-sm);
+  --p-inputtext-padding-y: var(--ds-space-xs);
+  --p-inputtext-border-color: var(--ds-color-border-interactive);
+  --p-inputtext-border-radius: var(--ds-radius-md);
+  --p-inputtext-shadow: none;
+  --p-inputtext-transition-duration: var(--ds-duration-fast);
+  --p-inputtext-hover-border-color: var(--ds-color-text-muted);
+  --p-inputtext-focus-border-color: var(--ds-color-selection);
+  --p-inputtext-focus-ring-color: var(--ds-color-focus-ring);
+  --p-inputtext-focus-ring-width: var(--ds-focus-ring-width);
+  --p-inputtext-focus-ring-style: solid;
+  --p-inputtext-focus-ring-offset: 0;
+  --p-inputtext-focus-ring-shadow: var(--ds-focus-ring);
+  --p-inputtext-invalid-border-color: var(--ds-color-danger);
+  --p-inputtext-placeholder-color: var(--ds-color-text-muted);
+  --p-inputtext-disabled-background: var(--ds-color-surface-muted);
+  --p-inputtext-disabled-color: var(--ds-color-text-muted);
+
+  /* Select (dropdown question) */
+  --p-select-background: var(--ds-color-surface);
+  --p-select-border-color: var(--ds-color-border-interactive);
+  --p-select-border-radius: var(--ds-radius-lg);
+  --p-select-shadow: none;
+  --p-select-transition-duration: var(--ds-duration-fast);
+  --p-select-padding-x: var(--ds-space-md);
+  --p-select-padding-y: var(--ds-space-sm);
+  --p-select-color: var(--ds-color-text);
+  --p-select-font-size: var(--ds-font-size-lg);
+  --p-select-font-weight: var(--ds-font-weight-regular);
+  --p-select-placeholder-color: var(--ds-color-text-muted);
+  --p-select-hover-border-color: var(--ds-color-text-muted);
+  --p-select-focus-border-color: var(--ds-color-selection);
+  --p-select-focus-ring-color: var(--ds-color-focus-ring);
+  --p-select-focus-ring-width: var(--ds-focus-ring-width);
+  --p-select-focus-ring-style: solid;
+  --p-select-focus-ring-offset: 0;
+  --p-select-focus-ring-shadow: var(--ds-focus-ring);
+  --p-select-invalid-border-color: var(--ds-color-danger);
+  --p-select-invalid-placeholder-color: var(--ds-color-danger);
+  --p-select-disabled-background: var(--ds-color-surface-muted);
+  --p-select-disabled-color: var(--ds-color-text-muted);
+  --p-select-dropdown-width: calc(var(--ds-touch-target) - var(--ds-space-md));
+  --p-select-dropdown-color: var(--ds-color-text-secondary);
+  --p-select-clear-icon-color: var(--ds-color-text-muted);
+  --p-select-overlay-background: var(--ds-color-surface);
+  --p-select-overlay-color: var(--ds-color-text);
+  --p-select-overlay-border-color: var(--ds-color-border-subtle);
+  --p-select-overlay-border-radius: var(--ds-radius-lg);
+  --p-select-overlay-shadow: var(--ds-shadow-4);
+  --p-select-list-padding: var(--ds-space-2xs);
+  --p-select-list-gap: var(--ds-space-3xs);
+  --p-select-list-header-padding: var(--ds-space-sm) var(--ds-space-sm) 0;
+  --p-select-option-padding: var(--ds-space-sm);
+  --p-select-option-color: var(--ds-color-text);
+  --p-select-option-font-size: var(--ds-font-size-lg);
+  --p-select-option-font-weight: var(--ds-font-weight-regular);
+  --p-select-option-border-radius: var(--ds-radius-sm);
+  --p-select-option-focus-background: var(--ds-color-selection-soft);
+  --p-select-option-focus-color: var(--ds-color-text);
+  --p-select-option-selected-background: var(--ds-color-selection-soft);
+  --p-select-option-selected-color: var(--ds-color-selection-strong);
+  --p-select-option-selected-font-weight: var(--ds-font-weight-semibold);
+  --p-select-option-selected-focus-background: var(--ds-color-selection-soft);
+  --p-select-option-selected-focus-color: var(--ds-color-selection-strong);
+  --p-select-option-group-background: transparent;
+  --p-select-option-group-color: var(--ds-color-text-muted);
+  --p-select-option-group-font-size: var(--ds-font-size-2xs);
+  --p-select-option-group-font-weight: var(--ds-font-weight-bold);
+  --p-select-option-group-padding: var(--ds-space-sm);
+  --p-select-checkmark-color: var(--ds-color-selection);
+  --p-select-checkmark-gutter-start: var(--ds-space-2xs);
+  --p-select-checkmark-gutter-end: var(--ds-space-sm);
+  --p-select-empty-message-padding: var(--ds-space-md);
+  --p-select-sm-font-size: var(--ds-font-size-sm);
+  --p-select-sm-padding-x: var(--ds-space-sm);
+  --p-select-sm-padding-y: var(--ds-space-xs);
+  --p-select-lg-font-size: var(--ds-font-size-lg);
+  --p-select-lg-padding-x: var(--ds-space-md);
+  --p-select-lg-padding-y: var(--ds-space-sm);
+
+  /* Toggle button (on/off question) */
+  --p-togglebutton-background: var(--ds-color-surface-muted);
+  --p-togglebutton-border-color: var(--ds-color-border-interactive);
+  --p-togglebutton-color: var(--ds-color-text-secondary);
+  --p-togglebutton-padding: var(--ds-space-2xs);
+  --p-togglebutton-border-radius: var(--ds-radius-pill);
+  --p-togglebutton-font-size: var(--ds-font-size-md);
+  --p-togglebutton-font-weight: var(--ds-font-weight-semibold);
+  --p-togglebutton-gap: var(--ds-space-xs);
+  --p-togglebutton-transition-duration: var(--ds-duration-fast);
+  --p-togglebutton-content-padding: var(--ds-space-xs) var(--ds-space-lg);
+  --p-togglebutton-content-border-radius: var(--ds-radius-pill);
+  --p-togglebutton-hover-background: var(--ds-color-border-subtle);
+  --p-togglebutton-hover-color: var(--ds-color-text);
+  --p-togglebutton-checked-background: var(--ds-color-selection);
+  --p-togglebutton-checked-border-color: var(--ds-color-selection);
+  --p-togglebutton-checked-color: var(--ds-color-text-on-selection);
+  --p-togglebutton-content-checked-background: transparent;
+  --p-togglebutton-content-checked-shadow: none;
+  --p-togglebutton-focus-ring-color: var(--ds-color-focus-ring);
+  --p-togglebutton-focus-ring-width: var(--ds-focus-ring-width);
+  --p-togglebutton-focus-ring-style: solid;
+  --p-togglebutton-focus-ring-offset: 0;
+  --p-togglebutton-focus-ring-shadow: var(--ds-focus-ring);
+  --p-togglebutton-invalid-border-color: var(--ds-color-danger);
+  --p-togglebutton-disabled-background: var(--ds-color-surface-muted);
+  --p-togglebutton-disabled-border-color: var(--ds-color-border);
+  --p-togglebutton-disabled-color: var(--ds-color-text-muted);
+  --p-togglebutton-icon-color: var(--ds-color-text-secondary);
+  --p-togglebutton-icon-hover-color: var(--ds-color-text);
+  --p-togglebutton-icon-checked-color: var(--ds-color-text-on-selection);
+  --p-togglebutton-icon-disabled-color: var(--ds-color-text-muted);
+  --p-togglebutton-sm-font-size: var(--ds-font-size-sm);
+  --p-togglebutton-sm-padding: var(--ds-space-3xs);
+  --p-togglebutton-sm-content-padding: var(--ds-space-2xs) var(--ds-space-md);
+  --p-togglebutton-lg-font-size: var(--ds-font-size-lg);
+  --p-togglebutton-lg-padding: var(--ds-space-xs);
+  --p-togglebutton-lg-content-padding: var(--ds-space-sm) var(--ds-space-xl);
+}
+
+/* --- Structural adjustments -------------------------------------------------- */
+
+.p-select {
+  width: 100%;
+  min-height: var(--ds-touch-target);
+  align-items: center;
+  font-family: var(--ds-font-text);
+}
+
+.p-select .p-select-label {
+  line-height: var(--ds-line-height-snug);
+  font-family: var(--ds-font-text);
+}
+
+.p-select .p-select-dropdown {
+  align-self: stretch;
+}
+
+.p-select-dropdown-icon {
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+}
+
+/* Overlay: the option list, filter field, and empty state. */
+.p-select-overlay {
+  border-radius: var(--ds-radius-lg);
+  overflow: hidden;
+  font-family: var(--ds-font-text);
+}
+
+.p-select-overlay .p-select-filter {
+  font-family: var(--ds-font-text);
+  font-size: var(--ds-font-size-md);
+  background-image: var(--ds-icon-search);
+  background-repeat: no-repeat;
+  background-position: var(--ds-space-sm) center;
+  background-size: var(--ds-icon-size) var(--ds-icon-size);
+  padding-inline-start: var(--ds-layout-2xl);
+}
+
+.p-select-overlay .p-select-filter::placeholder {
+  color: var(--ds-color-text-muted);
+}
+
+.p-select-overlay .p-select-list {
+  padding: var(--ds-space-2xs);
+}
+
+.p-select-overlay .p-select-option {
+  display: flex;
+  align-items: center;
+  border-radius: var(--ds-radius-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-duration-fast) var(--ds-ease-standard),
+    color var(--ds-duration-fast) var(--ds-ease-standard);
+}
+
+.p-select-overlay .p-select-option.p-focus,
+.p-select-overlay .p-select-option:hover {
+  background-color: var(--ds-color-selection-soft);
+}
+
+.p-select-overlay .p-select-option.p-select-option-selected {
+  background-color: var(--ds-color-selection-soft);
+  color: var(--ds-color-selection-strong);
+}
+
+.p-select-overlay .p-select-empty-message {
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-sm);
+}
+
+.p-togglebutton {
+  font-family: var(--ds-font-text);
+  min-height: var(--ds-touch-target);
+}
+
+.p-togglebutton .p-togglebutton-label {
+  line-height: var(--ds-line-height-snug);
+}
+
+/* The survey components scope their own PrimeNG usage. */
+app-dropdown-question p-select,
+app-toggle-button-question p-togglebutton {
+  display: block;
+  width: 100%;
+}
+
+app-toggle-button-question p-togglebutton {
+  width: fit-content;
+  min-width: var(--ds-touch-target);
+}

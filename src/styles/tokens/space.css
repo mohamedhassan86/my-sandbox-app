@@ -1,0 +1,82 @@
+/**
+ * Design System — space, radius, elevation, motion, layout, and layering tokens.
+ *
+ * Spacing is built on a 4px base unit, with a 2px step reserved for hairlines and icon
+ * nudges so no component needs an off-scale literal.
+ */
+
+:root {
+  /* Spacing scale (4px base) */
+  --ds-space-0: 0;
+  --ds-space-3xs: 0.125rem;
+  --ds-space-2xs: 0.25rem;
+  --ds-space-xs: 0.5rem;
+  --ds-space-sm: 0.75rem;
+  --ds-space-md: 1rem;
+  --ds-space-lg: 1.5rem;
+  --ds-space-xl: 2rem;
+  --ds-space-2xl: 2.5rem;
+  --ds-space-3xl: 3rem;
+  --ds-space-4xl: 4rem;
+  --ds-space-5xl: 5rem;
+
+  /* Fluid steps used for section rhythm and panel padding */
+  --ds-space-fluid-lg: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  --ds-space-fluid-xl: clamp(2rem, 1.25rem + 3vw, 4rem);
+
+  /* Radii — md is the reference tile radius, 2xl the reference panel radius */
+  --ds-radius-xs: 0.25rem;
+  --ds-radius-sm: 0.5rem;
+  --ds-radius-md: 0.625rem;
+  --ds-radius-lg: 0.875rem;
+  --ds-radius-xl: 1.25rem;
+  --ds-radius-2xl: 1.75rem;
+  --ds-radius-pill: 999px;
+
+  /* Elevation ramp */
+  --ds-shadow-1: 0 1px 2px var(--ds-alpha-ink-6), 0 1px 1px var(--ds-alpha-ink-4);
+  --ds-shadow-2: 0 2px 6px var(--ds-alpha-ink-6), 0 1px 2px var(--ds-alpha-ink-4);
+  --ds-shadow-3: 0 8px 24px var(--ds-alpha-ink-8), 0 2px 6px var(--ds-alpha-ink-4);
+  --ds-shadow-4: 0 20px 48px var(--ds-alpha-ink-12), 0 6px 16px var(--ds-alpha-ink-6);
+  --ds-shadow-panel: 0 24px 64px var(--ds-alpha-maroon-16);
+  --ds-shadow-inset-hairline: inset 0 0 0 1px var(--ds-alpha-ink-4);
+
+  /* Motion */
+  --ds-duration-instant: 80ms;
+  --ds-duration-fast: 140ms;
+  --ds-duration-base: 220ms;
+  --ds-duration-slow: 340ms;
+  --ds-duration-slower: 560ms;
+  --ds-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ds-ease-emphasized: cubic-bezier(0.2, 0.9, 0.1, 1);
+  --ds-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ds-ease-spring: cubic-bezier(0.34, 1.42, 0.64, 1);
+  --ds-enter-distance: 0.625rem;
+  --ds-enter-delay: 0ms;
+
+  /* Layout (the `layout-` prefix keeps these from shadowing spacing steps) */
+  --ds-container-max: 72rem;
+  --ds-container-pad: clamp(1rem, 4vw, 2rem);
+  --ds-panel-max: 60rem;
+  --ds-touch-target: 2.75rem;
+  --ds-sidebar-width: 19rem;
+  --ds-icon-size: 1.25rem;
+  --ds-layout-xs: 1rem;
+  --ds-layout-sm: 1.5rem;
+  --ds-layout-md: 2rem;
+  --ds-layout-lg: 2.5rem;
+  --ds-layout-xl: 3rem;
+  --ds-layout-2xl: 3.5rem;
+
+  /* Breakpoint contract (media queries use these values literally) */
+  --ds-bp-sm: 30rem;
+  --ds-bp-md: 48rem;
+  --ds-bp-lg: 64rem;
+  --ds-bp-xl: 80rem;
+
+  /* Layering contract */
+  --ds-z-sticky: 10;
+  --ds-z-overlay: 40;
+  --ds-z-modal: 50;
+  --ds-z-toast: 60;
+}

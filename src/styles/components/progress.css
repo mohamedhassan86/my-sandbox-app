@@ -1,18 +1,18 @@
 /**
- * Survey progress and step navigation — design-system progress/step contract.
+ * Design System — progress bar and step indicator.
  *
- * States are carried by marker fill, a check cue, and text, so current/complete/upcoming
- * remain distinguishable without colour. The compact variant is the mobile rail, where the
- * progress bar and the step markers stay visible at all times.
+ * Progress exposes its value through markup (`role="progressbar"` with `aria-valuenow`);
+ * the classes only decide presentation. Step status is carried by marker shape plus a check
+ * cue, never by colour alone, and the compact variant keeps progress visible on mobile.
  */
 
-.survey-navigation {
+.ds-progress {
   display: grid;
-  gap: var(--ds-space-sm);
-  margin-block-start: var(--ds-space-md);
+  gap: var(--ds-space-xs);
+  width: 100%;
 }
 
-.progress-bar {
+.ds-progress__track {
   position: relative;
   width: 100%;
   height: var(--ds-space-xs);
@@ -21,24 +21,65 @@
   overflow: hidden;
 }
 
-.progress-fill {
+.ds-progress--sm .ds-progress__track {
+  height: var(--ds-space-3xs);
+}
+
+.ds-progress--lg .ds-progress__track {
+  height: var(--ds-space-sm);
+}
+
+.ds-progress__fill {
   display: block;
   height: 100%;
-  border-radius: var(--ds-radius-pill);
+  width: 0;
+  border-radius: inherit;
   background-color: var(--ds-color-primary);
+  transform-origin: left center;
   transition: width var(--ds-duration-slow) var(--ds-ease-emphasized);
 }
 
-.progress-text {
-  margin: 0;
-  color: var(--ds-color-text-muted);
-  font-size: var(--ds-font-size-sm);
-  font-weight: var(--ds-font-weight-semibold);
-  font-variant-numeric: tabular-nums;
-  text-align: end;
+.ds-progress__fill--selection {
+  background-color: var(--ds-color-selection);
 }
 
-.survey-navigation ol {
+.ds-progress__fill--success {
+  background-color: var(--ds-color-success);
+}
+
+.ds-progress__value {
+  margin: 0;
+  font-size: var(--ds-font-size-sm);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Indeterminate: a travelling highlight for work with unknown duration. */
+.ds-progress--indeterminate .ds-progress__fill {
+  width: 35%;
+  animation: ds-progress-indeterminate var(--ds-duration-slower) infinite var(--ds-ease-standard);
+}
+
+@keyframes ds-progress-indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(300%);
+  }
+}
+
+/* Steps ---------------------------------------------------------------------- */
+
+.ds-steps {
+  display: grid;
+  gap: var(--ds-space-xs);
+  width: 100%;
+}
+
+.ds-steps__list {
   display: grid;
   gap: var(--ds-space-2xs);
   margin: 0;
@@ -46,11 +87,7 @@
   list-style: none;
 }
 
-.survey-navigation li {
-  width: 100%;
-}
-
-.page-step {
+.ds-step {
   display: flex;
   align-items: center;
   gap: var(--ds-space-sm);
@@ -72,22 +109,23 @@
     transform var(--ds-duration-fast) var(--ds-ease-standard);
 }
 
-.page-step:hover:not(:disabled) {
+.ds-step:hover:not(:disabled) {
   background-color: var(--ds-color-surface-muted);
   transform: translateX(var(--ds-space-3xs));
 }
 
-.page-step:focus-visible {
+.ds-step:focus-visible {
   outline: var(--ds-focus-ring-width) solid var(--ds-color-focus-ring-core);
   outline-offset: var(--ds-focus-ring-offset);
 }
 
-.page-step:disabled {
+.ds-step:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
 
-.step-number {
+.ds-step__marker {
+  position: relative;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -95,7 +133,6 @@
   height: var(--ds-space-xl);
   border: 1px solid var(--ds-color-border-strong);
   border-radius: var(--ds-radius-pill);
-  color: inherit;
   font-size: var(--ds-font-size-xs);
   font-weight: var(--ds-font-weight-semibold);
   font-variant-numeric: tabular-nums;
@@ -105,40 +142,37 @@
     color var(--ds-duration-fast) var(--ds-ease-standard);
 }
 
-.step-title {
+.ds-step__label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* Current step ----------------------------------------------------------------- */
-
-.survey-navigation li.active .page-step {
+/* Current step: filled brand marker, and it is also announced as the current step. */
+.ds-step.is-current {
   background-color: var(--ds-color-primary-soft);
   border-color: var(--ds-color-primary-border);
   color: var(--ds-color-primary);
   font-weight: var(--ds-font-weight-semibold);
 }
 
-.survey-navigation li.active .step-number {
-  border-color: var(--ds-color-primary);
+.ds-step.is-current .ds-step__marker {
   background-color: var(--ds-color-primary);
+  border-color: var(--ds-color-primary);
   color: var(--ds-color-text-on-primary);
 }
 
-/* Completed step: brand outline plus a check cue that is not colour-only --------- */
-
-.survey-navigation li.completed .page-step {
+/* Complete step: outlined marker plus a check cue (not colour alone). */
+.ds-step.is-complete {
   color: var(--ds-color-primary);
 }
 
-.survey-navigation li.completed .step-number {
+.ds-step.is-complete .ds-step__marker {
   border-color: var(--ds-color-primary);
-  background-color: var(--ds-color-surface);
   color: var(--ds-color-primary);
 }
 
-.survey-navigation li.completed .step-title::after {
+.ds-step.is-complete .ds-step__label::after {
   content: '';
   display: inline-block;
   width: var(--ds-space-sm);
@@ -156,19 +190,34 @@
   mask-size: contain;
 }
 
-/* Compact mobile rail ---------------------------------------------------------- */
-
-.survey-navigation.compact ol {
-  justify-items: center;
-  gap: var(--ds-space-2xs);
+.ds-step.is-upcoming {
+  color: var(--ds-color-text-muted);
 }
 
-.survey-navigation.compact .page-step {
+/* Compact rail: marker-only steps used inside the mobile navigation drawer. */
+.ds-steps--compact .ds-steps__list {
+  gap: var(--ds-space-2xs);
+  justify-items: center;
+}
+
+.ds-steps--compact .ds-step {
   justify-content: center;
   width: var(--ds-touch-target);
   padding-inline: var(--ds-space-2xs);
 }
 
-.survey-navigation.compact .step-number {
+.ds-steps--compact .ds-step__marker {
   border-radius: var(--ds-radius-lg);
+}
+
+.ds-steps--horizontal .ds-steps__list {
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: var(--ds-space-2xs);
+}
+
+.ds-steps--horizontal .ds-step {
+  flex-direction: column;
+  text-align: center;
+  gap: var(--ds-space-2xs);
 }
