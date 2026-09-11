@@ -29,8 +29,7 @@
           "questionId": "S1Q2",
           "type": "checkbox",
           "label": "Which areas do you use most?",
-          "required": true,
-          "minSelections": 1,
+          "required": false,
           "attachmentsRequired": 0,
           "options": [
             { "label": "Content", "value": "content" },
@@ -44,7 +43,7 @@
           "questionId": "S1Q3",
           "type": "dropdown",
           "label": "What device do you mainly use?",
-          "required": true,
+          "required": false,
           "attachmentsRequired": 0,
           "options": [
             { "label": "Desktop", "value": "desktop" },
@@ -65,7 +64,7 @@
           "questionId": "S2Q1",
           "type": "rating",
           "label": "Rate your overall experience.",
-          "required": false,
+          "required": true,
           "minValue": 1,
           "maxValue": 10,
           "leftLabel": "Poor",
@@ -112,7 +111,7 @@
           "questionId": "S3Q1",
           "type": "radio",
           "label": "How likely are you to recommend us?",
-          "required": false,
+          "required": true,
           "attachmentsRequired": 0,
           "options": [
             { "label": "Definitely", "value": "definitely" },

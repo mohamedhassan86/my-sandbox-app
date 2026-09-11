@@ -14,12 +14,13 @@ entry (`"quick-pulse": "survey-quick-pulse.json"`) in `public/survey-manifest.js
 reachable at `/surveys/quick-pulse`. The survey contains exactly three steps with
 exactly three questions each; all nine questions use closed types (2× radio, 2×
 checkbox, 2× dropdown, 1× rating, 1× satisfaction, 1× toggle_button) with exactly
-three required questions — one required radio, one required checkbox, one required
-dropdown — and zero attachments. The delivery is configuration-only: it reuses the
+three required questions — the first question of each step (radio on step 1, rating
+  on step 2, radio on step 3) — no selection-bounds rules, and zero attachments. The delivery is configuration-only: it reuses the
 existing catalog, renderer, validators, session, and submission services unchanged, so
 no application code is modified and the existing surveys are untouched (clarified
 2026-09-11: all closed types allowed, product-experience-pulse subject, manifest key
-`quick-pulse`, minimum required-question mix).
+`quick-pulse`, one required question per step = the step's first question, no
+  selection-bounds rules).
 
 ## Technical Context
 
@@ -70,8 +71,8 @@ components.
   or services are introduced; the feature is consumed entirely through the existing
   `Survey`/`SurveyPage`/`Question`/`Answer` contracts, documented first in
   `contracts/` before the fixture is authored.
-* **Validation and Submission Integrity**: PASS. Required-answer and selection-bounds
-  validation for the fixture's questions is enforced by the existing
+* **Validation and Submission Integrity**: PASS. Required-answer validation for the
+  fixture's questions (one per step) is enforced by the existing
   `survey-config.validator.ts` (schema) and `response.validator.ts` (navigation and
   submission) without modification.
 * **Testable Quality Gates**: PASS. The existing unit-test suite and production build
@@ -82,6 +83,10 @@ components.
   the existing accessible, responsive question components (radio/checkbox/dropdown/
   rating/satisfaction/toggle) with the established maroon design language; no new UI
   surfaces or logic are added.
+
+*Re-checked 2026-09-11 after the per-step required clarifications (one required
+question per step = its first question; no selection-bounds rules): all principles
+still PASS.*
 
 ## Project Structure
 

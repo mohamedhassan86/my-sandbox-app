@@ -40,30 +40,35 @@ codebase and the clarified spec (session 2026-09-11).
 
 - **Decision**: Product experience pulse subject (clarified), composed as:
   - **Step 1 "How You Use"** (icon `laptop-file`): `S1Q1` radio **required** — usage
-    frequency (5 options); `S1Q2` checkbox **required**, `minSelections: 1` — areas
-    used most (5 options); `S1Q3` dropdown **required** — main device (4 options).
-  - **Step 2 "Your Experience"** (icon `star`): `S2Q1` rating optional — overall
+    frequency (5 options); `S1Q2` checkbox optional — areas used most (5 options,
+    no selection bounds); `S1Q3` dropdown optional — main device (4 options).
+  - **Step 2 "Your Experience"** (icon `star`): `S2Q1` rating **required** — overall
     experience (1–10, `leftLabel` "Poor", `rightLabel` "Excellent"); `S2Q2`
     satisfaction optional — overall satisfaction (5 standard options); `S2Q3`
     checkbox optional — most-wanted improvements (5 options).
-  - **Step 3 "Next Steps"** (icon `shield-check`): `S3Q1` radio optional — likelihood
-    to recommend (5 options); `S3Q2` toggle_button optional, `defaultValue: false` —
-    product update notifications; `S3Q3` dropdown optional — preferred follow-up
-    channel (3 options).
+  - **Step 3 "Next Steps"** (icon `shield-check`): `S3Q1` radio **required** —
+    likelihood to recommend (5 options); `S3Q2` toggle_button optional,
+    `defaultValue: false` — product update notifications; `S3Q3` dropdown optional —
+    preferred follow-up channel (3 options).
 - **Rationale**: Satisfies every structural rule at once — exactly 3 pages × 3
   questions (FR-002); all closed types with no text or attachments (FR-003/FR-007);
-  at least one radio, checkbox, and dropdown (FR-004); the clarified minimum-required
-  mix with exactly one required radio, one required checkbox, and one required
-  dropdown and all other questions optional (FR-006, Q4 answer); each required
-  selection control style is exercised by `response.validator.ts`'s required-empty and
-  min/max-selection checks. The subject follows the clarified product-experience-pulse
+  at least one radio, checkbox, and dropdown (FR-004); the clarified
+  one-required-per-step mix — the first question of each step (radio, rating, radio) —
+  with all other questions optional and no selection-bounds rules (FR-006, clarified
+  2026-09-11); required-answer enforcement is exercised once per step by
+  `response.validator.ts`'s required-empty check. The subject follows the clarified product-experience-pulse
   theme (Q2 answer) and is consistent with the app's existing customer-feedback
   surveys.
 - **Alternatives considered**:
   - *All nine questions from only the three named types* — rejected by clarification
     Q1 (all supported closed types allowed).
-  - *Majority-required or all-required mix* — rejected by clarification Q4 (minimum
-    required mix chosen).
+  - *Different required mixes* (the original minimum-required type spread, majority,
+    or all required) — superseded by the later per-step decision: one required
+    question per step, each the step's first question (clarification round 2,
+    2026-09-11).
+  - *Keep `minSelections: 1` on the now-optional `S1Q2`* — rejected (same round): a
+    touched-then-cleared optional checkbox must not be blocked; the survey retains no
+    selection-bounds rules.
   - *Different subject (employee engagement, event feedback)* — rejected by
     clarification Q2 (product experience pulse chosen).
 

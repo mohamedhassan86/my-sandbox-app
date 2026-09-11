@@ -56,8 +56,7 @@ all base rules still apply.
           "questionId": "S1Q2",
           "type": "checkbox",
           "label": "Which areas do you use most?",
-          "required": true,
-          "minSelections": 1,
+          "required": false,
           "attachmentsRequired": 0,
           "options": [
             { "label": "Content", "value": "content" },
@@ -71,7 +70,7 @@ all base rules still apply.
           "questionId": "S1Q3",
           "type": "dropdown",
           "label": "What device do you mainly use?",
-          "required": true,
+          "required": false,
           "attachmentsRequired": 0,
           "options": [
             { "label": "Desktop", "value": "desktop" },
@@ -92,7 +91,7 @@ all base rules still apply.
           "questionId": "S2Q1",
           "type": "rating",
           "label": "Rate your overall experience.",
-          "required": false,
+          "required": true,
           "minValue": 1,
           "maxValue": 10,
           "leftLabel": "Poor",
@@ -139,7 +138,7 @@ all base rules still apply.
           "questionId": "S3Q1",
           "type": "radio",
           "label": "How likely are you to recommend us?",
-          "required": false,
+          "required": true,
           "attachmentsRequired": 0,
           "options": [
             { "label": "Definitely", "value": "definitely" },
@@ -186,14 +185,14 @@ all base rules still apply.
   appear — FR-003.
 - **Type distribution**: at least one `radio`, one `checkbox`, one `dropdown`
   (actually 2/2/2 in this fixture) — FR-004.
-- **Required distribution**: exactly three required questions — `S1Q1` (radio),
-  `S1Q2` (checkbox), `S1Q3` (dropdown); all other questions `required: false` —
-  FR-006 (clarification Q4).
+- **Required distribution**: exactly three required questions — the first question of
+  each step: `S1Q1` (radio), `S2Q1` (rating), `S3Q1` (radio); all other questions
+  `required: false` — FR-006 (clarified 2026-09-11).
 - **Options**: every selectable question has a non-empty `options` array; each option
   has a non-empty `label` and `value`; `value`s are unique within the question —
   FR-005 (existing validator rule).
-- **Selection bounds**: `S1Q2` sets `minSelections: 1`; no question sets
-  `maxSelections`; `minSelections` ≤ option count.
+- **Selection bounds**: no question sets `minSelections` or `maxSelections`
+  (FR-006).
 - **Rating**: `S2Q1` uses `minValue: 1` < `maxValue: 10` (integer, divisible by the
   default step 1).
 - **Toggle**: `S3Q2` uses boolean `defaultValue: false` and label object

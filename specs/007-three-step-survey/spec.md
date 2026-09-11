@@ -15,7 +15,9 @@
 - Q: Should the nine questions be limited to the three selection types (radio, checkbox, dropdown), or should the remaining slots also use other supported closed types such as rating, satisfaction, and toggle? → A: Radio, checkbox, and dropdown are each guaranteed at least once; the remaining slots may also use rating, satisfaction, or toggle (all closed types allowed, open-text and file-upload still excluded).
 - Q: What subject should the new survey's nine questions cover? → A: A short product experience pulse — usage habits, experience/satisfaction, and follow-up preferences.
 - Q: Should the new survey be registered in the survey manifest under the key `quick-pulse`, making its URL `/surveys/quick-pulse`? → A: Yes — the survey is registered under the manifest key `quick-pulse` at `/surveys/quick-pulse`.
-- Q: How many of the nine questions should be marked required? → A: Minimum required — at least one required radio, one required checkbox, and one required dropdown; all other questions optional.
+- Q: How many of the nine questions should be marked required? → A: Minimum required — at least one required radio, one required checkbox, and one required dropdown; all other questions optional. (Superseded by the per-step required decision below.)
+- Q: Should the required questions be distributed one per step? → A: Yes — exactly one required question per step, and it is the step's first question (a radio on step 1, a rating on step 2, and a radio on step 3); all other questions optional.
+- Q: Should the minimum-selection rule be removed from the step-1 checkbox question now that it is optional? → A: Yes — the rule is removed; the checkbox is fully skippable (zero or more selections), and no question in the survey defines a minimum- or maximum-selection rule.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -109,24 +111,24 @@ succeed while optional questions remain empty.
 
 **Acceptance Scenarios**:
 
-1. **Given** the current step contains a required radio, checkbox, or dropdown
-   question with no answer, **When** the respondent attempts to move to the next
-   step, **Then** navigation is blocked and a visible validation message identifies
-   the incomplete question.
-2. **Given** a required question has been answered and then cleared (for a checkbox
-   or dropdown question that allows clearing), **When** the respondent attempts to
-   navigate or submit, **Then** the validation error for that question is shown again.
-3. **Given** a checkbox question with a minimum-selection rule, **When** the
-   respondent selects fewer than the required number of options and attempts to
-   navigate, **Then** navigation is blocked with a message explaining the minimum
-   selection.
-4. **Given** all required questions are answered and optional questions are left
-   unanswered, **When** the respondent submits the survey, **Then** the submission
-   succeeds and the unanswered optional questions are represented as absent or null
-   in the response.
-5. **Given** all required questions are unanswered on the final step, **When** the
-   respondent attempts to submit, **Then** submission is blocked with visible
-   validation feedback and all previously entered answers are preserved.
+1. **Given** the current step's required question (its first question — a radio on
+   step 1, a rating on step 2, or a radio on step 3) has no answer, **When** the
+   respondent attempts to move to the next step, **Then** navigation is blocked and
+   a visible validation message identifies the incomplete question.
+2. **Given** the current step's required question has been answered, **When** the
+   respondent moves to the next step while the step's other (optional) questions are
+   left unanswered, **Then** navigation succeeds without validation errors.
+3. **Given** a checkbox question on any step with one or more options selected,
+   **When** the respondent deselects all options and attempts to navigate, **Then**
+   the question is treated as unanswered and navigation succeeds (no
+   minimum-selection rule applies to any question in this survey).
+4. **Given** all three required questions (one per step) are answered and all
+   optional questions are left unanswered, **When** the respondent submits the
+   survey, **Then** the submission succeeds and the unanswered optional questions
+   are represented as absent or null in the response.
+5. **Given** the final step's required question (its first question) is unanswered,
+   **When** the respondent attempts to submit, **Then** submission is blocked with
+   visible validation feedback and all previously entered answers are preserved.
 
 ---
 
@@ -142,9 +144,9 @@ succeed while optional questions remain empty.
   missing or empty option list, or duplicate option values? The configuration MUST be
   rejected with a user-visible schema validation error identifying the offending
   question/option, consistent with the existing surveys.
-- What happens when a respondent leaves every question on a step unanswered and the
-  step contains only optional questions? Navigation MUST succeed and the step counts
-  as fully valid with zero answered questions.
+- What happens when a respondent leaves every question on a step unanswered? Each
+  step contains exactly one required question (its first), so navigation from that
+  step MUST be blocked until that required question is answered.
 - What happens when a respondent changes an answer after moving past its step and
   later returns? The most recent answer MUST be the one displayed and the one
   submitted.
@@ -178,10 +180,11 @@ succeed while optional questions remain empty.
 - **FR-005**: Every selectable question (`radio`, `checkbox`, `dropdown`) MUST define
   a non-empty option list with unique, non-empty option values and labels; page IDs
   MUST be unique within the survey and question IDs MUST be unique within the survey.
-- **FR-006**: The survey MUST include both required and optional questions, and each
-  of the three required types — `radio`, `checkbox`, and `dropdown` — MUST be
-  represented by at least one required question, so that required-answer enforcement
-  is exercised across all three selection control styles.
+- **FR-006**: Each of the three steps MUST contain exactly one required question, and
+  it MUST be the step's first question (a `radio` on step 1, a `rating` on step 2,
+  and a `radio` on step 3); all other questions MUST be optional, so required-answer
+  enforcement is exercised exactly once per step. No question in the survey defines
+  a minimum- or maximum-selection rule.
 - **FR-007**: No question in the survey MAY require or allow attachments (zero
   attachments for every question).
 - **FR-008**: The survey MUST define a title, a short description, and an estimated

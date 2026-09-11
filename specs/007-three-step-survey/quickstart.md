@@ -56,29 +56,36 @@ pnpm start
   US2 scenario 4).
 - Spot-check the raw fixture (`http://localhost:4200/survey-quick-pulse.json`): 3
   pages × 3 questions, types `radio/checkbox/dropdown/rating/satisfaction/toggle_button`
-  only, exactly 3 `"required": true` entries (`S1Q1`, `S1Q2`, `S1Q3`), all
+  only, exactly 3 `"required": true` entries — the first question of each step
+  (`S1Q1`, `S2Q1`, `S3Q1`) — no `minSelections`/`maxSelections` fields, all
   `attachmentsRequired: 0` (contracts/survey-json.md).
 
 ## 4. Validate required-answer enforcement (US3)
 
 - Fresh load. On step 1, leave everything unanswered and attempt to continue.
-- **Expect**: navigation is blocked; visible errors identify `S1Q1` (radio), `S1Q2`
-  (checkbox), and `S1Q3` (dropdown) as required.
-- Select one checkbox option in `S1Q2`, answer `S1Q1` and `S1Q3`, and continue.
-- **Expect**: navigation succeeds; on steps 2–3 all questions are optional.
-- On step 1 (after returning), clear `S1Q2` entirely and attempt to leave again.
-- **Expect**: the checkbox error reappears (required + `minSelections: 1`).
+- **Expect**: navigation is blocked; a visible error identifies `S1Q1` (radio) as the
+  step's required question.
+- Answer only `S1Q1` and continue; on step 2 with nothing answered attempt to
+  continue.
+- **Expect**: navigation is blocked; a visible error identifies `S2Q1` (rating) as
+  required.
+- Answer only `S2Q1` and continue; on step 3 with nothing answered attempt to submit.
+- **Expect**: submission is blocked; a visible error identifies `S3Q1` (radio) as
+  required.
 
 ## 5. Validate optional answers and clearing
 
-- On step 2, select a value in the optional dropdown-free flow: pick a rating, then
-  clear `S3Q3` after selecting an option on step 3.
-- **Expect**: clearing returns the control to its empty state and the question counts
-  as unanswered (US3 scenario behavior for optional questions).
-- Submit with **only** the three required questions answered.
+- On any step, select then deselect all options of a checkbox question and attempt
+  to continue.
+- **Expect**: navigation succeeds — checkboxes are fully optional with no
+  minimum-selection rule (FR-006).
+- On step 3, clear `S3Q3` after selecting an option.
+- **Expect**: the control returns to its empty state and the question counts as
+  unanswered.
+- Submit with **only** the three required questions (one per step) answered.
 - **Expect**: submission succeeds; the completion summary shows step tiles of
-  **3/3, 0/3, 0/3 answered**; unanswered optional questions are absent/`null` in the
-  response (FR-009; contracts/response-submission.md).
+  **1/3, 1/3, 1/3 answered**; unanswered optional questions are absent/`null`
+  (FR-009; contracts/response-submission.md).
 
 ## 6. Validate full completion (US2)
 
