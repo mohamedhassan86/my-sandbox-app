@@ -1,4 +1,5 @@
 {
   "customer-feedback": "survey.json",
-  "extended-feedback": "survey-8-step.json"
+  "extended-feedback": "survey-8-step.json",
+  "quick-pulse": "survey-quick-pulse.json"
 }
