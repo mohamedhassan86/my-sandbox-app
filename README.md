@@ -48,6 +48,12 @@ An independent six-step fixture is available at
 with three questions per step and covers all supported question types without changing
 the default four-page survey.
 
+A three-step all-closed "Product Pulse Survey" is available at
+`http://localhost:4200/surveys/quick-pulse`. It contains exactly three steps with
+three closed questions per step — radio, checkbox, dropdown, rating, satisfaction,
+and toggle, with no free-text or attachment questions — and exactly one required
+question per step (its first: a radio, a rating, and a radio).
+
 New survey variants are added by placing a validated JSON file in `public/` and adding
 one named entry to `public/survey-manifest.json`; no Angular route or component change
 is required.

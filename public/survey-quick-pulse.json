@@ -1,0 +1,149 @@
+{
+  "surveyId": "SV009",
+  "title": "Product Pulse Survey",
+  "description": "A quick three-step pulse on how you use our product and how it is going.",
+  "version": "1.0",
+  "estimatedMinutes": 3,
+  "pages": [
+    {
+      "pageId": "S1",
+      "title": "How You Use",
+      "description": "Tell us how you use the product.",
+      "icon": "laptop-file",
+      "questions": [
+        {
+          "questionId": "S1Q1",
+          "type": "radio",
+          "label": "How often do you use the product?",
+          "required": true,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Every day", "value": "daily" },
+            { "label": "Several times a week", "value": "several_weeks" },
+            { "label": "Once a week", "value": "weekly" },
+            { "label": "Once a month", "value": "monthly" },
+            { "label": "Rarely", "value": "rarely" }
+          ]
+        },
+        {
+          "questionId": "S1Q2",
+          "type": "checkbox",
+          "label": "Which areas do you use most?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Content", "value": "content" },
+            { "label": "Reports", "value": "reports" },
+            { "label": "Collaboration", "value": "collaboration" },
+            { "label": "Integrations", "value": "integrations" },
+            { "label": "Mobile", "value": "mobile" }
+          ]
+        },
+        {
+          "questionId": "S1Q3",
+          "type": "dropdown",
+          "label": "What device do you mainly use?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Desktop", "value": "desktop" },
+            { "label": "Laptop", "value": "laptop" },
+            { "label": "Tablet", "value": "tablet" },
+            { "label": "Phone", "value": "phone" }
+          ]
+        }
+      ]
+    },
+    {
+      "pageId": "S2",
+      "title": "Your Experience",
+      "description": "How has your experience been?",
+      "icon": "star",
+      "questions": [
+        {
+          "questionId": "S2Q1",
+          "type": "rating",
+          "label": "Rate your overall experience.",
+          "required": true,
+          "minValue": 1,
+          "maxValue": 10,
+          "leftLabel": "Poor",
+          "rightLabel": "Excellent",
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "S2Q2",
+          "type": "satisfaction",
+          "label": "How satisfied are you overall?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Very dissatisfied", "value": "very-dissatisfied" },
+            { "label": "Dissatisfied", "value": "dissatisfied" },
+            { "label": "Neutral", "value": "neutral" },
+            { "label": "Satisfied", "value": "satisfied" },
+            { "label": "Very satisfied", "value": "very-satisfied" }
+          ]
+        },
+        {
+          "questionId": "S2Q3",
+          "type": "checkbox",
+          "label": "Which improvements would help you most?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Faster load times", "value": "faster_loads" },
+            { "label": "Better search", "value": "better_search" },
+            { "label": "More report formats", "value": "more_reports" },
+            { "label": "Offline mode", "value": "offline_mode" },
+            { "label": "Dark theme", "value": "dark_theme" }
+          ]
+        }
+      ]
+    },
+    {
+      "pageId": "S3",
+      "title": "Next Steps",
+      "description": "Help us keep things going.",
+      "icon": "shield-check",
+      "questions": [
+        {
+          "questionId": "S3Q1",
+          "type": "radio",
+          "label": "How likely are you to recommend us?",
+          "required": true,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Definitely", "value": "definitely" },
+            { "label": "Probably", "value": "probably" },
+            { "label": "Maybe", "value": "maybe" },
+            { "label": "Probably not", "value": "probably_not" },
+            { "label": "Definitely not", "value": "definitely_not" }
+          ]
+        },
+        {
+          "questionId": "S3Q2",
+          "type": "toggle_button",
+          "label": "Keep me posted about product updates.",
+          "description": "We'll only send updates you ask about.",
+          "required": false,
+          "defaultValue": false,
+          "attachmentsRequired": 0,
+          "options": { "onLabel": "Yes, keep me posted", "offLabel": "No, thank you" }
+        },
+        {
+          "questionId": "S3Q3",
+          "type": "dropdown",
+          "label": "Best way to follow up with you?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Email", "value": "email" },
+            { "label": "In-app message", "value": "in_app" },
+            { "label": "No contact", "value": "no_contact" }
+          ]
+        }
+      ]
+    }
+  ]
+}
