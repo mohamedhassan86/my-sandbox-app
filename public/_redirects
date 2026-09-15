@@ -1,0 +1,4 @@
+# Cloudflare Pages SPA fallback: serve index.html (200) for any path that is not a real
+# file, so deep links like /surveys/quick-pulse resolve through the Angular router instead
+# of 404ing. Copied into the published output by the `public` assets glob in angular.json.
+/*  /index.html  200

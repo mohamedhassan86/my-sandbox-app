@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:prod": "ng build --configuration production",
+    "deploy": "wrangler pages deploy",
+    "deploy:preview": "wrangler pages deploy --branch=preview",
+    "preview": "wrangler pages dev"
   },
   "private": true,
   "packageManager": "pnpm@11.25.0",
@@ -29,6 +33,7 @@
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "wrangler": "^4.131.2"
   }
 }

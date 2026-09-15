@@ -208,12 +208,39 @@ preserve the respondent's answers.
 
 ## Deployment
 
-The project is linked to Vercel. Deploy a production build with:
+Production hosting is Cloudflare Pages. `wrangler` is a devDependency, and
+`wrangler.jsonc` sets the Pages project name and the publish directory, so the
+deploy command needs no extra arguments:
 
 ```powershell
-pnpm dlx vercel --prod
+pnpm exec ng build
+pnpm exec wrangler pages deploy
 ```
 
-Vercel uses `vercel.json` to run Angular’s build and `pnpm install --ignore-scripts`.
-Environment files and Vercel metadata are excluded from version control.
+`pnpm run deploy` is the same as the second command. To publish a throwaway
+preview instead of the production branch:
+
+```powershell
+pnpm run deploy:preview
+```
+
+`dist/my-sandbox-app/browser` is the published output (Angular’s
+`@angular/build:application` writes to `<outDir>/<project>/browser`). Deep links
+such as `/surveys/quick-pulse` work because `public/_redirects` ships the
+`/*  /index.html  200` SPA fallback into that output directory; it must stay in
+`public/`, not the repository root.
+
+For a local run of the built bundle, use `pnpm run preview`.
+
+Non-interactive deploys (CI, sandboxed build runners) authenticate with a scoped
+API token rather than `pnpm exec wrangler login`:
+
+```powershell
+$env:CLOUDFLARE_API_TOKEN = "<token with Cloudflare Pages:Edit>"
+pnpm run deploy
+```
+
+Do not commit tokens; `.env*`, `.dev.vars`, and `.wrangler` are ignored.
+`vercel.json` is kept only for the legacy Vercel target and is not used by the
+Cloudflare Pages pipeline.
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

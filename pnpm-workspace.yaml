@@ -3,8 +3,13 @@ allowBuilds:
   esbuild: true
   lmdb: true
   msgpackr-extract: true
+  workerd: true
+minimumReleaseAgeExclude:
+  - miniflare@5.20260911.1-alpha
+  - wrangler@4.131.2
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
   - lmdb
   - msgpackr-extract
+  - workerd

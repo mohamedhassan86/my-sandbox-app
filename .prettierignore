@@ -5,3 +5,6 @@ coverage/
 pnpm-lock.yaml
 .angular/
 .vercel/
+# Cloudflare Pages config files (not code, no parser)
+public/_redirects
+public/_headers

@@ -1,7 +1,10 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Vercel and environment files
+# Vercel, Cloudflare and environment files
 .vercel
+.wrangler
+.dev.vars
+.dev.vars.*
 .env*
 
 # Compiled output

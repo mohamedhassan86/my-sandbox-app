@@ -1,0 +1,12 @@
+// Cloudflare Pages configuration.
+// Because `pages_build_output_dir` and `name` live here, the deploy command can be run
+// bare (`pnpm exec wrangler pages deploy`) — no positional directory or --project-name needed.
+// See https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Must match the Cloudflare Pages project name (alphanumeric and dashes only).
+  "name": "my-sandbox-app",
+  // Angular's `@angular/build:application` output: <outDir>/<project>/browser.
+  "pages_build_output_dir": "dist/my-sandbox-app/browser",
+  "compatibility_date": "2026-09-15",
+}
