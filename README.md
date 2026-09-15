@@ -208,37 +208,58 @@ preserve the respondent's answers.
 
 ## Deployment
 
-Production hosting is Cloudflare Pages. `wrangler` is a devDependency, and
-`wrangler.jsonc` sets the Pages project name and the publish directory, so the
-deploy command needs no extra arguments:
+Production hosting is Cloudflare Pages, published without the Cloudflare SDK: the
+deploy step is one `zip` plus one `curl` call to the Pages upload API
+(`scripts/pages-upload.sh`), so the runner needs no login session and no extra packages.
 
 ```powershell
-pnpm exec ng build
-pnpm exec wrangler pages deploy
-```
-
-`pnpm run deploy` is the same as the second command. To publish a throwaway
-preview instead of the production branch:
-
-```powershell
-pnpm run deploy:preview
-```
-
-`dist/my-sandbox-app/browser` is the published output (Angular’s
-`@angular/build:application` writes to `<outDir>/<project>/browser`). Deep links
-such as `/surveys/quick-pulse` work because `public/_redirects` ships the
-`/*  /index.html  200` SPA fallback into that output directory; it must stay in
-`public/`, not the repository root.
-
-For a local run of the built bundle, use `pnpm run preview`.
-
-Non-interactive deploys (CI, sandboxed build runners) authenticate with a scoped
-API token rather than `pnpm exec wrangler login`:
-
-```powershell
-$env:CLOUDFLARE_API_TOKEN = "<token with Cloudflare Pages:Edit>"
+pnpm run build:prod
 pnpm run deploy
 ```
+
+`pnpm run deploy:ci` runs the production build and the publish step in one command, which
+is what a deploy runner should execute. Add `PAGES_BRANCH=preview` for a preview
+deployment, or `PAGES_DRY_RUN=1` to package and validate the bundle without calling the
+API. Both are read from the environment, so `PAGES_DRY_RUN=1 pnpm run deploy` on a POSIX
+shell works as-is.
+
+| Variable                | Purpose                                                                       | Default                       |
+| ----------------------- | ----------------------------------------------------------------------------- | ----------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | API token with Cloudflare **Pages:Edit** and **Account:Read**                 | required, never committed     |
+| `CLOUDFLARE_ACCOUNT_ID` | account id, shown in the dashboard’s account rail                             | required                      |
+| `PAGES_PROJECT_NAME`    | Pages project to publish to                                                   | `my-sandbox-app`              |
+| `PAGES_BRANCH`          | branch for this deploy; must equal the project’s production branch to go live | `master`                      |
+| `PAGES_OUTPUT_DIR`      | directory that becomes the site root                                          | `dist/my-sandbox-app/browser` |
+| `PAGES_DRY_RUN`         | `1` stops after packaging                                                     | unset                         |
+
+`dist/my-sandbox-app/browser` is the published output (Angular’s
+`@angular/build:application` writes to `<outDir>/<project>/browser`). Deep links such as
+`/surveys/quick-pulse` work because `public/_redirects` ships the
+`/*  /index.html  200` SPA fallback into that directory; it must stay in `public/`, not
+the repository root. The archive is built with entries relative to the output directory,
+because Pages serves a zip from its root.
+
+Two caveats about `scripts/pages-upload.sh`:
+
+- It calls the same direct-upload endpoint as the dashboard’s drag-and-drop uploader,
+  which Cloudflare does not document in its public API reference.
+- Direct uploads are rejected for Pages projects created with Git integration. Those
+  projects deploy from a push, and for a manual publish use `pnpm run deploy:wrangler`,
+  which needs `wrangler` (a devDependency) and `CLOUDFLARE_API_TOKEN` as well.
+
+The same request from PowerShell:
+
+```powershell
+Compress-Archive -Path dist\my-sandbox-app\browser\* -DestinationPath $env:TEMP\site.zip -Force
+curl.exe -X POST "https://api.cloudflare.com/client/v4/accounts/$env:CLOUDFLARE_ACCOUNT_ID/pages/projects/my-sandbox-app/direct_uploads" `
+  -H "Authorization: Bearer $env:CLOUDFLARE_API_TOKEN" -F "branch=master" -F "file=@$env:TEMP\site.zip;type=application/zip"
+```
+
+To skip deploys from the shell entirely, connect the repository to Pages and let
+Cloudflare build: Framework preset **Angular**, Build command
+`pnpm install --frozen-lockfile && pnpm exec ng build`, Build output directory
+`dist/my-sandbox-app/browser`. `wrangler.jsonc` mirrors the same project name and output
+directory for `pnpm run deploy:wrangler` and `pnpm run preview`.
 
 Do not commit tokens; `.env*`, `.dev.vars`, and `.wrangler` are ignored.
 `vercel.json` is kept only for the legacy Vercel target and is not used by the
