@@ -1,0 +1,8 @@
+{
+  "name": "my-sandbox-app",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "dist/my-sandbox-app",
+    "not_found_handling": "single-page-application"
+  }
+}
