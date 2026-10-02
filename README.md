@@ -54,6 +54,14 @@ three closed questions per step — radio, checkbox, dropdown, rating, satisfact
 and toggle, with no free-text or attachment questions — and exactly one required
 question per step (its first: a radio, a rating, and a radio).
 
+A two-step all-closed "Event Feedback Survey" is available at
+`http://localhost:4200/surveys/event-feedback`. It contains exactly two steps with
+three closed questions per step — radio, checkbox, dropdown, rating, satisfaction,
+and toggle, with no free-text or attachment questions — and exactly one required
+question per step (its first: a radio, then a rating). The fixture contract check in
+`src/app/survey/survey-fixtures.contract.spec.ts` guards that structure and runs with
+the focused feature tests below.
+
 New survey variants are added by placing a validated JSON file in `public/` and adding
 one named entry to `public/survey-manifest.json`; no Angular route or component change
 is required.
@@ -203,8 +211,9 @@ preserve the respondent's answers.
   `src/app/shared/design-system`.
 - Spec Kit planning artifacts live under `specs/001-survey-management`,
   `specs/002-toggle-button-question`, `specs/003-dropdown-question`,
-  `specs/004-survey-design-system`, `specs/005-dropdown-menu-sizing`, and
-  `specs/006-survey-dock-brand`.
+  `specs/004-survey-design-system`, `specs/005-dropdown-menu-sizing`,
+  `specs/006-survey-dock-brand`, `specs/007-three-step-survey`, and
+  `specs/008-two-step-event-survey`.
 
 ## Deployment
 
