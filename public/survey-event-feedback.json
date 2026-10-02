@@ -1,0 +1,101 @@
+{
+  "surveyId": "SV010",
+  "title": "Event Feedback Survey",
+  "description": "A quick two-step survey about how you took part in the event and how it went.",
+  "version": "1.0",
+  "estimatedMinutes": 2,
+  "pages": [
+    {
+      "pageId": "S1",
+      "title": "Your Attendance",
+      "description": "Tell us how you took part in the event.",
+      "icon": "id-card",
+      "questions": [
+        {
+          "questionId": "S1Q1",
+          "type": "radio",
+          "label": "How did you attend the event?",
+          "required": true,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "In person", "value": "in_person" },
+            { "label": "Online, live", "value": "online_live" },
+            { "label": "Online, on demand", "value": "online_on_demand" },
+            { "label": "A mix of in person and online", "value": "mixed" }
+          ]
+        },
+        {
+          "questionId": "S1Q2",
+          "type": "checkbox",
+          "label": "Which parts of the event did you take part in?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Keynote", "value": "keynote" },
+            { "label": "Workshops", "value": "workshops" },
+            { "label": "Panel discussions", "value": "panels" },
+            { "label": "Networking", "value": "networking" },
+            { "label": "Exhibition", "value": "exhibition" }
+          ]
+        },
+        {
+          "questionId": "S1Q3",
+          "type": "dropdown",
+          "label": "How did you hear about the event?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Email invitation", "value": "email" },
+            { "label": "Social media", "value": "social_media" },
+            { "label": "Colleague or friend", "value": "word_of_mouth" },
+            { "label": "Event website", "value": "website" },
+            { "label": "Other", "value": "other" }
+          ]
+        }
+      ]
+    },
+    {
+      "pageId": "S2",
+      "title": "Your Experience",
+      "description": "Rate the event and choose how we follow up.",
+      "icon": "star",
+      "questions": [
+        {
+          "questionId": "S2Q1",
+          "type": "rating",
+          "label": "How would you rate the event overall?",
+          "required": true,
+          "minValue": 1,
+          "maxValue": 5,
+          "leftLabel": "Poor",
+          "rightLabel": "Excellent",
+          "attachmentsRequired": 0
+        },
+        {
+          "questionId": "S2Q2",
+          "type": "satisfaction",
+          "label": "How satisfied were you with the quality of the content?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Very dissatisfied", "value": "very-dissatisfied" },
+            { "label": "Dissatisfied", "value": "dissatisfied" },
+            { "label": "Neutral", "value": "neutral" },
+            { "label": "Satisfied", "value": "satisfied" },
+            { "label": "Very satisfied", "value": "very-satisfied" }
+          ]
+        },
+        {
+          "questionId": "S2Q3",
+          "type": "toggle_button",
+          "label": "Keep me informed about future events.",
+          "description": "We'll only send you invitations to similar events.",
+          "required": false,
+          "defaultValue": false,
+          "attachmentsRequired": 0,
+          "options": { "onLabel": "Yes, keep me informed", "offLabel": "No, thank you" }
+        }
+      ]
+    }
+  ]
+}
