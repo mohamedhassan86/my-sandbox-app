@@ -1,0 +1,79 @@
+{
+  "surveyId": "SV011",
+  "title": "TITO Survey",
+  "description": "A quick two-step survey for Abdelrahman covering personal and education info.",
+  "version": "1.0",
+  "estimatedMinutes": 2,
+  "pages": [
+    {
+      "pageId": "S1",
+      "title": "Personal Info",
+      "description": "Two quick questions to get to know Abdelrahman.",
+      "icon": "id-card",
+      "questions": [
+        {
+          "questionId": "S1Q1",
+          "type": "radio",
+          "label": "What is your current living situation?",
+          "required": true,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Living with family", "value": "with_family" },
+            { "label": "University dorm", "value": "university_dorm" },
+            { "label": "Rented apartment", "value": "rented_apartment" },
+            { "label": "Own home", "value": "own_home" },
+            { "label": "Other", "value": "other" }
+          ]
+        },
+        {
+          "questionId": "S1Q2",
+          "type": "dropdown",
+          "label": "What is your age group?",
+          "required": false,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "Under 18", "value": "under_18" },
+            { "label": "18 to 24", "value": "18_24" },
+            { "label": "25 to 34", "value": "25_34" },
+            { "label": "35 to 44", "value": "35_44" },
+            { "label": "45 or older", "value": "45_plus" }
+          ]
+        }
+      ]
+    },
+    {
+      "pageId": "S2",
+      "title": "Education Info",
+      "description": "Two quick questions about Abdelrahman's studies.",
+      "icon": "laptop-file",
+      "questions": [
+        {
+          "questionId": "S2Q1",
+          "type": "radio",
+          "label": "What is your highest completed level of education?",
+          "required": true,
+          "attachmentsRequired": 0,
+          "options": [
+            { "label": "High school or below", "value": "high_school" },
+            { "label": "Diploma", "value": "diploma" },
+            { "label": "Bachelor's degree", "value": "bachelor" },
+            { "label": "Master's degree", "value": "master" },
+            { "label": "Doctorate", "value": "doctorate" },
+            { "label": "Other", "value": "other" }
+          ]
+        },
+        {
+          "questionId": "S2Q2",
+          "type": "rating",
+          "label": "How would you rate your overall education experience so far?",
+          "required": false,
+          "minValue": 1,
+          "maxValue": 5,
+          "leftLabel": "Poor",
+          "rightLabel": "Excellent",
+          "attachmentsRequired": 0
+        }
+      ]
+    }
+  ]
+}
