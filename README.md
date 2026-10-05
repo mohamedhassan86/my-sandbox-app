@@ -62,6 +62,16 @@ question per step (its first: a radio, then a rating). The fixture contract chec
 `src/app/survey/survey-fixtures.contract.spec.ts` guards that structure and runs with
 the focused feature tests below.
 
+A two-step all-closed "TITO Survey" is available at
+`http://localhost:4200/surveys/tito`. It asks Abdelrahman for personal info (step 1:
+a required radio on his living situation and an optional age-group dropdown) and
+education info (step 2: a required radio on his highest completed education level and
+a closing 1–5 rating of his overall education experience), with no free-text or
+attachment questions. The fixture contract check in
+`src/app/survey/tito-survey.contract.spec.ts` guards that structure — two steps with
+two closed questions each, exactly one required question per step, and the rating last
+— and runs with the focused feature tests below.
+
 New survey variants are added by placing a validated JSON file in `public/` and adding
 one named entry to `public/survey-manifest.json`; no Angular route or component change
 is required.
@@ -212,8 +222,8 @@ preserve the respondent's answers.
 - Spec Kit planning artifacts live under `specs/001-survey-management`,
   `specs/002-toggle-button-question`, `specs/003-dropdown-question`,
   `specs/004-survey-design-system`, `specs/005-dropdown-menu-sizing`,
-  `specs/006-survey-dock-brand`, `specs/007-three-step-survey`, and
-  `specs/008-two-step-event-survey`.
+  `specs/006-survey-dock-brand`, `specs/007-three-step-survey`,
+  `specs/008-two-step-event-survey`, and `specs/009-tito-survey`.
 
 ## Deployment
 

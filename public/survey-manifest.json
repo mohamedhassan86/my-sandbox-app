@@ -2,5 +2,6 @@
   "customer-feedback": "survey.json",
   "extended-feedback": "survey-8-step.json",
   "quick-pulse": "survey-quick-pulse.json",
-  "event-feedback": "survey-event-feedback.json"
+  "event-feedback": "survey-event-feedback.json",
+  "tito": "survey-tito.json"
 }
